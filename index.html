@@ -4,7 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#91c9f5">
+
 <title>Cloud Sudoku</title>
+
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="shortcut icon" href="icon.png">
 
 <style>
 * {
@@ -36,8 +41,6 @@ body {
 .screen.active {
     display: flex;
 }
-
-/* ЗАКРЕПЛЁННАЯ ВЕРХНЯЯ ПАНЕЛЬ */
 
 .topbar {
     position: relative;
@@ -88,8 +91,6 @@ body {
     top: 19px;
     border-radius: 5px;
 }
-
-/* ОБЩИЕ ЭЛЕМЕНТЫ */
 
 h1, h2, p {
     text-align: center;
@@ -143,8 +144,6 @@ input {
     font-weight: bold;
 }
 
-/* КАРТА УРОВНЕЙ */
-
 .map-heading {
     flex-shrink: 0;
     padding: 5px 12px;
@@ -185,8 +184,6 @@ input {
     font-size: 10px;
     margin-top: 5px;
 }
-
-/* ИГРОВАЯ ОБЛАСТЬ */
 
 .game-scroll {
     flex: 1;
@@ -311,8 +308,6 @@ input {
     margin: 10px auto 15px;
 }
 
-/* ПОЗДРАВЛЕНИЕ */
-
 #successScreen {
     background: linear-gradient(160deg, #d7f2ff, #a9d9ff, #f3fbff);
     justify-content: center;
@@ -334,14 +329,12 @@ input {
 @keyframes pop {
     0% { transform: scale(.7); opacity: 0; }
     70% { transform: scale(1.06); }
-    100% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1); }
 }
 
 .cloud-emoji {
     font-size: 60px;
 }
-
-/* НАСТРОЙКИ */
 
 .settings-content {
     margin: auto;
@@ -835,8 +828,6 @@ function openSettings() {
 function backFromSettings() {
     showScreen(settingsReturn);
 }
-
-/* МУЗЫКА */
 
 function updateMusicButtons() {
     ["mapMusic", "gameMusic", "settingsMusic"].forEach(id => {
