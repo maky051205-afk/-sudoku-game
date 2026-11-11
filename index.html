@@ -42,7 +42,7 @@ button {
 }
 
 .logo {
-    font-size: 34px;
+    font-size: 32px;
     font-weight: 900;
     color: white;
     text-shadow: 0 4px 12px #398bc2;
@@ -57,7 +57,7 @@ button {
 }
 
 .card {
-    background: #ffffffd9;
+    background: #ffffffdf;
     border-radius: 28px;
     padding: 23px;
     box-shadow: 0 10px 35px #398bc233;
@@ -97,6 +97,37 @@ input {
     border: 1px solid #b9e2f8;
 }
 
+#musicButton {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 9999;
+    width: 49px;
+    height: 49px;
+    border-radius: 50%;
+    background: linear-gradient(145deg,#ffffff,#79cfff);
+    color: #247db6;
+    font-size: 25px;
+    box-shadow: 0 5px 18px #398bc255;
+}
+
+#musicButton.off {
+    background: #dceefa;
+    color: #8aa9bd;
+}
+
+#musicButton.off::after {
+    content: "";
+    position: absolute;
+    width: 30px;
+    height: 3px;
+    background: #ff5555;
+    border-radius: 5px;
+    transform: rotate(-45deg);
+    left: 9px;
+    top: 23px;
+}
+
 .header {
     display: flex;
     justify-content: space-between;
@@ -128,27 +159,16 @@ input {
     overflow-y: auto;
     border-radius: 25px;
     padding: 15px;
-    background:
-        linear-gradient(#a5e1ff99,#e5f7ff99);
-    position: relative;
+    background: linear-gradient(#a5e1ff99,#e5f7ff99);
     scroll-behavior: smooth;
 }
 
-.cloud-map::-webkit-scrollbar {
-    width: 4px;
-}
-
-.cloud-map::-webkit-scrollbar-thumb {
-    background: #7dbce0;
-    border-radius: 10px;
-}
-
 .level-item {
-    position: relative;
     height: 112px;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
 .level-item:nth-child(odd) {
@@ -174,7 +194,6 @@ input {
 
 .level-cloud.open {
     background: linear-gradient(145deg,#fff,#70c9ff);
-    border-color: white;
 }
 
 .level-cloud.done {
@@ -185,7 +204,6 @@ input {
 .level-cloud.locked {
     background: #d8eaf5;
     color: #91aabd;
-    opacity: .85;
 }
 
 .level-time {
@@ -194,7 +212,6 @@ input {
     font-size: 11px;
     color: #286c9c;
     font-weight: bold;
-    white-space: nowrap;
 }
 
 .game-card {
@@ -249,6 +266,7 @@ input {
     font-size: clamp(15px,5vw,22px);
     color: #318bc5;
     min-width: 0;
+    cursor: pointer;
 }
 
 .cell.fixed {
@@ -307,6 +325,10 @@ input {
     color: #604015;
 }
 
+.hidden {
+    display: none !important;
+}
+
 .message {
     min-height: 25px;
     margin-top: 12px;
@@ -319,12 +341,17 @@ input {
 
 <body>
 
-<!-- ПЕРВЫЙ ЭКРАН -->
+<button id="musicButton" class="off"
+onclick="toggleMusic()">♫</button>
+
+<!-- ПРИВЕТСТВИЕ -->
 
 <section id="welcome" class="screen active">
+
 <div class="center">
 
 <div class="logo">☁ CLOUD SUDOKU</div>
+
 <div class="subtitle">YOUR SKY ADVENTURE</div>
 
 <div class="card">
@@ -347,14 +374,18 @@ min="1900" max="2026">
 </div>
 </section>
 
-<!-- КАРТА УРОВНЕЙ -->
+<!-- КАРТА -->
 
 <section id="mapScreen" class="screen">
 
 <div class="header">
+
 <button onclick="showWelcome()">←</button>
+
 <b>☁ CLOUD SUDOKU</b>
+
 <button onclick="showWelcome()">⚙</button>
+
 </div>
 
 <h2 class="map-title">Твоё путешествие ☁</h2>
@@ -368,9 +399,13 @@ min="1900" max="2026">
 <section id="gameScreen" class="screen">
 
 <div class="header">
+
 <button onclick="showMap()">←</button>
+
 <b>УРОВЕНЬ <span id="levelNumber">1</span></b>
+
 <button onclick="showMap()">☁</button>
+
 </div>
 
 <div class="game-card">
@@ -395,14 +430,10 @@ min="1900" max="2026">
 
 <div class="hint-area">
 
-<button onclick="useHint()">
-💡 Подсказка
-</button>
+<button onclick="useHint()">💡 Подсказка</button>
 
-<button class="ad-btn hidden" id="adButton"
-onclick="watchAd()">
-▶ ADS
-</button>
+<button class="ad-btn hidden"
+id="adButton" onclick="watchAd()">▶ ADS</button>
 
 </div>
 
@@ -412,7 +443,7 @@ onclick="watchAd()">
 
 </section>
 
-<!-- ЗАВЕРШЕНИЕ -->
+<!-- РЕЗУЛЬТАТ -->
 
 <section id="resultScreen" class="screen">
 
@@ -442,14 +473,13 @@ onclick="watchAd()">
 
 </div>
 </div>
-
 </section>
 
 <script>
 
-// ======================
+// ==========================
 // СОХРАНЕНИЕ
-// ======================
+// ==========================
 
 let user = JSON.parse(
 localStorage.getItem("cloudUser") || "null"
@@ -477,506 +507,673 @@ let extraHints = 0;
 let seconds = 0;
 let timerInterval = null;
 
-// ======================
+// ==========================
+// МУЗЫКА PHONK
+// ==========================
+
+let audioContext = null;
+let masterGain = null;
+let musicEnabled = false;
+let musicLoop = null;
+let musicStep = 0;
+
+function toggleMusic() {
+
+    if (musicEnabled) {
+        stopMusic();
+    } else {
+        startMusic();
+    }
+
+}
+
+async function startMusic() {
+
+    const Audio = window.AudioContext ||
+                  window.webkitAudioContext;
+
+    if (!Audio) return;
+
+    try {
+
+        if (!audioContext) {
+
+            audioContext = new Audio();
+
+            masterGain = audioContext.createGain();
+
+            masterGain.gain.value = 0.22;
+
+            masterGain.connect(audioContext.destination);
+
+        }
+
+        await audioContext.resume();
+
+        musicEnabled = true;
+
+        document.getElementById("musicButton")
+        .classList.remove("off");
+
+        musicStep = 0;
+
+        playPhonk();
+
+        clearInterval(musicLoop);
+
+        musicLoop = setInterval(playPhonk,125);
+
+    } catch(error) {
+
+        stopMusic();
+
+    }
+
+}
+
+function stopMusic() {
+
+    musicEnabled = false;
+
+    clearInterval(musicLoop);
+
+    musicLoop = null;
+
+    document.getElementById("musicButton")
+    .classList.add("off");
+
+}
+
+function sound(freq,duration,type,volume) {
+
+    if (!musicEnabled) return;
+
+    let osc = audioContext.createOscillator();
+
+    let gain = audioContext.createGain();
+
+    osc.type = type;
+
+    osc.frequency.setValueAtTime(
+        freq,audioContext.currentTime
+    );
+
+    gain.gain.setValueAtTime(
+        volume,audioContext.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        audioContext.currentTime+duration
+    );
+
+    osc.connect(gain);
+
+    gain.connect(masterGain);
+
+    osc.start();
+
+    osc.stop(audioContext.currentTime+duration);
+
+}
+
+function playPhonk() {
+
+    if (!musicEnabled) return;
+
+    let step = musicStep % 16;
+
+    // Бас
+
+    let bass = [
+        55,55,82,55,
+        73,55,98,55,
+        55,55,82,55,
+        73,55,110,55
+    ];
+
+    sound(bass[step],0.22,"sawtooth",0.09);
+
+    // Бочка
+
+    if(step===0 || step===8) {
+        sound(55,0.18,"sine",0.7);
+    }
+
+    // Ударные
+
+    if(step===4 || step===12) {
+        sound(180,0.12,"triangle",0.25);
+    }
+
+    // Мелодия
+
+    let melody = [
+        220,0,261,0,
+        329,0,293,0,
+        220,0,196,0,
+        261,0,329,0
+    ];
+
+    if(melody[step]) {
+        sound(melody[step],0.16,"square",0.035);
+    }
+
+    musicStep++;
+
+}
+
+// ==========================
 // ЭКРАНЫ
-// ======================
+// ==========================
 
 function showScreen(id) {
 
-document.querySelectorAll(".screen")
-.forEach(s => s.classList.remove("active"));
+    document.querySelectorAll(".screen")
+    .forEach(s => s.classList.remove("active"));
 
-document.getElementById(id)
-.classList.add("active");
+    document.getElementById(id)
+    .classList.add("active");
 
 }
 
 function enterGame() {
 
-let name = document.getElementById("name").value.trim();
+    let name = document.getElementById("name").value.trim();
 
-let birth = document.getElementById("birth").value;
+    let birth = Number(document.getElementById("birth").value);
 
-if (!name || !birth ||
-Number(birth) < 1900 ||
-Number(birth) > 2026) {
+    if(!name || !birth ||
+       birth < 1900 || birth > 2026) {
 
-alert("Заполни имя и год рождения");
+        alert("Заполни имя и год рождения");
 
-return;
+        return;
 
-}
+    }
 
-user = {name,birth};
+    user = {name,birth};
 
-localStorage.setItem("cloudUser",
-JSON.stringify(user));
+    localStorage.setItem("cloudUser",
+    JSON.stringify(user));
 
-showMap();
+    showMap();
 
 }
 
 function showWelcome() {
 
-showScreen("welcome");
+    showScreen("welcome");
 
-if (user) {
+    if(user) {
 
-document.getElementById("name").value = user.name;
-document.getElementById("birth").value = user.birth;
+        document.getElementById("name").value=user.name;
 
-}
+        document.getElementById("birth").value=user.birth;
+
+    }
 
 }
 
 function showMap() {
 
-clearInterval(timerInterval);
+    clearInterval(timerInterval);
 
-showScreen("mapScreen");
+    showScreen("mapScreen");
 
-drawMap();
+    drawMap();
 
 }
+
+// ==========================
+// КАРТА УРОВНЕЙ
+// ==========================
 
 function drawMap() {
 
-let map = document.getElementById("levelMap");
+    let map = document.getElementById("levelMap");
 
-map.innerHTML = "";
+    map.innerHTML = "";
 
-for (let i = 1; i <= 1000; i++) {
+    for(let i=1;i<=1000;i++) {
 
-let item = document.createElement("div");
+        let item = document.createElement("div");
 
-item.className = "level-item";
+        item.className="level-item";
 
-let button = document.createElement("button");
+        let button = document.createElement("button");
 
-button.className = "level-cloud";
+        button.className="level-cloud";
 
-button.textContent = i;
+        if(i<unlocked) {
 
-if (i < unlocked) {
+            button.classList.add("done");
 
-button.classList.add("done");
+            button.textContent=i;
 
-} else if (i === unlocked) {
+        } else if(i===unlocked) {
 
-button.classList.add("open");
+            button.classList.add("open");
 
-} else {
+            button.textContent=i;
 
-button.classList.add("locked");
+        } else {
 
-button.textContent = "🔒";
+            button.classList.add("locked");
+
+            button.textContent="🔒";
+
+        }
+
+        button.onclick=()=>{
+
+            if(i>unlocked) return;
+
+            startLevel(i);
+
+        };
+
+        item.appendChild(button);
+
+        if(records[i]) {
+
+            let time=document.createElement("div");
+
+            time.className="level-time";
+
+            time.textContent=records[i];
+
+            item.appendChild(time);
+
+        }
+
+        map.appendChild(item);
+
+    }
+
+    setTimeout(()=>{
+
+        let current=map.children[unlocked-1];
+
+        if(current) {
+
+            map.scrollTop =
+            current.offsetTop-map.offsetTop-150;
+
+        }
+
+    },100);
 
 }
 
-button.onclick = () => {
-
-if (i > unlocked) return;
-
-startLevel(i);
-
-};
-
-item.appendChild(button);
-
-if (records[i]) {
-
-let time = document.createElement("div");
-
-time.className = "level-time";
-
-time.textContent = records[i];
-
-item.appendChild(time);
-
-}
-
-map.appendChild(item);
-
-}
-
-setTimeout(() => {
-
-let current = map.children[unlocked - 1];
-
-if (current) {
-
-map.scrollTop =
-current.offsetTop - map.offsetTop - 150;
-
-}
-
-},100);
-
-}
-
-// ======================
+// ==========================
 // SUDOKU
-// ======================
+// ==========================
 
 function shuffle(arr) {
 
-for (let i = arr.length-1; i > 0; i--) {
+    for(let i=arr.length-1;i>0;i--) {
 
-let j = Math.floor(Math.random()*(i+1));
+        let j=Math.floor(Math.random()*(i+1));
 
-[arr[i],arr[j]] = [arr[j],arr[i]];
+        [arr[i],arr[j]]=[arr[j],arr[i]];
 
-}
+    }
 
-return arr;
+    return arr;
 
 }
 
 function makeSolution() {
 
-let pattern = (r,c) =>
-(r*3+Math.floor(r/3)+c)%9;
+    let pattern=(r,c)=>
+    (r*3+Math.floor(r/3)+c)%9;
 
-let digits = shuffle([1,2,3,4,5,6,7,8,9]);
+    let digits=shuffle([1,2,3,4,5,6,7,8,9]);
 
-let rows = shuffle([0,1,2]).flatMap(g =>
-shuffle([0,1,2]).map(x => g*3+x)
-);
+    let rows=shuffle([0,1,2]).flatMap(g=>
+        shuffle([0,1,2]).map(x=>g*3+x)
+    );
 
-let cols = shuffle([0,1,2]).flatMap(g =>
-shuffle([0,1,2]).map(x => g*3+x)
-);
+    let cols=shuffle([0,1,2]).flatMap(g=>
+        shuffle([0,1,2]).map(x=>g*3+x)
+    );
 
-return rows.map(r =>
-cols.map(c => digits[pattern(r,c)])
-);
+    return rows.map(r=>
+        cols.map(c=>digits[pattern(r,c)])
+    );
 
 }
 
 function startLevel(level) {
 
-currentLevel = level;
+    currentLevel=level;
 
-hints = 3;
-extraHints = 0;
+    hints=3;
 
-seconds = 0;
+    seconds=0;
 
-clearInterval(timerInterval);
+    clearInterval(timerInterval);
 
-solution = makeSolution();
+    solution=makeSolution();
 
-board = solution.map(row => [...row]);
+    board=solution.map(row=>[...row]);
 
-let blanks = Math.min(58, 35 + Math.floor(level/20));
+    let blanks=Math.min(58,35+Math.floor(level/20));
 
-let positions = shuffle(
-Array.from({length:81},(_,i)=>i)
-);
+    let positions=shuffle(
+        Array.from({length:81},(_,i)=>i)
+    );
 
-for (let i=0;i<blanks;i++) {
+    for(let i=0;i<blanks;i++) {
 
-let p = positions[i];
+        let p=positions[i];
 
-board[Math.floor(p/9)][p%9] = 0;
+        board[Math.floor(p/9)][p%9]=0;
+
+    }
+
+    fixed=board.map(row=>row.map(v=>v!==0));
+
+    selected=null;
+
+    showScreen("gameScreen");
+
+    document.getElementById("levelNumber")
+    .textContent=level;
+
+    renderBoard();
+
+    updateHints();
+
+    document.getElementById("timer").textContent="00:00";
+
+    timerInterval=setInterval(()=>{
+
+        seconds++;
+
+        document.getElementById("timer")
+        .textContent=formatTime(seconds);
+
+    },1000);
 
 }
 
-fixed = board.map(row =>
-row.map(v => v !== 0)
-);
-
-selected = null;
-
-showScreen("gameScreen");
-
-document.getElementById("levelNumber")
-.textContent = level;
-
-renderBoard();
-
-updateHints();
-
-timerInterval = setInterval(() => {
-
-seconds++;
-
-document.getElementById("timer")
-.textContent = formatTime(seconds);
-
-},1000);
-
-}
+// ==========================
+// ТАЙМЕР
+// ==========================
 
 function formatTime(sec) {
 
-let min = Math.floor(sec/60);
+    let min=Math.floor(sec/60);
 
-let s = sec%60;
+    let s=sec%60;
 
-return String(min).padStart(2,"0")+
-":"+String(s).padStart(2,"0");
+    return String(min).padStart(2,"0")+
+    ":"+String(s).padStart(2,"0");
 
 }
 
-// ======================
+// ==========================
 // ДОСКА
-// ======================
+// ==========================
 
 function renderBoard() {
 
-let element = document.getElementById("board");
+    let element=document.getElementById("board");
 
-element.innerHTML = "";
+    element.innerHTML="";
 
-for(let r=0;r<9;r++) {
+    for(let r=0;r<9;r++) {
 
-for(let c=0;c<9;c++) {
+        for(let c=0;c<9;c++) {
 
-let cell = document.createElement("div");
+            let cell=document.createElement("div");
 
-cell.className = "cell";
+            cell.className="cell";
 
-if(fixed[r][c]) {
+            if(fixed[r][c]) {
 
-cell.classList.add("fixed");
+                cell.classList.add("fixed");
 
-}
+            }
 
-if(selected && selected.r===r &&
-selected.c===c) {
+            if(selected && selected.r===r &&
+               selected.c===c) {
 
-cell.classList.add("selected");
+                cell.classList.add("selected");
 
-}
+            }
 
-cell.textContent = board[r][c] || "";
+            cell.textContent=board[r][c]||"";
 
-cell.onclick = () => {
+            cell.onclick=()=>{
 
-selected = {r,c};
+                selected={r,c};
 
-renderBoard();
+                renderBoard();
 
-};
+            };
 
-element.appendChild(cell);
+            element.appendChild(cell);
 
-}
+        }
 
-}
+    }
 
-renderNumbers();
+    renderNumbers();
 
 }
 
 function renderNumbers() {
 
-let element = document.getElementById("numbers");
+    let element=document.getElementById("numbers");
 
-element.innerHTML = "";
+    element.innerHTML="";
 
-for(let n=1;n<=9;n++) {
+    for(let n=1;n<=9;n++) {
 
-let btn = document.createElement("button");
+        let btn=document.createElement("button");
 
-btn.className = "number";
+        btn.className="number";
 
-btn.textContent = n;
+        btn.textContent=n;
 
-btn.onclick = () => enterNumber(n);
+        btn.onclick=()=>enterNumber(n);
 
-element.appendChild(btn);
+        element.appendChild(btn);
+
+    }
 
 }
 
-}
+// ==========================
+// ВВОД ЦИФР
+// ==========================
 
 function enterNumber(n) {
 
-if(!selected) {
+    if(!selected) {
 
-showMessage("Выбери клетку");
+        showMessage("Сначала выбери клетку");
 
-return;
+        return;
+
+    }
+
+    let {r,c}=selected;
+
+    if(fixed[r][c]) return;
+
+    board[r][c]=n;
+
+    renderBoard();
+
+    checkCompletion();
 
 }
 
-let {r,c} = selected;
-
-if(fixed[r][c]) return;
-
-board[r][c] = n;
-
-renderBoard();
-
-checkCompletion();
-
-}
-
-// ======================
+// ==========================
 // ПОДСКАЗКИ
-// ======================
+// ==========================
 
 function updateHints() {
 
-document.getElementById("hintCount")
-.textContent = hints;
+    document.getElementById("hintCount")
+    .textContent=hints;
 
-document.getElementById("adButton")
-.classList.toggle("hidden", hints > 0);
+    document.getElementById("adButton")
+    .classList.toggle("hidden",hints>0);
 
 }
 
 function useHint() {
 
-if(hints <= 0) {
+    if(hints<=0) {
 
-showMessage("Подсказки закончились");
+        showMessage("Подсказки закончились!");
 
-return;
+        return;
 
-}
+    }
 
-giveOneHint();
+    giveOneHint();
 
-hints--;
+    hints--;
 
-updateHints();
+    updateHints();
 
 }
 
 function giveOneHint() {
 
-if(!selected) {
+    if(selected &&
+       !fixed[selected.r][selected.c] &&
+       board[selected.r][selected.c]===0) {
 
-for(let r=0;r<9;r++) {
+        let {r,c}=selected;
 
-for(let c=0;c<9;c++) {
+        board[r][c]=solution[r][c];
 
-if(!fixed[r][c] && board[r][c]===0) {
+        renderBoard();
 
-selected={r,c};
+        checkCompletion();
 
-break;
+        return true;
+
+    }
+
+    selected=null;
+
+    for(let r=0;r<9;r++) {
+
+        for(let c=0;c<9;c++) {
+
+            if(!fixed[r][c] && board[r][c]===0) {
+
+                board[r][c]=solution[r][c];
+
+                selected={r,c};
+
+                renderBoard();
+
+                checkCompletion();
+
+                return true;
+
+            }
+
+        }
+
+    }
+
+    showMessage("Все клетки заполнены!");
+
+    return false;
 
 }
 
-}
-
-if(selected) break;
-
-}
-
-}
-
-if(!selected) return;
-
-let {r,c}=selected;
-
-if(fixed[r][c] || board[r][c]!==0) {
-
-selected=null;
-
-return giveOneHint();
-
-}
-
-board[r][c]=solution[r][c];
-
-renderBoard();
-
-checkCompletion();
-
-}
-
-// ======================
+// ==========================
 // РЕКЛАМА
-// ======================
+// ==========================
 
 function watchAd() {
 
-showMessage(
-"Реклама ещё не подключена. Нужна интеграция AdMob."
-);
-
-// После подключения настоящей рекламы
-// её успешный просмотр должен вызывать:
-// grantRewardedHint();
+    showMessage("Рекламная система пока не подключена.");
 
 }
 
 function grantRewardedHint() {
 
-giveOneHint();
+    if(giveOneHint()) {
 
-updateHints();
+        showMessage("Получена одна подсказка!");
+
+    }
 
 }
 
-// ======================
-// ПРОХОЖДЕНИЕ
-// ======================
+// ==========================
+// ЗАВЕРШЕНИЕ
+// ==========================
 
 function checkCompletion() {
 
-let complete = true;
+    for(let r=0;r<9;r++) {
 
-for(let r=0;r<9;r++) {
+        for(let c=0;c<9;c++) {
 
-for(let c=0;c<9;c++) {
+            if(board[r][c]!==solution[r][c]) {
 
-if(board[r][c]!==solution[r][c]) {
+                return;
 
-complete=false;
+            }
 
-}
+        }
 
-}
+    }
 
-}
-
-if(complete) finishLevel();
+    finishLevel();
 
 }
 
 function finishLevel() {
 
-clearInterval(timerInterval);
+    clearInterval(timerInterval);
 
-let time = formatTime(seconds);
+    let time=formatTime(seconds);
 
-records[currentLevel] = time;
+    records[currentLevel]=time;
 
-if(currentLevel >= unlocked) {
+    if(currentLevel>=unlocked) {
 
-unlocked = currentLevel+1;
+        unlocked=currentLevel+1;
 
-}
+    }
 
-localStorage.setItem("cloudRecords",
-JSON.stringify(records));
+    localStorage.setItem("cloudRecords",
+    JSON.stringify(records));
 
-localStorage.setItem("cloudUnlocked",
-unlocked);
+    localStorage.setItem("cloudUnlocked",
+    unlocked);
 
-document.getElementById("resultTime")
-.textContent=time;
+    document.getElementById("resultTime")
+    .textContent=time;
 
-showScreen("resultScreen");
+    showScreen("resultScreen");
 
 }
 
 function nextLevel() {
 
-startLevel(unlocked);
+    startLevel(unlocked);
 
 }
 
 function showMessage(text) {
 
-document.getElementById("message")
-.textContent=text;
+    document.getElementById("message")
+    .textContent=text;
 
 }
 
