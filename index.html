@@ -97,17 +97,20 @@ input {
     border: 1px solid #b9e2f8;
 }
 
+/* МУЗЫКА СЛЕВА */
+
 #musicButton {
     position: fixed;
     top: 16px;
-    right: 16px;
+    left: 16px;
+    right: auto;
     z-index: 9999;
-    width: 49px;
-    height: 49px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     background: linear-gradient(145deg,#ffffff,#79cfff);
     color: #247db6;
-    font-size: 25px;
+    font-size: 24px;
     box-shadow: 0 5px 18px #398bc255;
 }
 
@@ -124,8 +127,24 @@ input {
     background: #ff5555;
     border-radius: 5px;
     transform: rotate(-45deg);
-    left: 9px;
-    top: 23px;
+    left: 8px;
+    top: 21px;
+}
+
+/* НАСТРОЙКИ СПРАВА */
+
+#settingsButton {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 9999;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(145deg,#ffffff,#79cfff);
+    color: #247db6;
+    font-size: 22px;
+    box-shadow: 0 5px 18px #398bc255;
 }
 
 .header {
@@ -344,7 +363,8 @@ input {
 <button id="musicButton" class="off"
 onclick="toggleMusic()">♫</button>
 
-<!-- ПРИВЕТСТВИЕ -->
+<button id="settingsButton"
+onclick="openSettings()">⚙</button>
 
 <section id="welcome" class="screen active">
 
@@ -374,8 +394,6 @@ min="1900" max="2026">
 </div>
 </section>
 
-<!-- КАРТА -->
-
 <section id="mapScreen" class="screen">
 
 <div class="header">
@@ -384,7 +402,7 @@ min="1900" max="2026">
 
 <b>☁ CLOUD SUDOKU</b>
 
-<button onclick="showWelcome()">⚙</button>
+<button onclick="showWelcome()">⌂</button>
 
 </div>
 
@@ -393,8 +411,6 @@ min="1900" max="2026">
 <div class="cloud-map" id="levelMap"></div>
 
 </section>
-
-<!-- ИГРА -->
 
 <section id="gameScreen" class="screen">
 
@@ -443,8 +459,6 @@ id="adButton" onclick="watchAd()">▶ ADS</button>
 
 </section>
 
-<!-- РЕЗУЛЬТАТ -->
-
 <section id="resultScreen" class="screen">
 
 <div class="center">
@@ -475,11 +489,33 @@ id="adButton" onclick="watchAd()">▶ ADS</button>
 </div>
 </section>
 
-<script>
+<section id="settingsScreen" class="screen">
 
-// ==========================
-// СОХРАНЕНИЕ
-// ==========================
+<div class="center">
+
+<div class="logo">⚙ Настройки</div>
+
+<div class="card">
+
+<h2>Настройки игры</h2>
+
+<button class="secondary-btn" onclick="toggleMusic()">
+♫ Включить / выключить музыку
+</button>
+
+<button class="secondary-btn" onclick="resetProgress()">
+Сбросить прогресс
+</button>
+
+<button class="main-btn" onclick="backFromSettings()">
+Сохранить и вернуться
+</button>
+
+</div>
+</div>
+</section>
+
+<script>
 
 let user = JSON.parse(
 localStorage.getItem("cloudUser") || "null"
@@ -494,22 +530,13 @@ localStorage.getItem("cloudRecords") || "{}"
 );
 
 let currentLevel = 1;
-
 let board = [];
 let solution = [];
 let fixed = [];
-
 let selected = null;
-
 let hints = 3;
-let extraHints = 0;
-
 let seconds = 0;
 let timerInterval = null;
-
-// ==========================
-// МУЗЫКА PHONK
-// ==========================
 
 let audioContext = null;
 let masterGain = null;
@@ -623,8 +650,6 @@ function playPhonk() {
 
     let step = musicStep % 16;
 
-    // Бас
-
     let bass = [
         55,55,82,55,
         73,55,98,55,
@@ -634,19 +659,13 @@ function playPhonk() {
 
     sound(bass[step],0.22,"sawtooth",0.09);
 
-    // Бочка
-
     if(step===0 || step===8) {
         sound(55,0.18,"sine",0.7);
     }
 
-    // Ударные
-
     if(step===4 || step===12) {
         sound(180,0.12,"triangle",0.25);
     }
-
-    // Мелодия
 
     let melody = [
         220,0,261,0,
@@ -663,9 +682,37 @@ function playPhonk() {
 
 }
 
-// ==========================
-// ЭКРАНЫ
-// ==========================
+function openSettings() {
+
+    showScreen("settingsScreen");
+
+}
+
+function backFromSettings() {
+
+    if(user) {
+        showMap();
+    } else {
+        showWelcome();
+    }
+
+}
+
+function resetProgress() {
+
+    if(confirm("Ты действительно хочешь сбросить весь прогресс?")) {
+
+        localStorage.removeItem("cloudUnlocked");
+        localStorage.removeItem("cloudRecords");
+
+        unlocked=1;
+        records={};
+
+        showMap();
+
+    }
+
+}
 
 function showScreen(id) {
 
@@ -724,10 +771,6 @@ function showMap() {
     drawMap();
 
 }
-
-// ==========================
-// КАРТА УРОВНЕЙ
-// ==========================
 
 function drawMap() {
 
@@ -805,10 +848,6 @@ function drawMap() {
     },100);
 
 }
-
-// ==========================
-// SUDOKU
-// ==========================
 
 function shuffle(arr) {
 
@@ -899,10 +938,6 @@ function startLevel(level) {
 
 }
 
-// ==========================
-// ТАЙМЕР
-// ==========================
-
 function formatTime(sec) {
 
     let min=Math.floor(sec/60);
@@ -913,10 +948,6 @@ function formatTime(sec) {
     ":"+String(s).padStart(2,"0");
 
 }
-
-// ==========================
-// ДОСКА
-// ==========================
 
 function renderBoard() {
 
@@ -987,10 +1018,6 @@ function renderNumbers() {
 
 }
 
-// ==========================
-// ВВОД ЦИФР
-// ==========================
-
 function enterNumber(n) {
 
     if(!selected) {
@@ -1013,10 +1040,6 @@ function enterNumber(n) {
 
 }
 
-// ==========================
-// ПОДСКАЗКИ
-// ==========================
-
 function updateHints() {
 
     document.getElementById("hintCount")
@@ -1037,11 +1060,13 @@ function useHint() {
 
     }
 
-    giveOneHint();
+    if(giveOneHint()) {
 
-    hints--;
+        hints--;
 
-    updateHints();
+        updateHints();
+
+    }
 
 }
 
@@ -1093,10 +1118,6 @@ function giveOneHint() {
 
 }
 
-// ==========================
-// РЕКЛАМА
-// ==========================
-
 function watchAd() {
 
     showMessage("Рекламная система пока не подключена.");
@@ -1112,10 +1133,6 @@ function grantRewardedHint() {
     }
 
 }
-
-// ==========================
-// ЗАВЕРШЕНИЕ
-// ==========================
 
 function checkCompletion() {
 
@@ -1174,6 +1191,14 @@ function showMessage(text) {
 
     document.getElementById("message")
     .textContent=text;
+
+}
+
+if(user) {
+
+    document.getElementById("name").value=user.name;
+
+    document.getElementById("birth").value=user.birth;
 
 }
 
