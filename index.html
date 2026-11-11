@@ -2,20 +2,19 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#91c9f5">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
 <title>Cloud Sudoku</title>
 
-<!-- ИКОНКА ПРИЛОЖЕНИЯ -->
-<link rel="icon" type="image/png" sizes="512x512" href="./icon.png?v=4">
-<link rel="shortcut icon" href="./icon.png?v=4">
-<link rel="apple-touch-icon" sizes="180x180" href="./icon.png?v=4">
+<link rel="icon" type="image/png" sizes="512x512" href="./icon.png?v=5">
+<link rel="shortcut icon" href="./icon.png?v=5">
+<link rel="apple-touch-icon" sizes="180x180" href="./icon.png?v=5">
 
 <style>
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 html, body {
@@ -23,875 +22,1391 @@ html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    font-family: Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #34456f;
 }
 
 body {
-    background: linear-gradient(160deg, #c9edff, #91c9f5, #e8f7ff);
-    color: #24496d;
+    background:
+        radial-gradient(circle at 20% 15%, #ffffff 0, transparent 28%),
+        linear-gradient(160deg, #dff4ff, #c9e2ff 50%, #e9ddff);
+}
+
+button, input {
+    font: inherit;
+}
+
+button {
+    border: none;
+    cursor: pointer;
 }
 
 .screen {
     display: none;
     width: 100%;
-    height: 100dvh;
-    overflow: hidden;
-    flex-direction: column;
+    height: 100%;
 }
 
 .screen.active {
     display: flex;
+    flex-direction: column;
 }
 
-.topbar {
-    position: relative;
-    z-index: 100;
+#header {
+    height: 66px;
+    min-height: 66px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 7px;
-    min-height: 58px;
-    padding: 7px 12px;
-    flex-shrink: 0;
-    background: #c9edff;
-    box-shadow: 0 4px 12px #477da622;
+    padding: 0 15px;
+    background: rgba(255,255,255,.48);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255,255,255,.7);
+    z-index: 5;
 }
 
-.topbar button {
-    border: 0;
-    border-radius: 14px;
-    background: white;
-    color: #35658e;
-    font-size: 20px;
-    width: 43px;
+.header-btn {
+    width: 42px;
     height: 42px;
-    flex-shrink: 0;
-    box-shadow: 0 3px 10px #5a9ac433;
-}
-
-.logo {
-    font-size: 16px;
-    font-weight: 900;
-    color: #3975a7;
-    white-space: nowrap;
-    text-align: center;
-}
-
-.music-off {
-    position: relative;
-}
-
-.music-off::after {
-    content: "";
-    position: absolute;
-    width: 29px;
-    height: 3px;
-    background: red;
-    transform: rotate(-45deg);
-    left: 7px;
-    top: 19px;
-    border-radius: 5px;
-}
-
-h1, h2, p {
-    text-align: center;
-}
-
-.center {
-    margin: auto;
-    width: 100%;
-    max-width: 420px;
-    text-align: center;
-    padding: 15px;
-}
-
-.card {
-    background: #ffffffd9;
-    border-radius: 25px;
-    padding: 20px;
-    box-shadow: 0 8px 25px #4d91bd30;
-}
-
-input {
-    width: 100%;
-    padding: 14px;
-    border: 2px solid #b9ddf5;
-    border-radius: 14px;
-    font-size: 16px;
-    margin: 8px 0;
-    outline: none;
-}
-
-.main-btn {
-    border: none;
-    border-radius: 17px;
-    padding: 14px 22px;
-    width: 100%;
-    background: linear-gradient(120deg, #58a9e7, #79c5f5);
-    color: white;
-    font-size: 17px;
-    font-weight: bold;
-    margin-top: 12px;
-    box-shadow: 0 5px 12px #4d91bd40;
-}
-
-.secondary-btn {
-    border: none;
     border-radius: 15px;
-    padding: 12px;
-    background: white;
-    color: #3975a7;
-    font-size: 15px;
-    font-weight: bold;
+    background: rgba(255,255,255,.75);
+    color: #526b9f;
+    font-size: 21px;
+    box-shadow: 0 4px 12px #789ac522;
 }
 
-.map-heading {
-    flex-shrink: 0;
-    padding: 5px 12px;
+.header-title {
+    font-weight: 900;
+    letter-spacing: 2px;
+    font-size: 16px;
+    color: #536caa;
 }
 
-.cloud-map {
+.header-side {
+    display: flex;
+    gap: 8px;
+}
+
+.content {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+    padding: 20px 16px 30px;
     overscroll-behavior: contain;
-    padding: 15px 12px 30px;
 }
 
-.cloud-list {
+.card {
+    background: rgba(255,255,255,.75);
+    border: 1px solid rgba(255,255,255,.9);
+    border-radius: 25px;
+    padding: 22px;
+    box-shadow: 0 10px 30px rgba(91,125,180,.12);
+}
+
+h1, h2, p {
+    margin-top: 0;
+}
+
+.primary {
+    width: 100%;
+    padding: 16px;
+    border-radius: 18px;
+    color: white;
+    font-weight: 800;
+    font-size: 16px;
+    background: linear-gradient(135deg, #779ce9, #a28be8);
+    box-shadow: 0 7px 18px #809de955;
+}
+
+.secondary {
+    padding: 13px 18px;
+    border-radius: 15px;
+    background: white;
+    color: #6179ae;
+    font-weight: 700;
+}
+
+/* WELCOME */
+
+#welcome {
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+}
+
+.welcome-card {
+    width: 100%;
+    max-width: 390px;
+    text-align: center;
+}
+
+.logo-cloud {
+    font-size: 75px;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 8px 10px #829ac544);
+}
+
+.welcome-card h1 {
+    color: #5876b8;
+    font-size: 30px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.welcome-card p {
+    color: #7b8eb5;
+    line-height: 1.5;
+}
+
+.name-input {
+    width: 100%;
+    padding: 16px;
+    border-radius: 16px;
+    border: 2px solid #dce8ff;
+    outline: none;
+    background: white;
+    color: #43577f;
+    margin: 15px 0;
+    text-align: center;
+    font-size: 16px;
+}
+
+/* MAP */
+
+.map-heading {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.map-heading h2 {
+    color: #5876b8;
+    margin-bottom: 5px;
+}
+
+.map-heading p {
+    color: #8294b8;
+    font-size: 14px;
+}
+
+.player-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 15px 18px;
+}
+
+.avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 15px;
+    background: #e7efff;
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+}
+
+.player-name {
+    font-weight: 800;
+    color: #526da9;
+}
+
+.player-progress {
+    font-size: 12px;
+    color: #8799bb;
+    margin-top: 4px;
+}
+
+.cloud-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
+    gap: 15px;
+    padding: 8px 2px 25px;
 }
 
-.cloud {
-    border: none;
-    border-radius: 50%;
-    height: 90px;
-    background: white;
-    color: #3984bb;
-    font-size: 23px;
-    font-weight: bold;
-    box-shadow: 0 6px 15px #4d91bd35;
+.level-cloud {
+    min-height: 100px;
+    border-radius: 25px;
+    background: linear-gradient(145deg, #ffffff, #e8f2ff);
+    box-shadow: 0 7px 16px #819cc52c;
+    color: #6684c0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border: 1px solid white;
 }
 
-.cloud.locked {
-    opacity: .45;
-    filter: grayscale(.5);
+.level-cloud .cloud-icon {
+    font-size: 35px;
+    line-height: 1.2;
 }
 
-.cloud small {
-    display: block;
-    font-size: 10px;
+.level-cloud .level-number {
+    font-size: 13px;
+    font-weight: 900;
     margin-top: 5px;
+}
+
+.level-cloud.locked {
+    opacity: .48;
+    filter: grayscale(.35);
+}
+
+.level-cloud.locked .cloud-icon {
+    font-size: 27px;
+}
+
+.level-cloud.completed {
+    background: linear-gradient(145deg, #fff, #e5f8f2);
+    color: #5aaf9d;
+}
+
+.level-time {
+    font-size: 10px;
+    margin-top: 4px;
+    color: #7ba99f;
+}
+
+/* GAME */
+
+#game {
+    overflow: hidden;
 }
 
 .game-scroll {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+    padding: 12px 12px 25px;
     overscroll-behavior: contain;
-    padding: 8px 12px 25px;
 }
 
-#gameInfo {
+.game-info {
     display: flex;
     justify-content: space-between;
-    padding: 10px 4px;
-    font-weight: bold;
+    align-items: center;
+    padding: 8px 4px 13px;
+    color: #7185b2;
+    font-size: 13px;
+    font-weight: 800;
 }
 
-.board-card {
-    margin: 12px auto 0;
-    width: min(100%, 370px);
-    background: white;
-    padding: 7px;
-    border-radius: 17px;
-    box-shadow: 0 6px 20px #477da633;
+.game-card {
+    padding: 12px;
+    border-radius: 22px;
+    background: rgba(255,255,255,.78);
+    box-shadow: 0 8px 25px #718dbb20;
+    max-width: 440px;
+    margin: 0 auto;
 }
 
-#board {
-    display: grid;
-    grid-template-columns: repeat(9, 1fr);
+.board {
     width: 100%;
     aspect-ratio: 1;
-    border: 2px solid #4b85b1;
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+    border: 2px solid #718bc0;
+    border-radius: 7px;
+    overflow: hidden;
+    background: white;
 }
 
 .cell {
     min-width: 0;
-    border: 0;
-    border-right: 1px solid #c5d9e9;
-    border-bottom: 1px solid #c5d9e9;
-    background: white;
-    color: #286b9e;
-    font-size: clamp(15px, 4.8vw, 21px);
-    font-weight: bold;
+    min-height: 0;
     padding: 0;
-    text-align: center;
-    outline: none;
+    border-right: 1px solid #d5def0;
+    border-bottom: 1px solid #d5def0;
+    background: #fff;
+    color: #526fae;
+    font-size: clamp(13px, 4vw, 20px);
+    font-weight: 700;
+    display: grid;
+    place-items: center;
     border-radius: 0;
 }
 
 .cell:nth-child(3n) {
-    border-right: 2px solid #4b85b1;
+    border-right: 2px solid #8298c4;
 }
 
 .cell:nth-child(9n) {
-    border-right: 0;
+    border-right: none;
 }
 
 .cell:nth-child(n+19):nth-child(-n+27),
 .cell:nth-child(n+46):nth-child(-n+54) {
-    border-bottom: 2px solid #4b85b1;
+    border-bottom: 2px solid #8298c4;
 }
 
-.cell.fixed {
-    background: #eaf6ff;
-    color: #24496d;
+.cell.given {
+    color: #354c7b;
+    background: #f1f5ff;
 }
 
 .cell.selected {
-    background: #cceaff;
+    background: #dce9ff;
+    box-shadow: inset 0 0 0 2px #7899df;
+}
+
+.cell.related {
+    background: #f0f5ff;
+}
+
+.cell.same {
+    background: #dce8ff;
 }
 
 .cell.wrong {
-    background: #ffd6d6;
-    color: #e32323;
+    background: #ffdada;
+    color: #d34b59;
+}
+
+.cell.hinted {
+    color: #54a993;
+    background: #e6fff5;
 }
 
 .number-pad {
     display: grid;
     grid-template-columns: repeat(9, 1fr);
     gap: 5px;
-    width: min(100%, 370px);
-    margin: 12px auto;
+    margin: 15px auto 10px;
+    max-width: 440px;
 }
 
-.number-pad button {
-    border: none;
-    border-radius: 10px;
-    background: white;
-    color: #3478a9;
-    font-size: 18px;
-    font-weight: bold;
-    padding: 11px 0;
+.number-btn {
+    aspect-ratio: 1;
+    border-radius: 12px;
+    background: rgba(255,255,255,.85);
+    color: #617eb9;
+    font-size: 17px;
+    font-weight: 900;
+    box-shadow: 0 3px 9px #8098bf20;
 }
 
-.actions {
+.number-btn:active {
+    background: #dce8ff;
+}
+
+.number-btn:disabled {
+    opacity: .3;
+}
+
+.game-actions {
     display: flex;
-    justify-content: center;
     gap: 9px;
-    flex-wrap: wrap;
-    margin: 8px auto;
+    max-width: 440px;
+    margin: 10px auto;
 }
 
-.actions button {
-    border: none;
-    border-radius: 13px;
-    padding: 11px 15px;
-    background: white;
-    color: #3478a9;
-    font-weight: bold;
+.game-actions button {
+    flex: 1;
+    padding: 13px 8px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.85);
+    color: #617bb2;
+    font-size: 13px;
+    font-weight: 800;
 }
 
-#message {
-    text-align: center;
-    font-size: 14px;
-    min-height: 22px;
-    margin: 5px;
-    color: #d34b4b;
-}
-
-#nextButton {
+.next-button {
     display: none;
-    max-width: 370px;
-    margin: 10px auto 15px;
+    max-width: 440px;
+    margin: 12px auto 5px;
 }
 
-#successScreen {
-    background: linear-gradient(160deg, #d7f2ff, #a9d9ff, #f3fbff);
-    justify-content: center;
-    align-items: center;
+.hint-count {
+    color: #8799bd;
     text-align: center;
-    padding: 15px;
+    font-size: 12px;
+    margin: 5px 0;
 }
 
-.success-card {
-    background: white;
-    padding: 30px 20px;
-    border-radius: 28px;
-    width: 100%;
-    max-width: 370px;
-    box-shadow: 0 10px 30px #4d91bd35;
-    animation: pop .5s ease;
-}
+/* SETTINGS */
 
-@keyframes pop {
-    0% { transform: scale(.7); opacity: 0; }
-    70% { transform: scale(1.06); }
-    100% { transform: scale(1); }
-}
-
-.cloud-emoji {
-    font-size: 60px;
-}
-
-.settings-content {
-    margin: auto;
-    width: 100%;
-    max-width: 400px;
-    padding: 12px;
+.settings-card {
+    max-width: 420px;
+    margin: 15px auto;
 }
 
 .setting-row {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid #e7edfa;
+    color: #6279aa;
+    font-weight: 700;
+}
+
+.setting-row:last-child {
+    border: none;
+}
+
+.switch {
+    width: 48px;
+    height: 28px;
+    border-radius: 20px;
+    background: #b9c7e2;
+    position: relative;
+}
+
+.switch::after {
+    content: "";
+    position: absolute;
+    width: 22px;
+    height: 22px;
     background: white;
-    padding: 16px;
-    border-radius: 15px;
-    margin: 10px 0;
+    border-radius: 50%;
+    top: 3px;
+    left: 3px;
+    transition: .2s;
+}
+
+.switch.on {
+    background: #82a5e9;
+}
+
+.switch.on::after {
+    left: 23px;
+}
+
+/* POPUP */
+
+.overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background: rgba(53,70,110,.35);
+    backdrop-filter: blur(7px);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.overlay.show {
+    display: flex;
+}
+
+.popup {
+    width: 100%;
+    max-width: 340px;
+    text-align: center;
+    background: white;
+    border-radius: 28px;
+    padding: 27px 22px;
+    box-shadow: 0 15px 45px #526c9c44;
+}
+
+.popup-icon {
+    font-size: 55px;
+    margin-bottom: 10px;
+}
+
+.popup h2 {
+    color: #5876b8;
+}
+
+.popup p {
+    color: #8292b4;
+    line-height: 1.5;
+}
+
+.popup .primary {
+    margin-top: 10px;
+}
+
+.small-note {
+    color: #94a2bf;
+    text-align: center;
+    font-size: 11px;
+    margin-top: 18px;
+}
+
+@media (max-width: 360px) {
+    .cloud-grid {
+        gap: 10px;
+    }
+    .level-cloud {
+        min-height: 88px;
+    }
+    .game-scroll {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
 }
 </style>
 </head>
 
 <body>
 
+<!-- WELCOME -->
 <section id="welcome" class="screen active">
-    <div class="center card">
-        <div class="cloud-emoji">☁️</div>
-        <h1>Cloud Sudoku</h1>
-        <p>Добро пожаловать в мир облаков!</p>
-        <input id="playerName" placeholder="Твоё имя">
-        <button class="main-btn" onclick="startApp()">Начать игру</button>
-    </div>
-</section>
+    <div class="welcome-card card">
+        <div class="logo-cloud">☁️</div>
+        <h1>CLOUD SUDOKU</h1>
+        <p>Твоя маленькая вселенная логики и спокойствия</p>
 
-<section id="map" class="screen">
-    <header class="topbar">
-        <button onclick="showScreen('welcome')">←</button>
-        <button id="mapMusic" onclick="toggleMusic()">♫</button>
-        <div class="logo">☁ CLOUD SUDOKU</div>
-        <button onclick="openSettings()">⚙</button>
-    </header>
+        <input id="nameInput" class="name-input"
+               type="text" maxlength="18"
+               placeholder="Введи своё имя">
 
-    <div class="map-heading">
-        <h2 id="hello">Карта уровней</h2>
-        <p>Проходи уровни и открывай новые облака ☁️</p>
-    </div>
-
-    <div class="cloud-map">
-        <div id="cloudList" class="cloud-list"></div>
-    </div>
-</section>
-
-<section id="game" class="screen">
-    <header class="topbar">
-        <button onclick="showScreen('map')">←</button>
-        <button id="gameMusic" onclick="toggleMusic()">♫</button>
-        <div class="logo">☁ CLOUD SUDOKU</div>
-        <button onclick="openSettings()">⚙</button>
-    </header>
-
-    <div class="game-scroll">
-        <div id="gameInfo">
-            <span id="levelText">Уровень 1</span>
-            <span id="timer">00:00</span>
-        </div>
-
-        <div class="board-card">
-            <div id="board"></div>
-        </div>
-
-        <div class="number-pad" id="numberPad"></div>
-
-        <div class="actions">
-            <button onclick="eraseCell()">⌫ Стереть</button>
-            <button onclick="giveHint()">💡 Подсказка</button>
-        </div>
-
-        <div id="message"></div>
-
-        <button id="nextButton" class="main-btn" onclick="checkBoard()">
-            Следующее →
+        <button class="primary" onclick="startApp()">
+            Начать игру ✨
         </button>
     </div>
 </section>
 
-<section id="successScreen" class="screen">
-    <div class="success-card">
-        <div class="cloud-emoji">🎉☁️</div>
-        <h1>Поздравляем!</h1>
-        <p id="successText">Ты прошла уровень!</p>
-        <h2 id="successTime">00:00</h2>
-        <p>Твоё время прохождения ❤️</p>
-        <p>Сейчас откроется следующий уровень...</p>
-    </div>
-</section>
+<!-- MAP -->
+<section id="map" class="screen">
+    <header id="header">
+        <div class="header-side">
+            <button class="header-btn" onclick="showScreen('map')">⌂</button>
+        </div>
 
-<section id="settings" class="screen">
-    <header class="topbar">
-        <button onclick="backFromSettings()">←</button>
-        <button id="settingsMusic" onclick="toggleMusic()">♫</button>
-        <div class="logo">☁ CLOUD SUDOKU</div>
-        <div style="width:43px"></div>
+        <div class="header-title">CLOUD SUDOKU</div>
+
+        <div class="header-side">
+            <button class="header-btn" id="musicMap" onclick="toggleMusic()">♫</button>
+            <button class="header-btn" onclick="showScreen('settings')">⚙</button>
+        </div>
     </header>
 
-    <div class="settings-content">
-        <div class="card">
-            <h2>Настройки ⚙</h2>
-
-            <div class="setting-row">
-                <span>Музыка</span>
-                <button class="secondary-btn" onclick="toggleMusic()">
-                    Включить / Выключить
-                </button>
-            </div>
-
-            <div class="setting-row">
-                <span>Игрок</span>
-                <strong id="settingsName"></strong>
-            </div>
-
-            <button class="main-btn" onclick="backFromSettings()">
-                Вернуться в игру
-            </button>
+    <main class="content">
+        <div class="map-heading">
+            <h2>Твоя карта облаков ☁️</h2>
+            <p>Проходи уровни и открывай новые облака</p>
         </div>
-    </div>
+
+        <div class="player-card card">
+            <div class="avatar">🌸</div>
+            <div>
+                <div class="player-name" id="playerName">Игрок</div>
+                <div class="player-progress" id="progressText">Уровень 1</div>
+            </div>
+        </div>
+
+        <div class="cloud-grid" id="cloudGrid"></div>
+        <div class="small-note">Каждое новое облако — новое испытание ✨</div>
+    </main>
 </section>
 
-<script>
-const $ = id => document.getElementById(id);
+<!-- GAME -->
+<section id="game" class="screen">
+    <header id="header">
+        <div class="header-side">
+            <button class="header-btn" onclick="backToMap()">‹</button>
+        </div>
 
-let player = localStorage.getItem("cloudPlayer") || "";
-let currentLevel = Number(localStorage.getItem("cloudLevel")) || 1;
-let selectedCell = null;
+        <div class="header-title">CLOUD SUDOKU</div>
+
+        <div class="header-side">
+            <button class="header-btn" id="musicGame" onclick="toggleMusic()">♫</button>
+            <button class="header-btn" onclick="showScreen('settings')">⚙</button>
+        </div>
+    </header>
+
+    <main class="game-scroll">
+        <div class="game-info">
+            <span id="levelLabel">УРОВЕНЬ 1</span>
+            <span id="timerLabel">00:00</span>
+        </div>
+
+        <div class="game-card">
+            <div class="board" id="board"></div>
+        </div>
+
+        <div class="number-pad" id="numberPad"></div>
+
+        <div class="game-actions">
+            <button onclick="eraseCell()">⌫ Стереть</button>
+            <button onclick="useHint()">💡 Подсказка</button>
+        </div>
+
+        <div class="hint-count" id="hintCount">Подсказок осталось: 3</div>
+
+        <button id="nextButton" class="primary next-button" onclick="checkBoard()">
+            Следующее →
+        </button>
+    </main>
+</section>
+
+<!-- SETTINGS -->
+<section id="settings" class="screen">
+    <header id="header">
+        <button class="header-btn" onclick="returnFromSettings()">‹</button>
+        <div class="header-title">НАСТРОЙКИ</div>
+        <div style="width:42px"></div>
+    </header>
+
+    <main class="content">
+        <div class="settings-card card">
+            <h2 style="text-align:center;color:#5876b8">Настройки ⚙️</h2>
+
+            <div class="setting-row">
+                <span>🎵 Музыка</span>
+                <button id="musicSwitch" class="switch on" onclick="toggleMusic()"></button>
+            </div>
+
+            <div class="setting-row">
+                <span>🔊 Звуковые эффекты</span>
+                <button id="soundSwitch" class="switch on" onclick="toggleSound()"></button>
+            </div>
+
+            <div class="setting-row">
+                <span>👤 Игрок</span>
+                <span id="settingsName">Игрок</span>
+            </div>
+        </div>
+
+        <p class="small-note">
+            Твой прогресс сохраняется на этом устройстве.
+        </p>
+    </main>
+</section>
+
+<!-- POPUP -->
+<div class="overlay" id="popupOverlay">
+    <div class="popup">
+        <div class="popup-icon" id="popupIcon">🎉</div>
+        <h2 id="popupTitle">Отлично!</h2>
+        <p id="popupText">Ты прошла уровень!</p>
+        <button class="primary" id="popupButton" onclick="closePopup()">
+            Продолжить
+        </button>
+    </div>
+</div>
+
+<script>
+/* STORAGE */
+
+const STORAGE_KEY = "cloudSudokuSaveV5";
+
+let saved = {};
+
+try {
+    saved = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+} catch(e) {
+    saved = {};
+}
+
+let player = saved.player || "";
+let unlockedLevel = Math.max(1, saved.unlockedLevel || 1);
+let completedTimes = saved.completedTimes || {};
+
+let currentLevel = 1;
 let puzzle = [];
 let solution = [];
-let fixed = [];
+let selectedCell = null;
+let hintsLeft = 3;
 let wrongCells = [];
-let startTime = 0;
+let hintedCells = [];
+
+let startedAt = 0;
+let elapsedBefore = 0;
 let timerInterval = null;
-let hints = 3;
-let musicOn = false;
-let audioContext = null;
-let musicTimer = null;
-let settingsReturn = "map";
-let completed = false;
+let gameStarted = false;
+let previousScreen = "map";
+
+let musicEnabled = saved.musicEnabled !== false;
+let soundEnabled = saved.soundEnabled !== false;
+
+/* SCREENS */
 
 function showScreen(id) {
     document.querySelectorAll(".screen").forEach(s => {
         s.classList.remove("active");
     });
-    $(id).classList.add("active");
+
+    document.getElementById(id).classList.add("active");
+
+    if(id === "settings") {
+        updateSettings();
+    }
+
+    if(id === "map") {
+        renderMap();
+    }
 }
 
 function startApp() {
-    const name = $("playerName").value.trim();
+    const input = document.getElementById("nameInput");
+    const name = input.value.trim();
 
-    if (name) {
-        player = name;
-        localStorage.setItem("cloudPlayer", player);
-    }
-
-    if (!player) {
-        alert("Напиши своё имя!");
+    if(!player && !name) {
+        input.focus();
+        input.placeholder = "Сначала введи имя ✨";
         return;
     }
 
-    $("hello").textContent = "Привет, " + player + "!";
-    $("settingsName").textContent = player;
+    if(name) player = name;
 
-    renderMap();
+    saveData();
+
+    document.getElementById("playerName").textContent = player;
+    document.getElementById("settingsName").textContent = player;
+
+    showScreen("map");
+    updateMusicButtons();
+}
+
+function backToMap() {
+    stopTimer();
     showScreen("map");
 }
 
-if (player) {
-    $("playerName").value = player;
+function returnFromSettings() {
+    showScreen(previousScreen);
 }
+
+/* SAVE */
+
+function saveData() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        player,
+        unlockedLevel,
+        completedTimes,
+        musicEnabled,
+        soundEnabled
+    }));
+}
+
+/* MAP */
 
 function renderMap() {
-    const list = $("cloudList");
-    list.innerHTML = "";
+    document.getElementById("playerName").textContent = player || "Игрок";
 
-    for (let i = 1; i <= 1000; i++) {
+    document.getElementById("progressText").textContent =
+        "Открыт уровень " + unlockedLevel;
+
+    const grid = document.getElementById("cloudGrid");
+    grid.innerHTML = "";
+
+    const amount = Math.max(60, unlockedLevel + 15);
+
+    for(let i = 1; i <= amount; i++) {
         const button = document.createElement("button");
-        button.className = "cloud";
-        button.innerHTML = "☁️<small>" + i + "</small>";
+        button.className = "level-cloud";
 
-        if (i > currentLevel) {
+        if(i > unlockedLevel) {
             button.classList.add("locked");
-            button.disabled = true;
-        } else {
-            button.onclick = () => newGame(i);
         }
 
-        const record = localStorage.getItem("cloudTime" + i);
-
-        if (record) {
-            const small = document.createElement("small");
-            small.textContent = "⏱ " + record;
-            button.appendChild(small);
+        if(completedTimes[i]) {
+            button.classList.add("completed");
         }
 
-        list.appendChild(button);
+        const icon = document.createElement("div");
+        icon.className = "cloud-icon";
+        icon.textContent = i > unlockedLevel ? "🔒" : "☁️";
+
+        const number = document.createElement("div");
+        number.className = "level-number";
+        number.textContent = i;
+
+        button.appendChild(icon);
+        button.appendChild(number);
+
+        if(completedTimes[i]) {
+            const time = document.createElement("div");
+            time.className = "level-time";
+            time.textContent = completedTimes[i];
+            button.appendChild(time);
+        }
+
+        button.onclick = () => {
+            if(i <= unlockedLevel) {
+                startLevel(i);
+            } else {
+                showPopup("🔒", "Облако закрыто", "Сначала пройди предыдущие уровни.", "Понятно");
+            }
+        };
+
+        grid.appendChild(button);
     }
 }
+
+/* SUDOKU GENERATOR */
 
 function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
+    const a = [...array];
+
+    for(let i = a.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+        [a[i], a[j]] = [a[j], a[i]];
     }
-    return array;
+
+    return a;
 }
 
-function generateSudoku() {
+function pattern(r, c) {
+    return (r * 3 + Math.floor(r / 3) + c) % 9;
+}
+
+function generateSolution() {
     const base = 3;
     const side = 9;
 
-    const pattern = (r, c) =>
-        (base * (r % base) + Math.floor(r / base) + c) % side;
+    const rows = [];
+    const cols = [];
 
-    const groups = [0, 1, 2];
+    const groups = shuffle([0,1,2]);
 
-    const rows = shuffle([...groups]).flatMap(g =>
-        shuffle([...groups]).map(r => g * 3 + r)
-    );
+    groups.forEach(group => {
+        shuffle([0,1,2]).forEach(row => {
+            rows.push(group * base + row);
+        });
+    });
 
-    const cols = shuffle([...groups]).flatMap(g =>
-        shuffle([...groups]).map(c => g * 3 + c)
-    );
+    const columnGroups = shuffle([0,1,2]);
 
-    const nums = shuffle([1,2,3,4,5,6,7,8,9]);
+    columnGroups.forEach(group => {
+        shuffle([0,1,2]).forEach(col => {
+            cols.push(group * base + col);
+        });
+    });
 
-    solution = rows.map(r =>
-        cols.map(c => nums[pattern(r, c)])
-    );
+    const numbers = shuffle([1,2,3,4,5,6,7,8,9]);
 
+    const board = [];
+
+    for(let r = 0; r < side; r++) {
+        const line = [];
+
+        for(let c = 0; c < side; c++) {
+            line.push(numbers[pattern(rows[r], cols[c])]);
+        }
+
+        board.push(line);
+    }
+
+    return board;
+}
+
+function generatePuzzle(level) {
+    solution = generateSolution();
     puzzle = solution.map(row => [...row]);
 
-    const removeCount = Math.min(
-        65,
-        38 + Math.floor((currentLevel - 1) / 20)
+    const difficulty = Math.min(58, 35 + Math.floor((level - 1) / 8) * 2);
+    const cellsToRemove = difficulty;
+
+    const positions = shuffle(
+        Array.from({length:81}, (_,i) => i)
     );
 
-    let positions = shuffle(
-        Array.from({length:81}, (_, i) => i)
-    );
-
-    for (let i = 0; i < removeCount; i++) {
-        const pos = positions[i];
-        puzzle[Math.floor(pos / 9)][pos % 9] = 0;
+    for(let i = 0; i < cellsToRemove; i++) {
+        const position = positions[i];
+        const r = Math.floor(position / 9);
+        const c = position % 9;
+        puzzle[r][c] = 0;
     }
-
-    fixed = puzzle.map(row => row.map(n => n !== 0));
 }
 
-function newGame(level) {
-    clearInterval(timerInterval);
+/* START LEVEL */
 
+function startLevel(level) {
     currentLevel = level;
-    completed = false;
     selectedCell = null;
+    hintsLeft = 3;
     wrongCells = [];
-    hints = 3;
+    hintedCells = [];
 
-    localStorage.setItem("cloudLevel", currentLevel);
+    generatePuzzle(level);
 
-    generateSudoku();
+    elapsedBefore = 0;
+    startedAt = Date.now();
+    gameStarted = true;
 
-    $("levelText").textContent = "Уровень " + currentLevel;
-    $("message").textContent = "";
-    $("nextButton").style.display = "none";
+    document.getElementById("levelLabel").textContent =
+        "УРОВЕНЬ " + level;
 
-    renderBoard();
-    renderNumbers();
-
-    startTime = Date.now();
-    updateTimer();
-
-    timerInterval = setInterval(updateTimer, 1000);
+    document.getElementById("nextButton").style.display = "none";
 
     showScreen("game");
+
+    renderBoard();
+    renderNumberPad();
+    updateHintCount();
+    startTimer();
 }
+
+/* BOARD */
 
 function renderBoard() {
-    const board = $("board");
-    board.innerHTML = "";
+    const boardElement = document.getElementById("board");
+    boardElement.innerHTML = "";
 
-    for (let r = 0; r < 9; r++) {
-        for (let c = 0; c < 9; c++) {
-            const button = document.createElement("button");
-            button.className = "cell";
-
+    for(let r = 0; r < 9; r++) {
+        for(let c = 0; c < 9; c++) {
             const value = puzzle[r][c];
-            button.textContent = value || "";
 
-            if (fixed[r][c]) button.classList.add("fixed");
+            const cell = document.createElement("button");
+            cell.className = "cell";
+            cell.textContent = value || "";
 
-            if (selectedCell &&
-                selectedCell.r === r &&
-                selectedCell.c === c) {
-                button.classList.add("selected");
+            const key = r + "-" + c;
+
+            if(value !== 0) {
+                cell.classList.add("given");
             }
 
-            if (wrongCells.some(x => x.r === r && x.c === c)) {
-                button.classList.add("wrong");
+            if(hintedCells.includes(key)) {
+                cell.classList.add("hinted");
             }
 
-            button.onclick = () => {
-                if (fixed[r][c] || completed) return;
-                selectedCell = {r, c};
-                renderBoard();
-            };
+            if(wrongCells.includes(key)) {
+                cell.classList.add("wrong");
+            }
 
-            board.appendChild(button);
+            if(selectedCell && selectedCell.r === r && selectedCell.c === c) {
+                cell.classList.add("selected");
+            }
+
+            if(selectedCell && (
+                selectedCell.r === r ||
+                selectedCell.c === c ||
+                (
+                    Math.floor(selectedCell.r / 3) === Math.floor(r / 3) &&
+                    Math.floor(selectedCell.c / 3) === Math.floor(c / 3)
+                )
+            )) {
+                cell.classList.add("related");
+            }
+
+            if(selectedCell && value !== 0 &&
+               value === puzzle[selectedCell.r][selectedCell.c]) {
+                cell.classList.add("same");
+            }
+
+            cell.onclick = () => selectCell(r,c);
+
+            boardElement.appendChild(cell);
         }
     }
+
+    updateNextButton();
 }
 
-function renderNumbers() {
-    const pad = $("numberPad");
+function selectCell(r,c) {
+    if(puzzle[r][c] !== 0) {
+        selectedCell = {r,c};
+        renderBoard();
+        return;
+    }
+
+    selectedCell = {r,c};
+    renderBoard();
+}
+
+function renderNumberPad() {
+    const pad = document.getElementById("numberPad");
     pad.innerHTML = "";
 
-    for (let n = 1; n <= 9; n++) {
+    for(let n = 1; n <= 9; n++) {
         const button = document.createElement("button");
+        button.className = "number-btn";
         button.textContent = n;
+
         button.onclick = () => enterNumber(n);
+
         pad.appendChild(button);
     }
 }
 
-function enterNumber(n) {
-    if (!selectedCell || completed) return;
+function enterNumber(number) {
+    if(!selectedCell) return;
 
-    const {r, c} = selectedCell;
+    const {r,c} = selectedCell;
 
-    if (fixed[r][c]) return;
+    if(puzzle[r][c] !== 0) return;
 
-    puzzle[r][c] = n;
+    puzzle[r][c] = number;
 
-    wrongCells = wrongCells.filter(
-        x => !(x.r === r && x.c === c)
-    );
+    wrongCells = wrongCells.filter(key => key !== r + "-" + c);
+    hintedCells = hintedCells.filter(key => key !== r + "-" + c);
 
-    $("message").textContent = "";
+    playSound(520);
     renderBoard();
-
-    $("nextButton").style.display =
-        isFull() ? "block" : "none";
 }
 
 function eraseCell() {
-    if (!selectedCell || completed) return;
+    if(!selectedCell) return;
 
-    const {r, c} = selectedCell;
+    const {r,c} = selectedCell;
 
-    if (fixed[r][c]) return;
+    if(puzzle[r][c] === 0) return;
+
+    if(solution[r][c] === puzzle[r][c]) {
+        return;
+    }
 
     puzzle[r][c] = 0;
-
-    wrongCells = wrongCells.filter(
-        x => !(x.r === r && x.c === c)
-    );
-
-    $("nextButton").style.display = "none";
-    $("message").textContent = "";
+    wrongCells = wrongCells.filter(key => key !== r + "-" + c);
 
     renderBoard();
 }
 
-function isFull() {
-    return puzzle.every(row => row.every(n => n !== 0));
-}
+/* HINTS */
 
-function checkBoard() {
-    if (!isFull()) {
-        $("message").textContent = "Сначала заполни все клетки!";
+function useHint() {
+    if(hintsLeft <= 0) {
+        showPopup(
+            "💡",
+            "Подсказки закончились",
+            "На этом уровне ты уже использовала все три бесплатные подсказки.",
+            "Понятно"
+        );
         return;
     }
 
-    wrongCells = [];
+    const empty = [];
 
-    for (let r = 0; r < 9; r++) {
-        for (let c = 0; c < 9; c++) {
-            if (puzzle[r][c] !== solution[r][c]) {
-                wrongCells.push({r, c});
+    for(let r = 0; r < 9; r++) {
+        for(let c = 0; c < 9; c++) {
+            if(puzzle[r][c] === 0) {
+                empty.push({r,c});
             }
         }
     }
 
-    if (wrongCells.length > 0) {
-        $("message").textContent =
-            "Есть ошибки! Исправь красные цифры ❤️";
+    if(empty.length === 0) return;
 
-        renderBoard();
+    const cell = empty[Math.floor(Math.random() * empty.length)];
+
+    puzzle[cell.r][cell.c] = solution[cell.r][cell.c];
+
+    const key = cell.r + "-" + cell.c;
+
+    hintedCells.push(key);
+    wrongCells = wrongCells.filter(k => k !== key);
+
+    selectedCell = cell;
+    hintsLeft--;
+
+    updateHintCount();
+    renderBoard();
+    playSound(740);
+}
+
+function updateHintCount() {
+    document.getElementById("hintCount").textContent =
+        "Подсказок осталось: " + hintsLeft;
+}
+
+/* CHECK */
+
+function updateNextButton() {
+    let filled = true;
+
+    for(let r = 0; r < 9; r++) {
+        for(let c = 0; c < 9; c++) {
+            if(puzzle[r][c] === 0) {
+                filled = false;
+                break;
+            }
+        }
+    }
+
+    document.getElementById("nextButton").style.display =
+        filled ? "block" : "none";
+}
+
+function checkBoard() {
+    wrongCells = [];
+
+    let correct = true;
+
+    for(let r = 0; r < 9; r++) {
+        for(let c = 0; c < 9; c++) {
+            if(puzzle[r][c] !== solution[r][c]) {
+                wrongCells.push(r + "-" + c);
+                correct = false;
+            }
+        }
+    }
+
+    renderBoard();
+
+    if(!correct) {
+        showPopup(
+            "💭",
+            "Почти получилось!",
+            "Некоторые клетки неправильные. Они выделены красным — исправь их и попробуй ещё раз.",
+            "Продолжить"
+        );
+
         return;
     }
 
     finishLevel();
 }
 
-function giveHint() {
-    if (completed) return;
-
-    if (hints <= 0) {
-        alert("Бесплатные подсказки закончились!");
-        return;
-    }
-
-    let cell = selectedCell;
-
-    if (!cell || puzzle[cell.r][cell.c] !== 0 ||
-        fixed[cell.r][cell.c]) {
-        cell = null;
-
-        for (let r = 0; r < 9 && !cell; r++) {
-            for (let c = 0; c < 9; c++) {
-                if (puzzle[r][c] === 0) {
-                    cell = {r, c};
-                    break;
-                }
-            }
-        }
-    }
-
-    if (!cell) return;
-
-    puzzle[cell.r][cell.c] = solution[cell.r][cell.c];
-    hints--;
-
-    selectedCell = cell;
-    renderBoard();
-
-    if (isFull()) {
-        $("nextButton").style.display = "block";
-    }
-}
-
-function updateTimer() {
-    const seconds = Math.floor((Date.now() - startTime) / 1000);
-    $("timer").textContent = formatTime(seconds);
-}
-
-function formatTime(seconds) {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-
-    return String(m).padStart(2, "0") + ":" +
-           String(s).padStart(2, "0");
-}
+/* COMPLETE */
 
 function finishLevel() {
-    if (completed) return;
+    stopTimer();
 
-    completed = true;
-    clearInterval(timerInterval);
+    const seconds = Math.floor((Date.now() - startedAt) / 1000) + elapsedBefore;
 
-    const seconds = Math.floor((Date.now() - startTime) / 1000);
-    const result = formatTime(seconds);
+    const minutes = Math.floor(seconds / 60);
+    const rest = seconds % 60;
 
-    localStorage.setItem("cloudTime" + currentLevel, result);
+    const timeText =
+        String(minutes).padStart(2,"0") + ":" +
+        String(rest).padStart(2,"0");
 
-    if (currentLevel >= Number(localStorage.getItem("cloudLevel") || 1)) {
-        currentLevel++;
-        localStorage.setItem("cloudLevel", currentLevel);
+    completedTimes[currentLevel] = timeText;
+
+    if(currentLevel >= unlockedLevel) {
+        unlockedLevel = currentLevel + 1;
     }
 
-    $("successText").textContent =
-        "Уровень " + (currentLevel - 1) + " пройден!";
+    saveData();
 
-    $("successTime").textContent = result;
+    showPopup(
+        "🎉",
+        "Уровень пройден!",
+        "Твоё время: " + timeText + "\nТы отлично справилась!",
+        "Продолжить"
+    );
 
-    showScreen("successScreen");
+    document.getElementById("popupButton").onclick = () => {
+        document.getElementById("popupOverlay").classList.remove("show");
 
-    setTimeout(() => {
-        renderMap();
-        newGame(currentLevel);
-    }, 2500);
+        if(currentLevel < unlockedLevel) {
+            setTimeout(() => {
+                startLevel(currentLevel + 1);
+            }, 300);
+        } else {
+            showScreen("map");
+        }
+    };
 }
 
-function openSettings() {
-    settingsReturn = document.querySelector(".screen.active").id;
-    $("settingsName").textContent = player;
-    showScreen("settings");
+/* TIMER */
+
+function startTimer() {
+    stopTimer();
+
+    timerInterval = setInterval(() => {
+        if(!gameStarted) return;
+
+        const seconds = Math.floor((Date.now() - startedAt) / 1000) + elapsedBefore;
+
+        const minutes = Math.floor(seconds / 60);
+        const rest = seconds % 60;
+
+        document.getElementById("timerLabel").textContent =
+            String(minutes).padStart(2,"0") + ":" +
+            String(rest).padStart(2,"0");
+    }, 500);
 }
 
-function backFromSettings() {
-    showScreen(settingsReturn);
+function stopTimer() {
+    if(timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
 }
 
-function updateMusicButtons() {
-    ["mapMusic", "gameMusic", "settingsMusic"].forEach(id => {
-        const button = $(id);
-        if (button) button.classList.toggle("music-off", !musicOn);
-    });
+/* POPUP */
+
+function showPopup(icon,title,text,button) {
+    document.getElementById("popupIcon").textContent = icon;
+    document.getElementById("popupTitle").textContent = title;
+    document.getElementById("popupText").textContent = text;
+    document.getElementById("popupButton").textContent = button;
+
+    document.getElementById("popupButton").onclick = closePopup;
+
+    document.getElementById("popupOverlay").classList.add("show");
 }
 
-function toggleMusic() {
-    musicOn = !musicOn;
+function closePopup() {
+    document.getElementById("popupOverlay").classList.remove("show");
+}
 
-    if (musicOn) {
-        startMusic();
-    } else {
-        stopMusic();
+/* MUSIC */
+
+let audioContext = null;
+let musicTimer = null;
+let musicStep = 0;
+
+function getAudioContext() {
+    const Audio = window.AudioContext || window.webkitAudioContext;
+
+    if(!Audio) return null;
+
+    if(!audioContext) {
+        audioContext = new Audio();
     }
 
-    updateMusicButtons();
+    if(audioContext.state === "suspended") {
+        audioContext.resume();
+    }
+
+    return audioContext;
+}
+
+function playTone(frequency, duration = 0.12, volume = 0.035) {
+    if(!soundEnabled) return;
+
+    const ctx = getAudioContext();
+    if(!ctx) return;
+
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    oscillator.type = "sine";
+    oscillator.frequency.value = frequency;
+
+    gain.gain.setValueAtTime(volume, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        ctx.currentTime + duration
+    );
+
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+
+    oscillator.start();
+    oscillator.stop(ctx.currentTime + duration);
+}
+
+function playSound(freq) {
+    if(soundEnabled) playTone(freq, .13, .035);
 }
 
 function startMusic() {
-    const Audio = window.AudioContext || window.webkitAudioContext;
+    if(!musicEnabled || musicTimer) return;
 
-    if (!Audio) return;
+    const ctx = getAudioContext();
+    if(!ctx) return;
 
-    if (!audioContext) audioContext = new Audio();
-
-    audioContext.resume();
-
-    if (musicTimer) return;
-
-    let step = 0;
+    const melody = [
+        392, 494, 587, 494,
+        440, 523, 659, 523,
+        392, 494, 587, 659,
+        587, 523, 494, 440
+    ];
 
     musicTimer = setInterval(() => {
-        if (!musicOn || !audioContext) return;
+        if(!musicEnabled) return;
 
-        const notes = [220, 261, 329, 392, 329, 261];
-        const oscillator = audioContext.createOscillator();
-        const gain = audioContext.createGain();
+        const note = melody[musicStep % melody.length];
+
+        const oscillator = ctx.createOscillator();
+        const gain = ctx.createGain();
 
         oscillator.type = "triangle";
-        oscillator.frequency.value = notes[step % notes.length];
+        oscillator.frequency.value = note;
 
-        gain.gain.setValueAtTime(0.0001, audioContext.currentTime);
-        gain.gain.exponentialRampToValueAtTime(
-            0.035, audioContext.currentTime + 0.04
-        );
-        gain.gain.exponentialRampToValueAtTime(
-            0.0001, audioContext.currentTime + 0.3
-        );
+        gain.gain.setValueAtTime(.0001, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(.025, ctx.currentTime + .04);
+        gain.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + .3);
 
         oscillator.connect(gain);
-        gain.connect(audioContext.destination);
+        gain.connect(ctx.destination);
 
         oscillator.start();
-        oscillator.stop(audioContext.currentTime + 0.32);
+        oscillator.stop(ctx.currentTime + .32);
 
-        step++;
+        musicStep++;
     }, 350);
 }
 
 function stopMusic() {
-    if (musicTimer) {
+    if(musicTimer) {
         clearInterval(musicTimer);
         musicTimer = null;
     }
 }
 
+function toggleMusic() {
+    musicEnabled = !musicEnabled;
+
+    if(musicEnabled) {
+        startMusic();
+    } else {
+        stopMusic();
+    }
+
+    saveData();
+    updateMusicButtons();
+    updateSettings();
+}
+
+function toggleSound() {
+    soundEnabled = !soundEnabled;
+    saveData();
+    updateSettings();
+}
+
+function updateMusicButtons() {
+    const text = musicEnabled ? "♫" : "♫̸";
+
+    document.getElementById("musicMap").textContent = text;
+    document.getElementById("musicGame").textContent = text;
+}
+
+function updateSettings() {
+    document.getElementById("musicSwitch").classList.toggle("on", musicEnabled);
+    document.getElementById("soundSwitch").classList.toggle("on", soundEnabled);
+
+    document.getElementById("settingsName").textContent = player || "Игрок";
+}
+
+/* KEYBOARD */
+
+document.addEventListener("keydown", event => {
+    if(!document.getElementById("game").classList.contains("active")) return;
+
+    if(event.key >= "1" && event.key <= "9") {
+        enterNumber(Number(event.key));
+    }
+
+    if(event.key === "Backspace" || event.key === "Delete") {
+        eraseCell();
+    }
+});
+
+/* PREVENT DOUBLE TAP ZOOM */
+
+let lastTouchEnd = 0;
+
+document.addEventListener("touchend", function(event) {
+    const now = Date.now();
+
+    if(now - lastTouchEnd <= 300) {
+        event.preventDefault();
+    }
+
+    lastTouchEnd = now;
+}, {passive:false});
+
+/* INIT */
+
+document.getElementById("nameInput").value = player;
+
+if(player) {
+    document.getElementById("playerName").textContent = player;
+    document.getElementById("settingsName").textContent = player;
+}
+
 updateMusicButtons();
+updateSettings();
+
+if(player) {
+    showScreen("map");
+} else {
+    showScreen("welcome");
+}
+
 </script>
 
 </body>
