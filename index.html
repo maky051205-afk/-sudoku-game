@@ -2,402 +2,601 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
- <link rel="shortcut icon" href="./icon.png.PNG?v=2">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#090909">
-<link rel="icon" type="image/png" href="./icon.png.PNG">
-<link rel="apple-touch-icon" href="./icon.png.PNG">
 
+<link rel="icon" type="image/png" href="./sudoku-icon.png">
+<link rel="apple-touch-icon" href="./sudoku-icon.png">
 
 <title>SUDOKU PREMIUM</title>
 
 <style>
-*{box-sizing:border-box}
-body{
- margin:0;
- background:#090909;
- color:#f5d77a;
- font-family:Arial,sans-serif;
- text-align:center;
+* {
+    box-sizing: border-box;
 }
-header{
- padding:22px 10px;
- font-size:30px;
- font-weight:bold;
- letter-spacing:5px;
- color:#f5d77a;
+
+body {
+    margin: 0;
+    padding: 15px;
+    background: #090909;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    text-align: center;
 }
-.subtitle{color:#aaa;font-size:12px}
-.panel{
- max-width:440px;
- margin:15px auto;
- padding:15px;
+
+header {
+    margin: 15px 0 25px;
 }
-button,select{
- background:#171717;
- color:#f5d77a;
- border:1px solid #bd963e;
- border-radius:9px;
- padding:11px;
- margin:5px;
- font-size:14px;
+
+h1 {
+    color: #ffd36a;
+    font-size: 34px;
+    letter-spacing: 5px;
+    margin-bottom: 5px;
+    text-shadow: 0 0 15px #c58b20;
 }
-button:active{background:#bd963e;color:#000}
-#board{
- display:grid;
- grid-template-columns:repeat(9,1fr);
- max-width:390px;
- margin:15px auto;
- border:3px solid #d5ae50;
+
+.subtitle {
+    color: #a88a52;
+    letter-spacing: 3px;
+    font-size: 11px;
 }
-.cell{
- aspect-ratio:1;
- border:1px solid #444;
- background:#151515;
- color:white;
- font-size:clamp(15px,5vw,22px);
- display:flex;
- justify-content:center;
- align-items:center;
- cursor:pointer;
+
+.panel {
+    max-width: 430px;
+    margin: auto;
+    padding: 18px;
+    background: #141414;
+    border: 1px solid #8d681f;
+    border-radius: 20px;
+    box-shadow: 0 0 25px #000;
 }
-.cell:nth-child(3n){border-right:2px solid #d5ae50}
-.cell:nth-child(9n+1){border-left:1px solid #444}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 18px;
+}
+
+.stat {
+    color: #aaa;
+    font-size: 12px;
+}
+
+.stat strong {
+    display: block;
+    color: #ffd36a;
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+#board {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    width: 100%;
+    aspect-ratio: 1;
+    border: 2px solid #d7a83e;
+    background: #d7a83e;
+    gap: 1px;
+}
+
+.cell {
+    min-width: 0;
+    background: #171717;
+    color: #fff;
+    border: none;
+    text-align: center;
+    font-size: clamp(15px, 5vw, 23px);
+    font-weight: bold;
+    outline: none;
+    padding: 0;
+    border-radius: 0;
+}
+
+.cell:focus {
+    background: #44351c;
+}
+
+.cell.fixed {
+    color: #e5bd68;
+    background: #222;
+}
+
+.cell.wrong {
+    background: #602323;
+}
+
+.cell:nth-child(3n) {
+    border-right: 2px solid #d7a83e;
+}
+
 .cell:nth-child(n+19):nth-child(-n+27),
-.cell:nth-child(n+46):nth-child(-n+54){
- border-bottom:2px solid #d5ae50;
+.cell:nth-child(n+46):nth-child(-n+54) {
+    border-bottom: 2px solid #d7a83e;
 }
-.cell.fixed{color:#e6bd5c;font-weight:bold}
-.cell.selected{background:#66501e}
-.cell.error{background:#682323}
-.cell.hint{background:#244b35}
-.controls{max-width:400px;margin:auto}
-.numbers{
- display:grid;
- grid-template-columns:repeat(9,1fr);
- gap:4px;
- max-width:390px;
- margin:12px auto;
+
+.numbers {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 5px;
+    margin: 15px 0;
 }
-.numbers button{padding:13px 0;margin:0}
-.info{color:#ddd;margin:12px}
-.hidden{display:none}
-#message{min-height:25px;color:#f5d77a}
+
+.numbers button {
+    padding: 12px 0;
+    background: #282015;
+    color: #ffd36a;
+    border: 1px solid #9d762a;
+    border-radius: 8px;
+    font-size: 17px;
+}
+
+button {
+    cursor: pointer;
+}
+
+.actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    margin-top: 12px;
+}
+
+.action {
+    padding: 13px 5px;
+    border-radius: 10px;
+    border: 1px solid #a77d29;
+    background: #211b10;
+    color: #ffd36a;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.action:active,
+.numbers button:active {
+    background: #654819;
+}
+
+.gold {
+    background: linear-gradient(135deg, #ffe19a, #b47b19);
+    color: #17100a;
+    border: none;
+}
+
+select {
+    width: 100%;
+    padding: 12px;
+    background: #211b10;
+    color: #ffd36a;
+    border: 1px solid #a77d29;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+#message {
+    min-height: 25px;
+    margin-top: 12px;
+    color: #ffd36a;
+    font-size: 14px;
+}
+
+.premium {
+    margin-top: 15px;
+    padding: 16px;
+    border: 1px solid #d6a33d;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #241b0b, #111);
+}
+
+.premium h3 {
+    color: #ffd36a;
+    margin: 0 0 7px;
+}
+
+.premium p {
+    color: #aaa;
+    font-size: 12px;
+}
+
+footer {
+    color: #666;
+    font-size: 11px;
+    margin: 25px 0;
+}
 </style>
 </head>
 
 <body>
 
-<header>SUDOKU</header>
-<div class="subtitle">PREMIUM EDITION</div>
+<header>
+    <h1>SUDOKU</h1>
+    <div class="subtitle">GOLDEN EDITION</div>
+</header>
 
 <div class="panel">
 
-<div class="info">
- Уровень: <span id="level">1</span> / 1000
+    <div class="stats">
+        <div class="stat">
+            УРОВЕНЬ
+            <strong id="level">1</strong>
+        </div>
+
+        <div class="stat">
+            ПРОЙДЕНО
+            <strong id="passed">0</strong>
+        </div>
+
+        <div class="stat">
+            ПОДСКАЗКИ
+            <strong id="hints">3</strong>
+        </div>
+    </div>
+
+    <select id="difficulty">
+        <option value="easy">Лёгкий</option>
+        <option value="medium">Средний</option>
+        <option value="hard">Сложный</option>
+    </select>
+
+    <div id="board"></div>
+
+    <div class="numbers">
+        <button onclick="enterNumber(1)">1</button>
+        <button onclick="enterNumber(2)">2</button>
+        <button onclick="enterNumber(3)">3</button>
+        <button onclick="enterNumber(4)">4</button>
+        <button onclick="enterNumber(5)">5</button>
+        <button onclick="enterNumber(6)">6</button>
+        <button onclick="enterNumber(7)">7</button>
+        <button onclick="enterNumber(8)">8</button>
+        <button onclick="enterNumber(9)">9</button>
+    </div>
+
+    <div class="actions">
+        <button class="action" onclick="eraseCell()">⌫ Стереть</button>
+        <button class="action" onclick="hint()">✦ Подсказка</button>
+        <button class="action" onclick="checkBoard()">✓ Проверить</button>
+        <button class="action" onclick="newGame()">↻ Новая игра</button>
+        <button class="action" onclick="toggleMusic()">♫ Музыка</button>
+        <button class="action gold" onclick="nextLevel()">Следующий уровень</button>
+    </div>
+
+    <div id="message">Выбери клетку и начинай играть!</div>
+
+    <div class="premium">
+        <h3>👑 PREMIUM</h3>
+        <p>Особый игровой режим</p>
+        <button class="action gold" onclick="premiumDemo()">
+            Попробовать Premium
+        </button>
+    </div>
+
 </div>
 
-<div class="info">
- Пройдено: <span id="passed">0</span>
-</div>
-
-<div id="board"></div>
-
-<div class="numbers" id="numbers">
-<button onclick="putNumber(1)">1</button>
-<button onclick="putNumber(2)">2</button>
-<button onclick="putNumber(3)">3</button>
-<button onclick="putNumber(4)">4</button>
-<button onclick="putNumber(5)">5</button>
-<button onclick="putNumber(6)">6</button>
-<button onclick="putNumber(7)">7</button>
-<button onclick="putNumber(8)">8</button>
-<button onclick="putNumber(9)">9</button>
-</div>
-
-<div id="message"></div>
-
-<div class="controls">
-<button onclick="checkGame()">Проверить</button>
-<button onclick="hint()">Подсказка</button>
-<button onclick="clearCell()">Стереть</button>
-<button onclick="newGame()">Новая игра</button>
-</div>
-
-<div class="controls">
-<button onclick="nextLevel()">Следующий уровень</button>
-<button onclick="toggleMusic()" id="musicButton">♫ Музыка: ВЫКЛ</button>
-<button onclick="togglePremium()">PREMIUM</button>
-</div>
-
-<div class="info">
-Сложность: <span id="difficulty">Лёгкая</span>
-</div>
-
-<div class="info">
-Лучший уровень: <span id="best">1</span>
-</div>
-
-</div>
+<footer>
+    SUDOKU GOLDEN EDITION
+</footer>
 
 <script>
-let level=Number(localStorage.getItem("sudokuLevel"))||1;
-let passed=Number(localStorage.getItem("sudokuPassed"))||0;
-let best=Number(localStorage.getItem("sudokuBest"))||1;
+let level = Number(localStorage.getItem("sudokuLevel")) || 1;
+let passed = Number(localStorage.getItem("sudokuPassed")) || 0;
 
-let solution=[];
-let puzzle=[];
-let selected=-1;
-let audio=null;
-let musicTimer=null;
-let musicStep=0;
-let premium=localStorage.getItem("sudokuPremium")==="true";
+let solution = [];
+let puzzle = [];
+let selected = -1;
+let hints = 3;
 
-function shuffle(a){
- for(let i=a.length-1;i>0;i--){
-  let j=Math.floor(Math.random()*(i+1));
-  [a[i],a[j]]=[a[j],a[i]];
- }
- return a;
+let musicOn = false;
+let audioContext = null;
+let musicTimer = null;
+let musicNote = 0;
+
+const board = document.getElementById("board");
+
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
 }
 
-function generateSolution(){
- let base=3;
- let side=9;
+function generateSolution() {
+    let base = [0,1,2,3,4,5,6,7,8];
 
- function pattern(r,c){
-  return (base*(r%base)+Math.floor(r/base)+c)%side;
- }
+    let bands = shuffle([0,1,2]);
+    let rows = [];
 
- let rows=[];
- let cols=[];
- let nums=shuffle([1,2,3,4,5,6,7,8,9]);
+    bands.forEach(b => {
+        shuffle([0,1,2]).forEach(r => {
+            rows.push(b * 3 + r);
+        });
+    });
 
- let groups=shuffle([0,1,2]);
- groups.forEach(g=>{
-  shuffle([0,1,2]).forEach(r=>rows.push(g*3+r));
- });
+    let stacks = shuffle([0,1,2]);
+    let cols = [];
 
- groups=shuffle([0,1,2]);
- groups.forEach(g=>{
-  shuffle([0,1,2]).forEach(c=>cols.push(g*3+c));
- });
+    stacks.forEach(s => {
+        shuffle([0,1,2]).forEach(c => {
+            cols.push(s * 3 + c);
+        });
+    });
 
- return rows.map(r=>cols.map(c=>nums[pattern(r,c)]));
+    let nums = shuffle([1,2,3,4,5,6,7,8,9]);
+
+    return rows.map(r =>
+        cols.map(c =>
+            nums[(r * 3 + Math.floor(r / 3) + c) % 9]
+        )
+    );
 }
 
-function generatePuzzle(){
- solution=generateSolution();
- puzzle=solution.map(row=>row.slice());
+function newGame() {
+    solution = generateSolution();
 
- let blanks=Math.min(60,28+Math.floor((level-1)*32/999));
- let positions=shuffle(Array.from({length:81},(_,i)=>i));
+    puzzle = solution.map(row => [...row]);
 
- for(let i=0;i<blanks;i++){
-  let p=positions[i];
-  puzzle[Math.floor(p/9)][p%9]=0;
- }
+    let difficulty = document.getElementById("difficulty").value;
 
- selected=-1;
- renderBoard();
- updateInfo();
+    let blanks;
+
+    if (difficulty === "easy") {
+        blanks = 30 + Math.min(8, Math.floor(level / 100));
+    } else if (difficulty === "medium") {
+        blanks = 40 + Math.min(8, Math.floor(level / 100));
+    } else {
+        blanks = 48 + Math.min(8, Math.floor(level / 100));
+    }
+
+    let positions = shuffle(
+        Array.from({length: 81}, (_, i) => i)
+    );
+
+    positions.slice(0, blanks).forEach(i => {
+        puzzle[Math.floor(i / 9)][i % 9] = 0;
+    });
+
+    hints = 3;
+    selected = -1;
+
+    render();
+    updateStats();
+
+    document.getElementById("message").textContent =
+        "Уровень " + level + ". Удачи!";
 }
 
-function renderBoard(){
- let board=document.getElementById("board");
- board.innerHTML="";
+function render() {
+    board.innerHTML = "";
 
- for(let i=0;i<81;i++){
-  let r=Math.floor(i/9);
-  let c=i%9;
-  let cell=document.createElement("div");
+    for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+            let i = r * 9 + c;
 
-  cell.className="cell";
-  cell.textContent=puzzle[r][c]||"";
+            let input = document.createElement("input");
 
-  if(puzzle[r][c]!==0)cell.classList.add("fixed");
-  if(selected===i)cell.classList.add("selected");
+            input.className = "cell";
+            input.type = "text";
+            input.inputMode = "none";
+            input.maxLength = 1;
 
-  cell.onclick=()=>{
-   selected=i;
-   renderBoard();
-  };
+            input.value = puzzle[r][c] || "";
 
-  board.appendChild(cell);
- }
+            if (puzzle[r][c] !== 0) {
+                input.classList.add("fixed");
+                input.readOnly = true;
+            }
+
+            input.addEventListener("click", () => {
+                selected = i;
+                highlight();
+            });
+
+            input.addEventListener("input", () => {
+                let value = input.value.replace(/[^1-9]/g, "");
+
+                input.value = value.slice(-1);
+
+                if (input.value) {
+                    puzzle[r][c] = Number(input.value);
+                } else {
+                    puzzle[r][c] = 0;
+                }
+
+                highlight();
+            });
+
+            board.appendChild(input);
+        }
+    }
+
+    highlight();
 }
 
-function putNumber(n){
- if(selected<0)return;
-
- let r=Math.floor(selected/9);
- let c=selected%9;
-
- if(solution[r][c]===puzzle[r][c] && puzzle[r][c]!==0)return;
-
- puzzle[r][c]=n;
- renderBoard();
+function highlight() {
+    document.querySelectorAll(".cell").forEach((cell, i) => {
+        cell.style.outline = i === selected ?
+            "2px solid #ffd36a" : "none";
+    });
 }
 
-function clearCell(){
- if(selected<0)return;
+function enterNumber(number) {
+    if (selected < 0) return;
 
- let r=Math.floor(selected/9);
- let c=selected%9;
+    let r = Math.floor(selected / 9);
+    let c = selected % 9;
 
- if(solution[r][c]===puzzle[r][c] && puzzle[r][c]!==0)return;
+    if (solution[r][c] === puzzle[r][c] &&
+        puzzle[r][c] !== 0) return;
 
- puzzle[r][c]=0;
- renderBoard();
+    if (document.querySelectorAll(".cell")[selected].readOnly) {
+        return;
+    }
+
+    puzzle[r][c] = number;
+
+    render();
+
+    document.querySelectorAll(".cell")[selected].focus();
 }
 
-function hint(){
- let empty=[];
+function eraseCell() {
+    if (selected < 0) return;
 
- for(let r=0;r<9;r++){
-  for(let c=0;c<9;c++){
-   if(puzzle[r][c]===0)empty.push([r,c]);
-  }
- }
+    let r = Math.floor(selected / 9);
+    let c = selected % 9;
 
- if(empty.length===0){
-  showMessage("Все клетки заполнены!");
-  return;
- }
+    if (document.querySelectorAll(".cell")[selected].readOnly) {
+        return;
+    }
 
- let [r,c]=empty[Math.floor(Math.random()*empty.length)];
- puzzle[r][c]=solution[r][c];
- selected=r*9+c;
- renderBoard();
- showMessage("Подсказка добавлена!");
+    puzzle[r][c] = 0;
+    render();
 }
 
-function checkGame(){
- let correct=true;
- let empty=false;
+function hint() {
+    if (hints <= 0) {
+        document.getElementById("message").textContent =
+            "Подсказки закончились!";
+        return;
+    }
 
- for(let r=0;r<9;r++){
-  for(let c=0;c<9;c++){
-   if(puzzle[r][c]===0)empty=true;
-   if(puzzle[r][c]!==solution[r][c])correct=false;
-  }
- }
+    if (selected < 0) {
+        document.getElementById("message").textContent =
+            "Сначала выбери пустую клетку.";
+        return;
+    }
 
- if(correct){
-  passed++;
-  localStorage.setItem("sudokuPassed",passed);
+    let r = Math.floor(selected / 9);
+    let c = selected % 9;
 
-  if(level>=best){
-   best=level+1;
-   localStorage.setItem("sudokuBest",best);
-  }
+    if (puzzle[r][c] !== 0) {
+        document.getElementById("message").textContent =
+            "Выбери пустую клетку.";
+        return;
+    }
 
-  if(level>=1000){
-   showMessage("Поздравляем! Ты прошла все 1000 уровней!");
-  }else{
-   showMessage("Победа! Отличная работа!");
-  }
+    puzzle[r][c] = solution[r][c];
+    hints--;
 
-  updateInfo();
- }else if(empty){
-  showMessage("Есть пустые клетки или ошибки.");
- }else{
-  showMessage("Проверь некоторые числа.");
- }
+    render();
+    updateStats();
+
+    document.getElementById("message").textContent =
+        "Подсказка использована!";
 }
 
-function nextLevel(){
- if(level>=1000){
-  showMessage("Ты прошла все уровни!");
-  return;
- }
+function checkBoard() {
+    let empty = 0;
+    let wrong = 0;
 
- level++;
- localStorage.setItem("sudokuLevel",level);
- generatePuzzle();
- showMessage("Уровень "+level);
+    document.querySelectorAll(".cell").forEach(cell => {
+        cell.classList.remove("wrong");
+    });
+
+    for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+            if (puzzle[r][c] === 0) {
+                empty++;
+            } else if (puzzle[r][c] !== solution[r][c]) {
+                wrong++;
+                board.children[r * 9 + c].classList.add("wrong");
+            }
+        }
+    }
+
+    if (wrong > 0) {
+        document.getElementById("message").textContent =
+            "Есть ошибки. Проверь красные клетки!";
+    } else if (empty > 0) {
+        document.getElementById("message").textContent =
+            "Пока всё правильно! Продолжай.";
+    } else {
+        passed++;
+        level++;
+
+        localStorage.setItem("sudokuLevel", level);
+        localStorage.setItem("sudokuPassed", passed);
+
+        updateStats();
+
+        document.getElementById("message").textContent =
+            "🏆 Отлично! Уровень пройден!";
+    }
 }
 
-function newGame(){
- generatePuzzle();
- showMessage("Новая игра!");
+function nextLevel() {
+    if (level === Number(localStorage.getItem("sudokuLevel"))) {
+        newGame();
+    }
 }
 
-function updateInfo(){
- document.getElementById("level").textContent=level;
- document.getElementById("passed").textContent=passed;
- document.getElementById("best").textContent=best;
-
- let difficulty="Лёгкая";
- if(level>300)difficulty="Средняя";
- if(level>650)difficulty="Сложная";
-
- document.getElementById("difficulty").textContent=difficulty;
+function updateStats() {
+    document.getElementById("level").textContent = level;
+    document.getElementById("passed").textContent = passed;
+    document.getElementById("hints").textContent = hints;
 }
 
-function showMessage(text){
- document.getElementById("message").textContent=text;
+function premiumDemo() {
+    document.getElementById("message").textContent =
+        "👑 Premium — демонстрационный режим. Реальная оплата пока не подключена.";
 }
 
-function togglePremium(){
- premium=!premium;
- localStorage.setItem("sudokuPremium",premium);
- showMessage(premium?"Premium включён!":"Premium выключен.");
- document.body.style.background=premium?"#11100b":"#090909";
+function toggleMusic() {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext ||
+            window.webkitAudioContext)();
+    }
+
+    if (musicOn) {
+        clearInterval(musicTimer);
+        musicOn = false;
+
+        document.getElementById("message").textContent =
+            "Музыка выключена.";
+        return;
+    }
+
+    musicOn = true;
+    audioContext.resume();
+
+    const notes = [261.63, 329.63, 392, 329.63, 440, 392, 329.63];
+
+    musicTimer = setInterval(() => {
+        let oscillator = audioContext.createOscillator();
+        let gain = audioContext.createGain();
+
+        oscillator.type = "sine";
+        oscillator.frequency.value = notes[musicNote % notes.length];
+
+        gain.gain.setValueAtTime(0.0001, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(
+            0.06, audioContext.currentTime + 0.05
+        );
+        gain.gain.exponentialRampToValueAtTime(
+            0.0001, audioContext.currentTime + 0.45
+        );
+
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.5);
+
+        musicNote++;
+    }, 500);
+
+    document.getElementById("message").textContent =
+        "♫ Музыка включена!";
 }
 
-function playTone(freq,duration,type="sine",volume=0.05){
- if(!audio)return;
+document.getElementById("difficulty").addEventListener(
+    "change", newGame
+);
 
- let osc=audio.createOscillator();
- let gain=audio.createGain();
-
- osc.type=type;
- osc.frequency.value=freq;
- gain.gain.value=volume;
-
- osc.connect(gain);
- gain.connect(audio.destination);
-
- osc.start();
- gain.gain.exponentialRampToValueAtTime(0.001,audio.currentTime+duration);
- osc.stop(audio.currentTime+duration);
-}
-
-function beat(){
- if(!audio)return;
-
- let notes=[110,110,146,110,164,146,110,196];
-
- if(musicStep%4===0)playTone(65,0.13,"sine",0.15);
- if(musicStep%4===2)playTone(180,0.07,"triangle",0.035);
- if(musicStep%2===0)playTone(3000,0.025,"square",0.012);
-
- playTone(notes[musicStep%notes.length],0.12,"sawtooth",0.025);
-
- musicStep++;
-}
-
-function toggleMusic(){
- if(!audio){
-  audio=new (window.AudioContext||window.webkitAudioContext)();
- }
-
- if(audio.state==="suspended")audio.resume();
-
- if(musicTimer){
-  clearInterval(musicTimer);
-  musicTimer=null;
-  document.getElementById("musicButton").textContent="♫ Музыка: ВЫКЛ";
- }else{
-  beat();
-  musicTimer=setInterval(beat,160);
-  document.getElementById("musicButton").textContent="♫ Музыка: ВКЛ";
- }
-}
-
-generatePuzzle();
-updateInfo();
+newGame();
+updateStats();
 </script>
 
 </body>
