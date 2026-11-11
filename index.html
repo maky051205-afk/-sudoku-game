@@ -2,27 +2,31 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#090909">
-
 <link rel="icon" type="image/png" href="./sudoku-icon.png">
 <link rel="apple-touch-icon" href="./sudoku-icon.png">
-
-<title>SUDOKU GOLDEN EDITION</title>
+<title>Судоку на логику</title>
 
 <style>
 * {
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    touch-action: manipulation;
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
     margin: 0;
     min-height: 100vh;
-    background: radial-gradient(circle at top, #30200b, #090909 55%);
+    padding: 18px;
+    background: radial-gradient(circle at top, #38250b, #090909 60%);
     color: white;
     font-family: Arial, sans-serif;
     text-align: center;
-    padding: 15px;
 }
 
 .screen {
@@ -35,37 +39,59 @@ body {
     display: block;
 }
 
+.topbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    max-width: 440px;
+    margin: 8px auto 0;
+}
+
+.sound {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid #b88b39;
+    background: #1c170e;
+    color: #ffd36a;
+    font-size: 21px;
+    cursor: pointer;
+}
+
 .logo {
     color: #ffd36a;
-    font-size: 36px;
+    font-size: clamp(22px, 6vw, 32px);
     font-weight: bold;
-    letter-spacing: 5px;
+    letter-spacing: 4px;
+    line-height: 1.5;
     text-shadow: 0 0 20px #d69b30;
-    margin-top: 35px;
+    margin-top: 22px;
 }
 
 .subtitle {
     color: #c39a4e;
-    letter-spacing: 4px;
-    font-size: 11px;
-    margin-bottom: 35px;
+    letter-spacing: 5px;
+    font-size: 10px;
+    margin: 8px 0 30px;
 }
 
 .card {
-    background: linear-gradient(145deg, #1d180f, #101010);
-    border: 1px solid #9c742c;
-    border-radius: 22px;
-    padding: 22px;
-    box-shadow: 0 0 25px #000;
+    background: linear-gradient(145deg, #211a0e, #111);
+    border: 1px solid #98702c;
+    border-radius: 24px;
+    padding: 23px;
+    box-shadow: 0 12px 35px #0008;
     margin-bottom: 18px;
 }
 
 h2 {
     color: #ffd36a;
+    margin-top: 5px;
 }
 
-input, button {
-    font-family: inherit;
+.welcomeText {
+    color: #ccc;
+    line-height: 1.6;
 }
 
 .nameInput {
@@ -76,64 +102,117 @@ input, button {
     background: #090909;
     color: white;
     font-size: 16px;
-    outline: none;
     margin: 15px 0;
     text-align: center;
+    outline: none;
 }
 
 .btn {
     width: 100%;
     padding: 15px;
-    border-radius: 12px;
+    border-radius: 13px;
     border: 1px solid #c39742;
     background: #211a0d;
     color: #ffd36a;
     font-weight: bold;
     font-size: 15px;
     margin-top: 10px;
+    cursor: pointer;
+    touch-action: manipulation;
 }
 
 .btn.gold {
-    background: linear-gradient(135deg, #ffe4a0, #b77c1d);
+    background: linear-gradient(135deg, #ffe5a4, #c18a2c);
     color: #17100a;
     border: none;
+    box-shadow: 0 5px 18px #b77c1d55;
 }
 
 .btn:active {
-    transform: scale(.97);
+    transform: scale(.98);
 }
 
-.welcomeText {
-    color: #ddd;
-    line-height: 1.6;
+.menuCard {
+    position: relative;
+    padding: 25px 20px;
+}
+
+.player {
+    color: #c9b58b;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+.player strong {
+    display: block;
+    color: #ffe0a0;
+    font-size: 22px;
+    margin-top: 7px;
+}
+
+.levelLabel {
+    color: #aaa;
+    font-size: 12px;
+    letter-spacing: 3px;
 }
 
 .levelNumber {
     color: #ffd36a;
-    font-size: 32px;
+    font-size: 46px;
     font-weight: bold;
+    margin: 8px 0;
+    text-shadow: 0 0 15px #b77c1d66;
+}
+
+.levelTotal {
+    color: #a58b5c;
+    font-size: 13px;
 }
 
 .progress {
     width: 100%;
-    height: 8px;
-    background: #292015;
+    height: 7px;
+    background: #332819;
     border-radius: 20px;
-    margin: 15px 0;
+    margin: 20px 0 8px;
     overflow: hidden;
 }
 
 .progressBar {
     height: 100%;
-    background: linear-gradient(90deg, #9b6715, #ffe39b);
+    background: linear-gradient(90deg, #a36b17, #ffe5a4);
     width: 0%;
+    border-radius: 20px;
+}
+
+.progressText {
+    color: #9d8a68;
+    font-size: 11px;
+}
+
+.playButton {
+    margin-top: 28px;
+    padding: 18px;
+    font-size: 16px;
+    letter-spacing: 3px;
+}
+
+.changeName {
+    display: inline-block;
+    margin-top: 20px;
+    background: transparent;
+    border: none;
+    color: #9f895f;
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .stats {
     display: flex;
     justify-content: space-around;
     color: #aaa;
-    font-size: 12px;
+    font-size: 11px;
     margin-bottom: 18px;
 }
 
@@ -152,10 +231,10 @@ input, button {
     border: 2px solid #d6a641;
     width: 100%;
     aspect-ratio: 1;
+    touch-action: manipulation;
 }
 
 .cell {
-    width: 100%;
     min-width: 0;
     border: 0;
     border-radius: 0;
@@ -166,6 +245,7 @@ input, button {
     font-size: clamp(15px, 5vw, 23px);
     font-weight: bold;
     outline: none;
+    touch-action: manipulation;
 }
 
 .cell.fixed {
@@ -204,6 +284,7 @@ input, button {
     background: #251d10;
     color: #ffd36a;
     font-size: 17px;
+    touch-action: manipulation;
 }
 
 .actions {
@@ -231,120 +312,86 @@ input, button {
     line-height: 1.5;
 }
 
-#musicButton {
-    margin-bottom: 15px;
-}
-
 footer {
-    color: #666;
-    font-size: 11px;
-    margin: 25px 0;
+    color: #665638;
+    font-size: 10px;
+    margin: 28px 0;
+    letter-spacing: 3px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- ПРИВЕТСТВИЕ -->
+<div class="topbar">
+    <button class="sound" id="soundButton" onclick="toggleMusic()" aria-label="Включить или выключить музыку">🔇</button>
+</div>
 
 <section id="welcome" class="screen active">
-
-    <div class="logo">SUDOKU</div>
-    <div class="subtitle">GOLDEN EDITION</div>
+    <div class="logo">СУДОКУ НА ЛОГИКУ</div>
+    <div class="subtitle">МИР ГОЛОВОЛОМОК</div>
 
     <div class="card">
-
         <h2>Добро пожаловать!</h2>
-
         <p class="welcomeText">
-            Добро пожаловать в мир SUDOKU!
-            <br>
-            Готов проверить свою логику?
+            Готова проверить свою логику<br>
+            и пройти все 1000 уровней?
         </p>
 
-        <input
-            id="playerName"
-            class="nameInput"
-            type="text"
-            maxlength="20"
-            placeholder="Напишите имя или ник"
-            autocomplete="off"
-        >
+        <input id="playerName" class="nameInput"
+               type="text" maxlength="20"
+               placeholder="Твоё имя или ник"
+               autocomplete="off">
 
         <button class="btn gold" onclick="startGame()">
             НАЧАТЬ ИГРУ
         </button>
 
-        <p class="small">
-            1000 уровней • Логика • Мастерство
-        </p>
-
+        <p class="small">1000 уровней • Логика • Мастерство</p>
     </div>
-
 </section>
 
-<!-- ГЛАВНОЕ МЕНЮ -->
-
 <section id="menu" class="screen">
+    <div class="logo">СУДОКУ НА ЛОГИКУ</div>
+    <div class="subtitle">ТВОЯ ИГРА — ТВОЙ РЕКОРД</div>
 
-    <div class="logo">SUDOKU</div>
-    <div class="subtitle">GOLDEN EDITION</div>
+    <div class="card menuCard">
+        <div class="player">
+            ИГРОК
+            <strong id="helloName">Игрок</strong>
+        </div>
 
-    <div class="card">
-
-        <h2 id="helloName">Привет!</h2>
-
-        <p class="small">Твой текущий уровень</p>
-
-        <div class="levelNumber" id="menuLevel">1 / 1000</div>
+        <div class="levelLabel">ТВОЙ УРОВЕНЬ</div>
+        <div class="levelNumber" id="menuLevel">1</div>
+        <div class="levelTotal">из 1000 уровней</div>
 
         <div class="progress">
             <div class="progressBar" id="progressBar"></div>
         </div>
 
-        <button class="btn gold" onclick="openGame()">
-            ПРОДОЛЖИТЬ
+        <div class="progressText" id="progressText">Пройдено 0 из 1000</div>
+
+        <button class="btn gold playButton" onclick="openGame()">
+            ИГРАТЬ
         </button>
 
-        <button class="btn" onclick="toggleMusic()" id="menuMusic">
-            ♫ Включить музыку
+        <button class="changeName" onclick="changePlayer()">
+            Изменить имя игрока
         </button>
-
-        <button class="btn" onclick="changePlayer()">
-            Изменить имя
-        </button>
-
     </div>
-
 </section>
 
-<!-- ИГРА -->
-
 <section id="game" class="screen">
-
-    <div class="logo" style="font-size:28px">SUDOKU</div>
-
-    <div class="subtitle">GOLDEN EDITION</div>
+    <div class="logo" style="font-size:25px;letter-spacing:3px">
+        СУДОКУ НА ЛОГИКУ
+    </div>
+    <div class="subtitle">ТРЕНИРУЙ СВОЙ УМ</div>
 
     <div class="card">
-
         <div class="stats">
-
-            <div>
-                УРОВЕНЬ
-                <strong id="level">1</strong>
-            </div>
-
-            <div>
-                ПРОЙДЕНО
-                <strong id="passed">0</strong>
-            </div>
-
-            <div>
-                ПОДСКАЗКИ
-                <strong id="hints">3</strong>
-            </div>
-
+            <div>УРОВЕНЬ<strong id="level">1</strong></div>
+            <div>ПРОЙДЕНО<strong id="passed">0</strong></div>
+            <div>ПОДСКАЗКИ<strong id="hints">3</strong></div>
         </div>
 
         <div id="board"></div>
@@ -362,47 +409,22 @@ footer {
         </div>
 
         <div class="actions">
-
-            <button class="btn" onclick="eraseCell()">
-                ⌫ Стереть
-            </button>
-
-            <button class="btn" onclick="hint()">
-                ✦ Подсказка
-            </button>
-
-            <button class="btn" onclick="checkBoard()">
-                ✓ Проверить
-            </button>
-
-            <button class="btn" onclick="toggleMusic()">
-                ♫ Музыка
-            </button>
-
-            <button class="btn" onclick="goMenu()">
-                Меню
-            </button>
-
-            <button class="btn gold" onclick="nextLevel()">
-                Следующий уровень
-            </button>
-
+            <button class="btn" onclick="eraseCell()">⌫ Стереть</button>
+            <button class="btn" onclick="hint()">✦ Подсказка</button>
+            <button class="btn" onclick="checkBoard()">✓ Проверить</button>
+            <button class="btn" onclick="toggleMusic()">♫ Музыка</button>
+            <button class="btn" onclick="goMenu()">Меню</button>
+            <button class="btn gold" onclick="nextLevel()">Следующий уровень</button>
         </div>
 
-        <div id="message">
-            Выбери клетку и начинай играть!
-        </div>
-
+        <div id="message">Выбери клетку и начинай играть!</div>
     </div>
-
 </section>
 
-<footer>SUDOKU GOLDEN EDITION</footer>
+<footer>СУДОКУ НА ЛОГИКУ • GOLDEN EDITION</footer>
 
 <script>
-
 let playerName = localStorage.getItem("sudokuName") || "";
-
 let level = Number(localStorage.getItem("sudokuLevel")) || 1;
 let passed = Number(localStorage.getItem("sudokuPassed")) || 0;
 
@@ -421,533 +443,332 @@ let musicStep = 0;
 const board = document.getElementById("board");
 
 function showScreen(id) {
-
     document.querySelectorAll(".screen").forEach(screen => {
         screen.classList.remove("active");
     });
-
     document.getElementById(id).classList.add("active");
 }
 
 function startGame() {
-
-    let input = document.getElementById("playerName").value.trim();
+    const input = document.getElementById("playerName").value.trim();
 
     if (!input) {
-        alert("Напиши своё имя или игровой ник!");
+        alert("Напиши своё имя или ник!");
         return;
     }
 
     playerName = input;
-
     localStorage.setItem("sudokuName", playerName);
-
     updateMenu();
     showScreen("menu");
 }
 
 function changePlayer() {
-
-    let newName = prompt("Напиши новое имя или ник:", playerName);
+    const newName = prompt("Новое имя игрока:", playerName);
 
     if (newName && newName.trim()) {
-
         playerName = newName.trim().slice(0, 20);
-
         localStorage.setItem("sudokuName", playerName);
-
         updateMenu();
     }
 }
 
 function updateMenu() {
-
-    document.getElementById("helloName").textContent =
-        "Привет, " + playerName + "!";
-
-    document.getElementById("menuLevel").textContent =
-        level + " / 1000";
-
+    document.getElementById("helloName").textContent = playerName;
+    document.getElementById("menuLevel").textContent = level;
     document.getElementById("progressBar").style.width =
-        (level / 1000 * 100) + "%";
-
-    document.getElementById("menuMusic").textContent =
-        musicOn ? "♫ Выключить музыку" : "♫ Включить музыку";
+        (passed / 1000 * 100) + "%";
+    document.getElementById("progressText").textContent =
+        "Пройдено " + passed + " из 1000";
 }
 
 function openGame() {
-
-    if (level > 1000) level = 1000;
-
     newGame();
     showScreen("game");
 }
 
 function goMenu() {
-
     updateMenu();
     showScreen("menu");
 }
 
 function shuffle(array) {
-
     for (let i = array.length - 1; i > 0; i--) {
-
-        let j = Math.floor(Math.random() * (i + 1));
-
+        const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
-
     return array;
 }
 
 function generateSolution() {
+    const pattern = (r, c) => (r * 3 + Math.floor(r / 3) + c) % 9;
 
-    let bands = shuffle([0, 1, 2]);
-    let stacks = shuffle([0, 1, 2]);
+    const rows = [];
+    const cols = [];
 
-    let rows = [];
-    let cols = [];
-
+    const bands = shuffle([0, 1, 2]);
     bands.forEach(b => {
-
-        shuffle([0, 1, 2]).forEach(r => {
-            rows.push(b * 3 + r);
-        });
-
+        shuffle([0, 1, 2]).forEach(r => rows.push(b * 3 + r));
     });
 
+    const stacks = shuffle([0, 1, 2]);
     stacks.forEach(s => {
-
-        shuffle([0, 1, 2]).forEach(c => {
-            cols.push(s * 3 + c);
-        });
-
+        shuffle([0, 1, 2]).forEach(c => cols.push(s * 3 + c));
     });
 
-    let nums = shuffle([1,2,3,4,5,6,7,8,9]);
+    const nums = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
-    return rows.map(r => {
-
-        return cols.map(c => {
-
-            return nums[(r * 3 + Math.floor(r / 3) + c) % 9];
-
-        });
-
-    });
-
+    return rows.map(r =>
+        cols.map(c => nums[pattern(r, c)])
+    );
 }
 
 function newGame() {
-
     solution = generateSolution();
-
     puzzle = solution.map(row => [...row]);
 
     let blanks = Math.min(60, 30 + Math.floor((level - 1) / 25));
+    const positions = shuffle(Array.from({length: 81}, (_, i) => i));
 
-    let positions = shuffle(
-        Array.from({length: 81}, (_, i) => i)
-    );
+    for (let i = 0; i < blanks; i++) {
+        const pos = positions[i];
+        puzzle[Math.floor(pos / 9)][pos % 9] = 0;
+    }
 
-    positions.slice(0, blanks).forEach(i => {
-
-        puzzle[Math.floor(i / 9)][i % 9] = 0;
-
-    });
-
-    fixed = puzzle.map(row =>
-        row.map(value => value !== 0)
-    );
-
-    hints = 3;
+    fixed = puzzle.map(row => row.map(v => v !== 0));
     selected = -1;
+    hints = 3;
     completed = false;
 
-    render();
-    updateStats();
-
+    document.getElementById("level").textContent = level;
+    document.getElementById("passed").textContent = passed;
+    document.getElementById("hints").textContent = hints;
     document.getElementById("message").textContent =
-        "Уровень " + level + ". Удачи!";
+        "Выбери клетку и начинай играть!";
+
+    renderBoard();
 }
 
-function render() {
-
+function renderBoard() {
     board.innerHTML = "";
 
     for (let r = 0; r < 9; r++) {
-
         for (let c = 0; c < 9; c++) {
-
-            let i = r * 9 + c;
-
-            let cell = document.createElement("input");
+            const index = r * 9 + c;
+            const cell = document.createElement("button");
 
             cell.className = "cell";
-            cell.type = "text";
-            cell.inputMode = "none";
-            cell.maxLength = 1;
+            cell.textContent = puzzle[r][c] || "";
 
-            cell.value = puzzle[r][c] || "";
+            if (fixed[r][c]) cell.classList.add("fixed");
+            if (selected === index) cell.classList.add("selected");
 
-            if (fixed[r][c]) {
-                cell.classList.add("fixed");
-                cell.readOnly = true;
-            }
-
-            cell.addEventListener("click", () => {
-
-                selected = i;
-                highlight();
-
-            });
+            cell.onclick = () => {
+                selected = index;
+                renderBoard();
+            };
 
             board.appendChild(cell);
-
         }
+    }
+}
 
+function enterNumber(num) {
+    if (selected < 0 || completed) {
+        document.getElementById("message").textContent =
+            "Сначала выбери пустую клетку!";
+        return;
     }
 
-    highlight();
-}
-
-function highlight() {
-
-    document.querySelectorAll(".cell").forEach((cell, i) => {
-
-        cell.classList.toggle("selected", i === selected);
-
-    });
-
-}
-
-function enterNumber(number) {
-
-    if (selected < 0 || completed) return;
-
-    let r = Math.floor(selected / 9);
-    let c = selected % 9;
+    const r = Math.floor(selected / 9);
+    const c = selected % 9;
 
     if (fixed[r][c]) return;
 
-    puzzle[r][c] = number;
-
-    render();
-
+    puzzle[r][c] = num;
+    renderBoard();
 }
 
 function eraseCell() {
-
     if (selected < 0 || completed) return;
 
-    let r = Math.floor(selected / 9);
-    let c = selected % 9;
+    const r = Math.floor(selected / 9);
+    const c = selected % 9;
 
-    if (fixed[r][c]) return;
-
-    puzzle[r][c] = 0;
-
-    render();
-
+    if (!fixed[r][c]) {
+        puzzle[r][c] = 0;
+        renderBoard();
+    }
 }
 
 function hint() {
-
-    if (completed) return;
-
-    if (hints <= 0) {
-
+    if (hints <= 0 || completed) {
         document.getElementById("message").textContent =
             "Подсказки закончились!";
-
         return;
-
     }
 
     if (selected < 0) {
-
         document.getElementById("message").textContent =
-            "Сначала выбери клетку.";
-
+            "Сначала выбери клетку!";
         return;
-
     }
 
-    let r = Math.floor(selected / 9);
-    let c = selected % 9;
+    const r = Math.floor(selected / 9);
+    const c = selected % 9;
 
-    if (fixed[r][c] || puzzle[r][c] !== 0) {
-
+    if (fixed[r][c]) {
         document.getElementById("message").textContent =
-            "Выбери пустую клетку.";
-
+            "Выбери пустую клетку!";
         return;
-
     }
 
     puzzle[r][c] = solution[r][c];
-
     hints--;
-
-    render();
-    updateStats();
-
+    document.getElementById("hints").textContent = hints;
     document.getElementById("message").textContent =
         "Подсказка использована!";
-
+    renderBoard();
 }
 
 function checkBoard() {
-
     if (completed) return;
 
-    let empty = 0;
-    let wrong = 0;
-
-    document.querySelectorAll(".cell").forEach(cell => {
-        cell.classList.remove("wrong");
-    });
+    let empty = false;
+    let correct = true;
 
     for (let r = 0; r < 9; r++) {
-
         for (let c = 0; c < 9; c++) {
-
-            if (puzzle[r][c] === 0) {
-
-                empty++;
-
-            } else if (puzzle[r][c] !== solution[r][c]) {
-
-                wrong++;
-
-                board.children[r * 9 + c].classList.add("wrong");
-
-            }
-
+            if (puzzle[r][c] === 0) empty = true;
+            if (puzzle[r][c] !== solution[r][c]) correct = false;
         }
-
     }
 
-    if (wrong > 0) {
-
+    if (empty) {
         document.getElementById("message").textContent =
-            "Есть ошибки! Проверь красные клетки.";
-
+            "Заполни все клетки!";
         return;
-
     }
 
-    if (empty > 0) {
-
+    if (!correct) {
         document.getElementById("message").textContent =
-            "Всё правильно! Продолжай.";
-
+            "Есть ошибки. Попробуй ещё раз!";
         return;
-
     }
 
     completed = true;
-
     passed++;
-
     localStorage.setItem("sudokuPassed", passed);
 
+    document.getElementById("passed").textContent = passed;
     document.getElementById("message").textContent =
-        "🏆 ПОЗДРАВЛЯЮ! УРОВЕНЬ ПРОЙДЕН!";
-
-    updateStats();
-
+        "🎉 Отлично! Уровень пройден!";
 }
 
 function nextLevel() {
-
     if (!completed) {
-
         document.getElementById("message").textContent =
-            "Сначала правильно заверши этот уровень!";
-
+            "Сначала правильно реши судоку!";
         return;
-
     }
 
     if (level >= 1000) {
-
         document.getElementById("message").textContent =
-            "👑 Поздравляем! Ты прошла все 1000 уровней!";
-
+            "Поздравляем! Ты прошла все 1000 уровней!";
         return;
-
     }
 
     level++;
-
     localStorage.setItem("sudokuLevel", level);
-
     newGame();
-
 }
 
-function updateStats() {
-
-    document.getElementById("level").textContent = level;
-
-    document.getElementById("passed").textContent = passed;
-
-    document.getElementById("hints").textContent = hints;
-
-}
-
-// ЭНЕРГИЧНАЯ МУЗЫКА
-
-function playNote(frequency, duration, volume, type, delay = 0) {
-
-    let start = audioContext.currentTime + delay;
-
-    let oscillator = audioContext.createOscillator();
-
-    let gain = audioContext.createGain();
-
-    oscillator.type = type;
-
-    oscillator.frequency.setValueAtTime(frequency, start);
-
-    gain.gain.setValueAtTime(0.001, start);
-
-    gain.gain.exponentialRampToValueAtTime(
-        volume, start + 0.02
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-        0.001, start + duration
-    );
-
-    oscillator.connect(gain);
-    gain.connect(audioContext.destination);
-
-    oscillator.start(start);
-    oscillator.stop(start + duration + 0.02);
-
-}
-
-function musicBeat() {
-
-    const melody = [
-        523.25, 659.25, 783.99, 659.25,
-        587.33, 698.46, 880, 698.46,
-        659.25, 783.99, 987.77, 783.99,
-        587.33, 698.46, 880, 1046.5
-    ];
-
-    const bass = [
-        130.81, 130.81, 164.81, 164.81,
-        146.83, 146.83, 174.61, 174.61
-    ];
-
-    let step = musicStep % 16;
-
-    playNote(
-        melody[step],
-        0.22,
-        0.055,
-        "triangle"
-    );
-
-    playNote(
-        melody[(step + 4) % 16] * 2,
-        0.12,
-        0.018,
-        "sine",
-        0.12
-    );
-
-    if (step % 2 === 0) {
-
-        playNote(
-            bass[(step / 2) % 8],
-            0.32,
-            0.075,
-            "sawtooth"
-        );
-
+function toggleMusic() {
+    if (musicOn) {
+        stopMusic();
+    } else {
+        startMusic();
     }
-
-    if (step % 4 === 0) {
-
-        playNote(
-            90,
-            0.13,
-            0.035,
-            "sine"
-        );
-
-    }
-
-    if (step % 4 === 2) {
-
-        playNote(
-            220,
-            0.09,
-            0.018,
-            "triangle"
-        );
-
-    }
-
-    musicStep++;
+    updateSoundIcon();
 }
 
-async function toggleMusic() {
+function updateSoundIcon() {
+    document.getElementById("soundButton").textContent =
+        musicOn ? "🔊" : "🔇";
+}
+
+function startMusic() {
+    const AudioContextClass =
+        window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContextClass) {
+        document.getElementById("message").textContent =
+            "Музыка не поддерживается этим браузером.";
+        return;
+    }
 
     if (!audioContext) {
-
-        audioContext = new (
-            window.AudioContext ||
-            window.webkitAudioContext
-        )();
-
+        audioContext = new AudioContextClass();
     }
 
-    if (musicOn) {
+    audioContext.resume();
+    musicOn = true;
+    musicStep = 0;
 
-        clearInterval(musicTimer);
+    const melody = [261.63, 329.63, 392, 329.63, 293.66, 349.23, 440, 392];
 
-        musicOn = false;
+    function playNote(freq, duration, volume, type) {
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
 
-        document.getElementById("message").textContent =
-            "Музыка выключена.";
+        osc.type = type;
+        osc.frequency.value = freq;
 
-    } else {
+        gain.gain.setValueAtTime(0.0001, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(
+            volume, audioContext.currentTime + 0.04
+        );
+        gain.gain.exponentialRampToValueAtTime(
+            0.0001, audioContext.currentTime + duration
+        );
 
-        await audioContext.resume();
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
 
-        musicOn = true;
-
-        musicBeat();
-
-        musicTimer = setInterval(musicBeat, 160);
-
-        document.getElementById("message").textContent =
-            "♫ Музыка включена!";
-
+        osc.start();
+        osc.stop(audioContext.currentTime + duration + 0.05);
     }
 
-    updateMenu();
+    musicTimer = setInterval(() => {
+        if (!musicOn) return;
 
+        const note = melody[musicStep % melody.length];
+
+        playNote(note, 0.65, 0.055, "sine");
+
+        if (musicStep % 2 === 0) {
+            playNote(note / 2, 0.8, 0.025, "triangle");
+        }
+
+        musicStep++;
+    }, 550);
 }
 
-// ВОССТАНОВЛЕНИЕ ИГРЫ
+function stopMusic() {
+    musicOn = false;
+
+    if (musicTimer) {
+        clearInterval(musicTimer);
+        musicTimer = null;
+    }
+}
+
+updateSoundIcon();
 
 if (playerName) {
-
-    document.getElementById("playerName").value = playerName;
-
     updateMenu();
-
     showScreen("menu");
-
 }
-
 </script>
 
 </body>
