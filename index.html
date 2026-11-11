@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#9bdcff">
+
 <title>Cloud Sudoku</title>
 
 <style>
@@ -12,30 +13,88 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-body {
+html, body {
     margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
     font-family: Arial, sans-serif;
-    background: linear-gradient(#74c9fa,#c9edff,#f1faff);
     color: #23496b;
+    background: linear-gradient(#74c9fa,#c9edff,#f1faff);
 }
 
 button {
     border: none;
     cursor: pointer;
     font-weight: bold;
+    font-family: inherit;
 }
 
 .screen {
     display: none;
-    min-height: 100vh;
-    padding: 22px 16px 35px;
+    height: 100dvh;
+    width: 100%;
+    padding: 12px 14px;
+    overflow: hidden;
 }
 
 .screen.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
 }
 
+/* ВЕРХНЯЯ ПАНЕЛЬ */
+
+.topbar {
+    width: 100%;
+    max-width: 430px;
+    min-height: 52px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.top-button {
+    width: 43px;
+    height: 43px;
+    min-width: 43px;
+    border-radius: 50%;
+    background: linear-gradient(145deg,#ffffff,#b9e6ff);
+    color: #3187bd;
+    font-size: 21px;
+    box-shadow: 0 4px 12px #398bc233;
+    position: relative;
+}
+
+.top-button.music-off::after {
+    content: "";
+    position: absolute;
+    width: 28px;
+    height: 3px;
+    background: #ff5252;
+    border-radius: 5px;
+    transform: rotate(-45deg);
+    top: 20px;
+    left: 7px;
+}
+
+.brand {
+    flex: 1;
+    text-align: center;
+    font-weight: 900;
+    color: white;
+    font-size: 15px;
+    text-shadow: 0 3px 8px #398bc2;
+    white-space: nowrap;
+}
+
+/* ПРИВЕТСТВИЕ */
+
 .center {
+    width: 100%;
     max-width: 430px;
     margin: auto;
     text-align: center;
@@ -46,7 +105,7 @@ button {
     font-weight: 900;
     color: white;
     text-shadow: 0 4px 12px #398bc2;
-    margin-top: 45px;
+    margin-top: 20px;
 }
 
 .subtitle {
@@ -61,7 +120,7 @@ button {
     border-radius: 28px;
     padding: 23px;
     box-shadow: 0 10px 35px #398bc233;
-    margin-top: 30px;
+    margin-top: 25px;
 }
 
 input {
@@ -78,7 +137,7 @@ input {
 
 .main-btn {
     width: 100%;
-    padding: 17px;
+    padding: 16px;
     margin-top: 15px;
     border-radius: 17px;
     background: linear-gradient(120deg,#65c8ff,#398ee5);
@@ -97,85 +156,25 @@ input {
     border: 1px solid #b9e2f8;
 }
 
-/* МУЗЫКА СЛЕВА */
-
-#musicButton {
-    position: fixed;
-    top: 16px;
-    left: 16px;
-    right: auto;
-    z-index: 9999;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: linear-gradient(145deg,#ffffff,#79cfff);
-    color: #247db6;
-    font-size: 24px;
-    box-shadow: 0 5px 18px #398bc255;
-}
-
-#musicButton.off {
-    background: #dceefa;
-    color: #8aa9bd;
-}
-
-#musicButton.off::after {
-    content: "";
-    position: absolute;
-    width: 30px;
-    height: 3px;
-    background: #ff5555;
-    border-radius: 5px;
-    transform: rotate(-45deg);
-    left: 8px;
-    top: 21px;
-}
-
-/* НАСТРОЙКИ СПРАВА */
-
-#settingsButton {
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    z-index: 9999;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: linear-gradient(145deg,#ffffff,#79cfff);
-    color: #247db6;
-    font-size: 22px;
-    box-shadow: 0 5px 18px #398bc255;
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 430px;
-    margin: auto;
-}
-
-.header button {
-    background: #ffffffc9;
-    padding: 12px;
-    border-radius: 50%;
-    color: #388ac1;
-    font-size: 18px;
-}
+/* КАРТА ОБЛАКОВ */
 
 .map-title {
     text-align: center;
     color: white;
-    font-size: 27px;
+    font-size: 25px;
     text-shadow: 0 3px 10px #398bc2;
-    margin: 25px 0;
+    margin: 15px 0;
+    flex-shrink: 0;
 }
 
 .cloud-map {
+    width: 100%;
     max-width: 430px;
-    margin: auto;
-    height: 70vh;
+    margin: 0 auto;
+    flex: 1;
+    min-height: 0;
     overflow-y: auto;
+    overscroll-behavior: contain;
     border-radius: 25px;
     padding: 15px;
     background: linear-gradient(#a5e1ff99,#e5f7ff99);
@@ -191,11 +190,11 @@ input {
 }
 
 .level-item:nth-child(odd) {
-    transform: translateX(-55px);
+    transform: translateX(-45px);
 }
 
 .level-item:nth-child(even) {
-    transform: translateX(55px);
+    transform: translateX(45px);
 }
 
 .level-cloud {
@@ -233,27 +232,44 @@ input {
     font-weight: bold;
 }
 
+/* ИГРОВОЙ ЭКРАН */
+
+#gameScreen {
+    overflow: hidden;
+}
+
+.game-title {
+    text-align: center;
+    color: white;
+    font-size: 21px;
+    margin: 14px 0 8px;
+    text-shadow: 0 3px 10px #398bc2;
+    flex-shrink: 0;
+}
+
 .game-card {
+    width: 100%;
     max-width: 430px;
-    margin: auto;
-    padding: 18px;
+    margin: 12px auto 0;
+    padding: 14px;
     background: #ffffffdc;
     border-radius: 25px;
     box-shadow: 0 10px 30px #438fc233;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .game-stats {
     display: flex;
     justify-content: space-around;
     gap: 8px;
-    margin: 15px 0;
+    margin: 5px 0 12px;
 }
 
 .stat {
     background: #e7f6ff;
     border-radius: 14px;
-    padding: 12px 5px;
+    padding: 10px 5px;
     flex: 1;
     font-size: 12px;
 }
@@ -273,8 +289,9 @@ input {
     border: 3px solid #559acb;
     border-radius: 8px;
     overflow: hidden;
+    width: 100%;
     aspect-ratio: 1;
-    margin: 15px auto;
+    margin: 12px auto;
 }
 
 .cell {
@@ -282,7 +299,7 @@ input {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: clamp(15px,5vw,22px);
+    font-size: clamp(14px,4.8vw,22px);
     color: #318bc5;
     min-width: 0;
     cursor: pointer;
@@ -314,11 +331,11 @@ input {
 .numbers {
     display: grid;
     grid-template-columns: repeat(9,1fr);
-    gap: 5px;
+    gap: 4px;
 }
 
 .number {
-    padding: 13px 0;
+    padding: 12px 0;
     background: #d9f0ff;
     color: #347eae;
     border-radius: 9px;
@@ -328,12 +345,12 @@ input {
 .hint-area {
     display: flex;
     gap: 8px;
-    margin-top: 15px;
+    margin-top: 12px;
 }
 
 .hint-area button {
     flex: 1;
-    padding: 14px 5px;
+    padding: 13px 5px;
     border-radius: 13px;
     background: #4da9e8;
     color: white;
@@ -349,10 +366,29 @@ input {
 }
 
 .message {
-    min-height: 25px;
-    margin-top: 12px;
+    min-height: 22px;
+    margin-top: 8px;
     color: #388ac1;
     font-size: 13px;
+}
+
+/* РЕЗУЛЬТАТ И НАСТРОЙКИ */
+
+.result-card {
+    width: 100%;
+    max-width: 430px;
+    margin: auto;
+    text-align: center;
+}
+
+.settings-card {
+    width: 100%;
+    max-width: 430px;
+    margin: 30px auto;
+    background: #ffffffdf;
+    border-radius: 28px;
+    padding: 23px;
+    text-align: center;
 }
 
 </style>
@@ -360,11 +396,7 @@ input {
 
 <body>
 
-<button id="musicButton" class="off"
-onclick="toggleMusic()">♫</button>
-
-<button id="settingsButton"
-onclick="openSettings()">⚙</button>
+<!-- ПРИВЕТСТВИЕ -->
 
 <section id="welcome" class="screen active">
 
@@ -394,15 +426,20 @@ min="1900" max="2026">
 </div>
 </section>
 
+<!-- КАРТА -->
+
 <section id="mapScreen" class="screen">
 
-<div class="header">
+<div class="topbar">
 
-<button onclick="showWelcome()">←</button>
+<button class="top-button" onclick="showWelcome()">←</button>
 
-<b>☁ CLOUD SUDOKU</b>
+<button class="top-button" id="mapMusic"
+onclick="toggleMusic()">♫</button>
 
-<button onclick="showWelcome()">⌂</button>
+<div class="brand">☁ CLOUD SUDOKU</div>
+
+<button class="top-button" onclick="openSettings()">⚙</button>
 
 </div>
 
@@ -412,17 +449,26 @@ min="1900" max="2026">
 
 </section>
 
+<!-- ИГРА -->
+
 <section id="gameScreen" class="screen">
 
-<div class="header">
+<div class="topbar">
 
-<button onclick="showMap()">←</button>
+<button class="top-button" onclick="showMap()">←</button>
 
-<b>УРОВЕНЬ <span id="levelNumber">1</span></b>
+<button class="top-button" id="gameMusic"
+onclick="toggleMusic()">♫</button>
 
-<button onclick="showMap()">☁</button>
+<div class="brand">☁ CLOUD SUDOKU</div>
+
+<button class="top-button" onclick="openSettings()">⚙</button>
 
 </div>
+
+<h2 class="game-title">
+УРОВЕНЬ <span id="levelNumber">1</span>
+</h2>
 
 <div class="game-card">
 
@@ -449,19 +495,33 @@ min="1900" max="2026">
 <button onclick="useHint()">💡 Подсказка</button>
 
 <button class="ad-btn hidden"
-id="adButton" onclick="watchAd()">▶ ADS</button>
+id="adButton" onclick="watchAd()">🔴 ADS</button>
 
 </div>
 
 <div class="message" id="message"></div>
 
 </div>
-
 </section>
+
+<!-- РЕЗУЛЬТАТ -->
 
 <section id="resultScreen" class="screen">
 
-<div class="center">
+<div class="topbar">
+
+<button class="top-button" onclick="showMap()">←</button>
+
+<button class="top-button" id="resultMusic"
+onclick="toggleMusic()">♫</button>
+
+<div class="brand">☁ CLOUD SUDOKU</div>
+
+<button class="top-button" onclick="openSettings()">⚙</button>
+
+</div>
+
+<div class="result-card">
 
 <div class="logo">☁ УРА!</div>
 
@@ -489,15 +549,26 @@ id="adButton" onclick="watchAd()">▶ ADS</button>
 </div>
 </section>
 
+<!-- НАСТРОЙКИ -->
+
 <section id="settingsScreen" class="screen">
 
-<div class="center">
+<div class="topbar">
 
-<div class="logo">⚙ Настройки</div>
+<button class="top-button" onclick="backFromSettings()">←</button>
 
-<div class="card">
+<button class="top-button" id="settingsMusic"
+onclick="toggleMusic()">♫</button>
 
-<h2>Настройки игры</h2>
+<div class="brand">☁ CLOUD SUDOKU</div>
+
+<button class="top-button">⚙</button>
+
+</div>
+
+<div class="settings-card">
+
+<h2>⚙ Настройки</h2>
 
 <button class="secondary-btn" onclick="toggleMusic()">
 ♫ Включить / выключить музыку
@@ -508,14 +579,16 @@ id="adButton" onclick="watchAd()">▶ ADS</button>
 </button>
 
 <button class="main-btn" onclick="backFromSettings()">
-Сохранить и вернуться
+Вернуться
 </button>
 
 </div>
-</div>
+
 </section>
 
 <script>
+
+// СОХРАНЕНИЕ
 
 let user = JSON.parse(
 localStorage.getItem("cloudUser") || "null"
@@ -537,6 +610,9 @@ let selected = null;
 let hints = 3;
 let seconds = 0;
 let timerInterval = null;
+let previousScreen = "mapScreen";
+
+// МУЗЫКА
 
 let audioContext = null;
 let masterGain = null;
@@ -579,8 +655,7 @@ async function startMusic() {
 
         musicEnabled = true;
 
-        document.getElementById("musicButton")
-        .classList.remove("off");
+        updateMusicButtons();
 
         musicStep = 0;
 
@@ -606,8 +681,22 @@ function stopMusic() {
 
     musicLoop = null;
 
-    document.getElementById("musicButton")
-    .classList.add("off");
+    updateMusicButtons();
+
+}
+
+function updateMusicButtons() {
+
+    ["mapMusic","gameMusic","resultMusic","settingsMusic"]
+    .forEach(id=>{
+
+        let btn=document.getElementById(id);
+
+        if(!btn) return;
+
+        btn.classList.toggle("music-off",!musicEnabled);
+
+    });
 
 }
 
@@ -682,37 +771,7 @@ function playPhonk() {
 
 }
 
-function openSettings() {
-
-    showScreen("settingsScreen");
-
-}
-
-function backFromSettings() {
-
-    if(user) {
-        showMap();
-    } else {
-        showWelcome();
-    }
-
-}
-
-function resetProgress() {
-
-    if(confirm("Ты действительно хочешь сбросить весь прогресс?")) {
-
-        localStorage.removeItem("cloudUnlocked");
-        localStorage.removeItem("cloudRecords");
-
-        unlocked=1;
-        records={};
-
-        showMap();
-
-    }
-
-}
+// ЭКРАНЫ
 
 function showScreen(id) {
 
@@ -771,6 +830,47 @@ function showMap() {
     drawMap();
 
 }
+
+function openSettings() {
+
+    previousScreen =
+    document.querySelector(".screen.active").id;
+
+    showScreen("settingsScreen");
+
+}
+
+function backFromSettings() {
+
+    showScreen(previousScreen);
+
+    if(previousScreen==="mapScreen") {
+        drawMap();
+    }
+
+}
+
+// СБРОС
+
+function resetProgress() {
+
+    if(confirm("Ты действительно хочешь сбросить весь прогресс?")) {
+
+        localStorage.removeItem("cloudUnlocked");
+
+        localStorage.removeItem("cloudRecords");
+
+        unlocked=1;
+
+        records={};
+
+        showMap();
+
+    }
+
+}
+
+// КАРТА
 
 function drawMap() {
 
@@ -848,6 +948,8 @@ function drawMap() {
     },100);
 
 }
+
+// SUDOKU
 
 function shuffle(arr) {
 
@@ -949,6 +1051,8 @@ function formatTime(sec) {
 
 }
 
+// ДОСКА
+
 function renderBoard() {
 
     let element=document.getElementById("board");
@@ -1018,6 +1122,8 @@ function renderNumbers() {
 
 }
 
+// ВВОД
+
 function enterNumber(n) {
 
     if(!selected) {
@@ -1039,6 +1145,8 @@ function enterNumber(n) {
     checkCompletion();
 
 }
+
+// ПОДСКАЗКИ
 
 function updateHints() {
 
@@ -1118,6 +1226,8 @@ function giveOneHint() {
 
 }
 
+// РЕКЛАМА
+
 function watchAd() {
 
     showMessage("Рекламная система пока не подключена.");
@@ -1133,6 +1243,8 @@ function grantRewardedHint() {
     }
 
 }
+
+// ЗАВЕРШЕНИЕ
 
 function checkCompletion() {
 
@@ -1194,6 +1306,8 @@ function showMessage(text) {
 
 }
 
+// ВОССТАНОВЛЕНИЕ ИМЕНИ
+
 if(user) {
 
     document.getElementById("name").value=user.name;
@@ -1201,6 +1315,8 @@ if(user) {
     document.getElementById("birth").value=user.birth;
 
 }
+
+updateMusicButtons();
 
 </script>
 
