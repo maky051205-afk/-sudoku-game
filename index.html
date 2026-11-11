@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#120d16">
+<meta name="theme-color" content="#160f19">
 <link rel="icon" type="image/png" href="./sudoku-icon.png">
 <link rel="apple-touch-icon" href="./sudoku-icon.png">
 <title>Судоку на логику</title>
@@ -17,30 +17,28 @@
 }
 
 html, body {
+    margin: 0;
     width: 100%;
     height: 100%;
     height: 100dvh;
-    margin: 0;
-    padding: 0;
     overflow: hidden;
-    overscroll-behavior: none;
     position: fixed;
     inset: 0;
-    touch-action: pan-x pan-y;
+    overscroll-behavior: none;
 }
 
 body {
     background:
-        radial-gradient(ellipse at top, #382638 0%, transparent 55%),
-        linear-gradient(145deg, #120d16, #211421 55%, #100c13);
+        radial-gradient(ellipse at 50% 0%, #493044 0%, transparent 55%),
+        linear-gradient(145deg, #100b13, #251827 55%, #120d16);
     color: #ead9bd;
     font-family: 'Montserrat', sans-serif;
 }
 
 button {
     font-family: inherit;
-    cursor: pointer;
     border: none;
+    cursor: pointer;
     -webkit-appearance: none;
 }
 
@@ -49,17 +47,16 @@ button {
     inset: 0;
     width: 100%;
     max-width: 440px;
-    height: 100%;
     height: 100dvh;
     margin: auto;
     padding:
         max(env(safe-area-inset-top), 12px)
         13px
         max(env(safe-area-inset-bottom), 12px);
-    overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    overflow: hidden;
 }
 
 .screen {
@@ -67,7 +64,7 @@ button {
     width: 100%;
     max-height: 100%;
     overflow: hidden;
-    animation: appear .25s ease;
+    animation: fade .25s ease;
 }
 
 .screen.active {
@@ -79,62 +76,62 @@ button {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0;
 }
 
-@keyframes appear {
-    from { opacity: 0; }
-    to { opacity: 1; }
+@keyframes fade {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .brand {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .brand h1 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 36px;
-    letter-spacing: 4px;
+    font-size: 43px;
+    letter-spacing: 3px;
     font-weight: 600;
-    color: #d8b987;
+    color: #dfc18e;
     margin: 0;
+    text-shadow: 0 2px 15px #b58b5433;
 }
 
 .brand p {
-    color: #a88e78;
-    font-size: 10px;
+    color: #b49a84;
+    font-size: 11px;
     letter-spacing: 5px;
     margin: 6px 0 0;
 }
 
 .card {
     width: 100%;
-    background: linear-gradient(145deg, rgba(59,39,57,.95), rgba(29,20,32,.98));
-    border: 1px solid rgba(207,171,119,.32);
-    border-radius: 23px;
-    padding: 22px 18px;
-    box-shadow: 0 12px 30px rgba(0,0,0,.22);
+    background: linear-gradient(145deg, rgba(65,43,62,.96), rgba(29,20,32,.98));
+    border: 1px solid rgba(207,171,119,.35);
+    border-radius: 24px;
+    padding: 24px 19px;
+    box-shadow: 0 12px 35px #0005;
 }
 
 .subtitle {
     text-align: center;
-    color: #bca68d;
-    font-size: 13px;
+    color: #c6ad91;
+    font-size: 14px;
     line-height: 1.7;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
 }
 
 input {
     width: 100%;
-    padding: 14px;
+    padding: 15px;
     border-radius: 13px;
     border: 1px solid #765b65;
     background: #211722;
     color: #ead9bd;
-    font-size: 15px;
+    font-size: 16px;
     outline: none;
-    margin-bottom: 12px;
+    margin-bottom: 13px;
 }
 
 input::placeholder {
@@ -143,82 +140,49 @@ input::placeholder {
 
 .main-btn {
     width: 100%;
-    padding: 15px;
+    padding: 16px;
     border-radius: 14px;
-    background: linear-gradient(110deg, #b38b58, #ddc49a);
+    background: linear-gradient(110deg, #b38b58, #e0c69b);
     color: #211622;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: 2px;
-    margin-top: 9px;
-}
-
-.main-btn:active,
-.small-btn:active,
-.number:active {
-    transform: scale(.97);
+    margin-top: 10px;
 }
 
 .player-name {
     text-align: center;
-    color: #c7a879;
+    color: #d4b681;
     font-family: 'Cormorant Garamond', serif;
-    font-size: 25px;
-    margin-bottom: 5px;
+    font-size: 31px;
+    margin-bottom: 8px;
 }
 
 .level-label {
     text-align: center;
-    color: #a99082;
-    font-size: 11px;
+    color: #b49a84;
+    font-size: 12px;
     letter-spacing: 3px;
-    margin: 8px 0 20px;
+    margin: 15px 0 12px;
 }
 
 .level-number {
     text-align: center;
     font-family: 'Cormorant Garamond', serif;
-    font-size: 65px;
+    font-size: 76px;
     color: #dfc397;
     line-height: 1;
-    margin-bottom: 18px;
+    margin-bottom: 19px;
 }
 
 .menu-info {
     display: flex;
     justify-content: space-between;
-    border-top: 1px solid rgba(207,171,119,.2);
-    padding-top: 15px;
-    margin-top: 17px;
-    color: #aa9381;
-    font-size: 11px;
-}
-
-.premium-card {
-    text-align: center;
-    border: 1px solid rgba(218,181,119,.35);
-    background: linear-gradient(145deg, #453044, #211722);
-    border-radius: 17px;
-    padding: 15px 12px;
-    margin-top: 15px;
-}
-
-.crown {
-    font-size: 30px;
-}
-
-.premium-card h2 {
-    font-family: 'Cormorant Garamond', serif;
-    color: #e0c18f;
-    font-size: 27px;
-    margin: 3px 0;
-}
-
-.premium-card p {
-    color: #bca68d;
-    font-size: 11px;
-    line-height: 1.6;
-    margin: 7px 0;
+    border-top: 1px solid #cfab772e;
+    padding-top: 17px;
+    margin-top: 20px;
+    color: #c0a68d;
+    font-size: 13px;
 }
 
 /* ИГРОВОЙ ЭКРАН */
@@ -226,47 +190,48 @@ input::placeholder {
 .game-top {
     width: 100%;
     display: grid;
-    grid-template-columns: 45px 1fr 45px;
+    grid-template-columns: 46px 1fr 46px;
     align-items: center;
-    flex-shrink: 0;
     margin-bottom: 5px;
+    flex-shrink: 0;
 }
 
 .icon-btn {
-    width: 41px;
-    height: 41px;
+    width: 43px;
+    height: 43px;
     border-radius: 50%;
-    color: #d8bd91;
-    background: rgba(190,151,99,.12);
-    border: 1px solid rgba(207,171,119,.3);
-    font-size: 20px;
+    color: #dfc397;
+    background: linear-gradient(145deg, #493448, #281d2c);
+    border: 1px solid #cfab7755;
+    font-size: 21px;
 }
 
 .game-title {
     text-align: center;
-    color: #d8bd91;
+    color: #e0c397;
     font-family: 'Cormorant Garamond', serif;
-    font-size: 25px;
+    font-size: 32px;
 }
 
 .game-subtitle {
     text-align: center;
-    color: #a99082;
-    font-size: 10px;
-    letter-spacing: 2px;
-    margin: 3px 0 11px;
+    color: #bca38c;
+    font-size: 12px;
+    letter-spacing: 3px;
+    margin: 2px 0 11px;
     flex-shrink: 0;
 }
 
+/* ПОЛЕ */
+
 .board-wrap {
-    width: min(100%, 410px, 47dvh);
-    flex-shrink: 1;
-    min-height: 0;
+    width: min(100%, 440px, 47dvh);
+    flex-shrink: 0;
     aspect-ratio: 1 / 1;
-    padding: 6px;
+    padding: 5px;
     border-radius: 12px;
-    background: #b9966b;
-    box-shadow: 0 7px 20px rgba(0,0,0,.25);
+    background: linear-gradient(145deg, #e0c397, #9c754c);
+    box-shadow: 0 8px 22px #0005;
 }
 
 .board {
@@ -282,18 +247,17 @@ input::placeholder {
 .cell {
     min-width: 0;
     min-height: 0;
-    border: 1px solid rgba(204,177,143,.2);
+    border: 1px solid #cfb28b38;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #d6bd97;
+    color: #e0c69d;
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(16px, 5vw, 23px);
-    font-weight: 600;
+    font-size: clamp(20px, 5.8vw, 27px);
+    font-weight: 700;
     background: #2a202d;
     padding: 0;
     border-radius: 0;
-    touch-action: manipulation;
 }
 
 .cell:nth-child(3n) {
@@ -310,17 +274,17 @@ input::placeholder {
 }
 
 .cell.fixed {
-    color: #ead7b5;
-    background: #35283a;
+    color: #f2dfbd;
+    background: #382b3b;
 }
 
 .cell.selected {
-    background: #695044;
-    color: #fff0d1;
+    background: #765b45;
+    color: white;
 }
 
 .cell.related {
-    background: #413044;
+    background: #423146;
 }
 
 .cell.same {
@@ -328,130 +292,222 @@ input::placeholder {
 }
 
 .cell.wrong {
-    background: #8e343b !important;
-    color: #fff0e9 !important;
-    box-shadow: inset 0 0 0 2px #e76c70;
+    background: #913d43 !important;
+    color: #fff !important;
+    box-shadow: inset 0 0 0 2px #ed7777;
 }
 
-.cell.correct {
-    color: #e3c99c;
-}
-
-.hint-instruction {
-    width: 100%;
-    text-align: center;
-    color: #c2a989;
-    font-size: 12px;
-    line-height: 1.4;
-    margin: 10px 0 8px;
-    min-height: 17px;
-    flex-shrink: 0;
-}
+/* ЦИФРЫ */
 
 .numbers {
     width: 100%;
     display: grid;
     grid-template-columns: repeat(9, 1fr);
-    gap: 4px;
+    gap: 5px;
+    margin-top: 12px;
     flex-shrink: 0;
 }
 
 .number {
-    height: clamp(34px, 5.2dvh, 43px);
-    border-radius: 8px;
-    color: #d8bd91;
-    background: linear-gradient(145deg, #443346, #302332);
-    border: 1px solid rgba(207,171,119,.25);
+    height: 45px;
+    border-radius: 9px;
+    color: #e5cda6;
+    background: linear-gradient(145deg, #49364b, #302332);
+    border: 1px solid #cfab7755;
     font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
+    font-size: 26px;
     font-weight: 700;
     padding: 0;
 }
+
+.number:active {
+    background: #795b42;
+    transform: scale(.96);
+}
+
+/* КНОПКИ ПОД ПОЛЕМ */
 
 .actions {
     width: 100%;
     display: flex;
     gap: 9px;
-    margin-top: 9px;
+    margin-top: 10px;
     flex-shrink: 0;
 }
 
 .small-btn {
     flex: 1;
-    height: 39px;
+    height: 42px;
     border-radius: 11px;
-    color: #d7bd96;
-    background: rgba(190,151,99,.12);
-    border: 1px solid rgba(207,171,119,.28);
-    font-size: 20px;
+    color: #e0c69d;
+    background: linear-gradient(145deg, #443246, #2c202e);
+    border: 1px solid #cfab7744;
+    font-size: 22px;
 }
 
-.daily-count {
-    text-align: center;
-    color: #bca68d;
-    font-size: 10px;
-    margin-top: 8px;
+/* НИЖНЯЯ ПАНЕЛЬ */
+
+.bottom-panel {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
     flex-shrink: 0;
+}
+
+.hint-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #e1c394;
+    background: linear-gradient(145deg, #49364b, #302332);
+    border: 1px solid #cfab7755;
+    border-radius: 25px;
+    padding: 8px 13px;
+    font-size: 13px;
+}
+
+.hint-button .bulb {
+    font-size: 19px;
+}
+
+.hint-count {
+    color: #d2b58c;
+    font-size: 12px;
+}
+
+.ads-button {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 25%, #ff7777, #d51e32 65%, #8d1021);
+    border: 2px solid #e1c397;
+    box-shadow: 0 0 13px #d51e3260, inset 0 1px 4px #ffffff55;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    overflow: hidden;
+}
+
+.ads-button::after {
+    content: "";
+    position: absolute;
+    width: 58px;
+    height: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transform: rotate(-43deg);
+    box-shadow: 0 0 3px #fff;
+}
+
+.ads-button span {
+    position: relative;
+    z-index: 1;
 }
 
 .message {
     text-align: center;
-    min-height: 17px;
-    margin-top: 5px;
-    font-size: 11px;
-    color: #d4b98e;
+    min-height: 18px;
+    margin-top: 7px;
+    font-size: 12px;
+    color: #dfc397;
     line-height: 1.4;
     flex-shrink: 0;
 }
 
-.back-btn {
-    display: block;
-    margin: 15px auto 0;
-    color: #c6aa87;
-    background: transparent;
+/* ОКНА */
+
+.modal-bg {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    background: #08060bc9;
+    align-items: center;
+    justify-content: center;
+    padding: 22px;
+}
+
+.modal-bg.active {
+    display: flex;
+}
+
+.modal {
+    width: 100%;
+    max-width: 350px;
+    background: linear-gradient(145deg, #493448, #201723);
+    border: 1px solid #d0ae7a88;
+    border-radius: 25px;
+    padding: 25px 20px;
+    box-shadow: 0 15px 45px #0009;
+    text-align: center;
+    animation: fade .2s ease;
+}
+
+.modal-icon {
+    font-size: 43px;
+    margin-bottom: 7px;
+}
+
+.modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 34px;
+    color: #e0c397;
+    margin: 0 0 12px;
+}
+
+.modal-text {
+    color: #c6ad91;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 17px;
+}
+
+.modal-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 13px;
+    background: linear-gradient(110deg, #b38b58, #e0c69b);
+    color: #211622;
     font-size: 12px;
-    padding: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-top: 8px;
 }
 
-@media (max-height: 700px) {
-    .board-wrap {
-        width: min(100%, 39dvh);
-    }
-
-    .game-subtitle {
-        margin-bottom: 6px;
-    }
-
-    .hint-instruction {
-        margin: 6px 0;
-    }
-
-    .brand {
-        margin-bottom: 12px;
-    }
-
-    .card {
-        padding: 17px 14px;
-    }
-
-    .premium-card {
-        padding: 10px;
-    }
+.modal-secondary {
+    background: #332536;
+    color: #d9c19d;
+    border: 1px solid #cfab7755;
 }
 
-@media (max-width: 350px) {
-    .app {
-        padding-left: 9px;
-        padding-right: 9px;
-    }
+/* АДАПТАЦИЯ */
 
-    .number {
-        font-size: 19px;
-    }
+@media (max-height: 720px) {
+    .game-title { font-size: 27px; }
+    .game-subtitle { margin-bottom: 7px; }
+    .board-wrap { width: min(100%, 410px, 43dvh); }
+    .numbers { margin-top: 8px; }
+    .number { height: 39px; }
+    .actions { margin-top: 7px; }
+    .small-btn { height: 37px; }
+    .bottom-panel { margin-top: 7px; }
+    .ads-button { width: 43px; height: 43px; }
+}
 
-    .cell {
-        font-size: 16px;
-    }
+@media (max-height: 620px) {
+    .board-wrap { width: min(100%, 390px, 39dvh); }
+    .number { height: 34px; }
+    .small-btn { height: 33px; }
+    .game-top .icon-btn { width: 37px; height: 37px; }
+    .bottom-panel { margin-top: 5px; }
+    .ads-button { width: 38px; height: 38px; }
 }
 </style>
 </head>
@@ -459,596 +515,649 @@ input::placeholder {
 <body>
 <div class="app">
 
-<section class="screen" id="profileScreen">
+<!-- ПРОФИЛЬ -->
+<section class="screen active" id="profileScreen">
     <div class="brand">
-        <h1>СУДОКУ</h1>
-        <p>НА ЛОГИКУ</p>
+        <h1>SUDOKU</h1>
+        <p>LOGIC GAME</p>
     </div>
 
     <div class="card">
         <div class="subtitle">
-            Добро пожаловать<br>
-            Создай свой игровой профиль
+            Добро пожаловать в мир логики и красивых решений
         </div>
 
-        <input id="nameInput" type="text" maxlength="24" placeholder="Твоё имя">
+        <input id="nameInput" type="text" maxlength="18" placeholder="Твоё имя">
         <input id="yearInput" type="number" min="1900" max="2026" placeholder="Год рождения">
 
-        <button class="main-btn" onclick="saveProfile()">ПРОДОЛЖИТЬ</button>
+        <button class="main-btn" onclick="saveProfile()">НАЧАТЬ</button>
     </div>
 </section>
 
+<!-- ГЛАВНОЕ МЕНЮ -->
 <section class="screen" id="menuScreen">
     <div class="brand">
-        <h1>СУДОКУ</h1>
-        <p>НА ЛОГИКУ</p>
+        <h1>SUDOKU</h1>
+        <p>LOGIC GAME</p>
     </div>
 
     <div class="card">
-        <div class="player-name" id="welcomeName"></div>
-        <div class="level-label">ТВОЙ ТЕКУЩИЙ УРОВЕНЬ</div>
+        <div class="player-name" id="playerName"></div>
+        <div class="level-label">ТВОЙ УРОВЕНЬ</div>
         <div class="level-number" id="menuLevel">1</div>
 
         <button class="main-btn" onclick="startGame()">НАЧАТЬ ИГРУ</button>
 
         <div class="menu-info">
             <span>Пройдено: <b id="passedCount">0</b></span>
-            <span>Подсказки: <b id="menuHints">3</b>/3</span>
-        </div>
-
-        <div class="premium-card">
-            <div class="crown">👑</div>
-            <h2>PREMIUM</h2>
-            <p>Играй без рекламных объявлений.</p>
-            <button class="main-btn" onclick="openPremium()">УЗНАТЬ О PREMIUM</button>
+            <span>Подсказки: <b id="menuHints">3</b></span>
         </div>
     </div>
 </section>
 
+<!-- ИГРА -->
 <section class="screen" id="gameScreen">
+
     <div class="game-top">
-        <button class="icon-btn" id="musicButton" onclick="toggleMusic()">♫</button>
+        <button class="icon-btn" onclick="toggleMusic()" id="musicButton">♫</button>
         <div class="game-title">Судоку</div>
-        <button class="icon-btn" onclick="useHint()">💡</button>
+        <button class="icon-btn" onclick="showScreen('menuScreen')">⌂</button>
     </div>
 
-    <div class="game-subtitle">
-        УРОВЕНЬ <span id="gameLevel">1</span>
-    </div>
+    <div class="game-subtitle" id="gameLevel">LEVEL 1</div>
 
     <div class="board-wrap">
         <div class="board" id="board"></div>
     </div>
 
-    <div class="hint-instruction" id="hintInstruction">
-        Выбери клетку, затем нажми на нужную цифру.
-    </div>
-
-    <div class="numbers">
-        <button class="number" onclick="enterNumber(1)">1</button>
-        <button class="number" onclick="enterNumber(2)">2</button>
-        <button class="number" onclick="enterNumber(3)">3</button>
-        <button class="number" onclick="enterNumber(4)">4</button>
-        <button class="number" onclick="enterNumber(5)">5</button>
-        <button class="number" onclick="enterNumber(6)">6</button>
-        <button class="number" onclick="enterNumber(7)">7</button>
-        <button class="number" onclick="enterNumber(8)">8</button>
-        <button class="number" onclick="enterNumber(9)">9</button>
+    <div class="numbers" id="numbers">
+        <button class="number" onclick="putNumber(1)">1</button>
+        <button class="number" onclick="putNumber(2)">2</button>
+        <button class="number" onclick="putNumber(3)">3</button>
+        <button class="number" onclick="putNumber(4)">4</button>
+        <button class="number" onclick="putNumber(5)">5</button>
+        <button class="number" onclick="putNumber(6)">6</button>
+        <button class="number" onclick="putNumber(7)">7</button>
+        <button class="number" onclick="putNumber(8)">8</button>
+        <button class="number" onclick="putNumber(9)">9</button>
     </div>
 
     <div class="actions">
         <button class="small-btn" onclick="eraseCell()">⌫</button>
-        <button class="small-btn" onclick="goToMenu()">⌂</button>
-        <button class="small-btn" onclick="checkBoard()">→</button>
+        <button class="small-btn" onclick="checkBoard()">✓</button>
     </div>
 
-    <div class="daily-count" id="hintCount">
-        Бесплатные подсказки сегодня: 3 из 3
-    </div>
+    <div class="bottom-panel">
+        <button class="hint-button" onclick="useHint()">
+            <span class="bulb">💡</span>
+            <span>Подсказка</span>
+            <span class="hint-count" id="hintCount">3/3</span>
+        </button>
 
-    <div class="message" id="gameMessage"></div>
-</section>
-
-<section class="screen" id="premiumScreen">
-    <div class="brand">
-        <h1>СУДОКУ</h1>
-        <p>PREMIUM EDITION</p>
-    </div>
-
-    <div class="card">
-        <div class="premium-card">
-            <div class="crown">👑</div>
-            <h2>PREMIUM</h2>
-            <p>
-                Играй без рекламных объявлений.<br><br>
-                ✦ Без рекламы<br>
-                ✦ Комфортная игра<br>
-                ✦ Элегантный игровой стиль
-            </p>
-            <button class="main-btn" onclick="buyPremium()">ПЛАТНАЯ ВЕРСИЯ</button>
-        </div>
-
-        <button class="back-btn" onclick="showScreen('menuScreen')">
-            ← Вернуться в меню
+        <button class="ads-button" onclick="openAds()">
+            <span>ADS</span>
         </button>
     </div>
+
+    <div class="message" id="message"></div>
 </section>
+
+<!-- ОКНО ADS -->
+<div class="modal-bg" id="adsModal">
+    <div class="modal">
+        <div class="modal-icon">🚫</div>
+        <h2 class="modal-title">Remove Ads</h2>
+        <div class="modal-text">
+            Играй спокойно, без рекламных перерывов.<br><br>
+            Отключение рекламы будет доступно после подключения безопасной оплаты.
+        </div>
+        <button class="modal-btn" onclick="closeModal()">ПОНЯТНО</button>
+        <button class="modal-btn modal-secondary" onclick="closeModal()">НАЗАД</button>
+    </div>
+</div>
+
+<!-- ОКНО ПОДСКАЗКИ -->
+<div class="modal-bg" id="hintModal">
+    <div class="modal">
+        <div class="modal-icon">💡</div>
+        <h2 class="modal-title">Подсказка</h2>
+        <div class="modal-text">
+            Бесплатные подсказки на сегодня закончились.
+            Дополнительная подсказка за просмотр рекламы появится после подключения рекламного сервиса.
+        </div>
+        <button class="modal-btn" onclick="closeModal()">ПОНЯТНО</button>
+    </div>
+</div>
+
+<!-- ОКНО ПОБЕДЫ -->
+<div class="modal-bg" id="winModal">
+    <div class="modal">
+        <div class="modal-icon">✦</div>
+        <h2 class="modal-title">Прекрасно!</h2>
+        <div class="modal-text" id="winText">
+            Уровень пройден!
+        </div>
+        <button class="modal-btn" onclick="nextLevel()">СЛЕДУЮЩИЙ УРОВЕНЬ</button>
+    </div>
+</div>
+
+<!-- ОКНО РЕКЛАМНОГО МЕСТА -->
+<div class="modal-bg" id="levelAdModal">
+    <div class="modal">
+        <div class="modal-icon">✧</div>
+        <h2 class="modal-title">Отличная игра!</h2>
+        <div class="modal-text">
+            Ты прошла уровень!<br>
+            Здесь будет рекламный блок после подключения рекламного сервиса.
+        </div>
+        <button class="modal-btn" onclick="closeLevelAd()">ПРОДОЛЖИТЬ</button>
+    </div>
+</div>
 
 </div>
 
 <script>
-let playerName = localStorage.getItem('logicName') || '';
-let birthYear = localStorage.getItem('logicBirthYear') || '';
-let level = Number(localStorage.getItem('logicLevel') || 1);
-let passed = Number(localStorage.getItem('logicPassed') || 0);
+/* СОХРАНЕНИЕ */
+
+let player = localStorage.getItem("sudokuPlayer") || "";
+let birthYear = localStorage.getItem("sudokuBirth") || "";
+let level = Number(localStorage.getItem("sudokuLevel")) || 1;
+let passed = Number(localStorage.getItem("sudokuPassed")) || 0;
+
+let today = new Date().toDateString();
+let hintDate = localStorage.getItem("sudokuHintDate");
+let hints = Number(localStorage.getItem("sudokuHints"));
+
+if (hintDate !== today) {
+    hints = 3;
+    localStorage.setItem("sudokuHintDate", today);
+    localStorage.setItem("sudokuHints", "3");
+}
+
+if (!Number.isFinite(hints) || hints < 0) hints = 3;
 
 let solution = [];
 let puzzle = [];
 let originalPuzzle = [];
-let selectedCell = null;
-let wrongCells = new Set();
+let selected = -1;
+let wrongCells = [];
 let musicOn = false;
 let audioContext = null;
-let melodyTimer = null;
-let melodyIndex = 0;
-let gameFinished = false;
+
+/* ЭКРАНЫ */
 
 function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(screen => {
-        screen.classList.remove('active');
-    });
-
-    document.getElementById(id).classList.add('active');
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
 }
 
-function saveProfile() {
-    const name = document.getElementById('nameInput').value.trim();
-    const year = document.getElementById('yearInput').value.trim();
+/* ПРОФИЛЬ */
 
-    if (!name || !year || Number(year) < 1900 || Number(year) > 2026) {
-        alert('Введи имя и правильный год рождения.');
+function saveProfile() {
+    let name = document.getElementById("nameInput").value.trim();
+    let year = Number(document.getElementById("yearInput").value);
+
+    if (!name) {
+        alert("Напиши своё имя");
         return;
     }
 
-    playerName = name;
+    if (!year || year < 1900 || year > 2026) {
+        alert("Проверь год рождения");
+        return;
+    }
+
+    player = name;
     birthYear = year;
 
-    localStorage.setItem('logicName', playerName);
-    localStorage.setItem('logicBirthYear', birthYear);
+    localStorage.setItem("sudokuPlayer", player);
+    localStorage.setItem("sudokuBirth", birthYear);
 
     updateMenu();
-    showScreen('menuScreen');
+    showScreen("menuScreen");
 }
 
 function updateMenu() {
-    document.getElementById('welcomeName').textContent = playerName || 'Игрок';
-    document.getElementById('menuLevel').textContent = level;
-    document.getElementById('passedCount').textContent = passed;
-    document.getElementById('menuHints').textContent = getHintsLeft();
+    document.getElementById("playerName").textContent = player || "Игрок";
+    document.getElementById("menuLevel").textContent = level;
+    document.getElementById("passedCount").textContent = passed;
+    document.getElementById("menuHints").textContent = hints;
 }
 
-function todayKey() {
-    const date = new Date();
-    return date.getFullYear() + '-' +
-        (date.getMonth() + 1) + '-' +
-        date.getDate();
+if (player) {
+    updateMenu();
+    showScreen("menuScreen");
 }
 
-function getHintsLeft() {
-    const savedDate = localStorage.getItem('logicHintDate');
-    const savedHints = Number(localStorage.getItem('logicHintsLeft'));
-
-    if (savedDate !== todayKey()) {
-        localStorage.setItem('logicHintDate', todayKey());
-        localStorage.setItem('logicHintsLeft', '3');
-        return 3;
-    }
-
-    return Number.isFinite(savedHints) ? savedHints : 3;
-}
-
-function setHintsLeft(value) {
-    localStorage.setItem('logicHintDate', todayKey());
-    localStorage.setItem('logicHintsLeft', String(value));
-    updateHintDisplay();
-}
-
-function updateHintDisplay() {
-    const left = getHintsLeft();
-
-    document.getElementById('hintCount').textContent =
-        'Бесплатные подсказки сегодня: ' + left + ' из 3';
-
-    document.getElementById('menuHints').textContent = left;
-}
+/* SUDOKU: СОЗДАНИЕ РЕШЁТКИ */
 
 function shuffle(array) {
-    const result = array.slice();
+    let a = array.slice();
 
-    for (let i = result.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [result[i], result[j]] = [result[j], result[i]];
+    for (let i = a.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
     }
 
-    return result;
-}
-
-function pattern(r, c) {
-    return (r * 3 + Math.floor(r / 3) + c) % 9;
+    return a;
 }
 
 function makeSolution() {
-    const bands = shuffle([0, 1, 2]);
-    const rows = [];
+    let base = 3;
+    let side = 9;
 
-    bands.forEach(band => {
-        shuffle([0, 1, 2]).forEach(row => {
-            rows.push(band * 3 + row);
-        });
-    });
-
-    const stacks = shuffle([0, 1, 2]);
-    const cols = [];
-
-    stacks.forEach(stack => {
-        shuffle([0, 1, 2]).forEach(col => {
-            cols.push(stack * 3 + col);
-        });
-    });
-
-    const digits = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-    const grid = [];
-
-    for (let r = 0; r < 9; r++) {
-        const row = [];
-
-        for (let c = 0; c < 9; c++) {
-            row.push(digits[pattern(rows[r], cols[c])]);
-        }
-
-        grid.push(row);
+    function pattern(r, c) {
+        return (base * (r % base) + Math.floor(r / base) + c) % side;
     }
 
-    return grid;
+    let rows = [];
+    let cols = [];
+
+    let bands = shuffle([0, 1, 2]);
+    bands.forEach(b => {
+        shuffle([0, 1, 2]).forEach(r => rows.push(b * 3 + r));
+    });
+
+    let stacks = shuffle([0, 1, 2]);
+    stacks.forEach(s => {
+        shuffle([0, 1, 2]).forEach(c => cols.push(s * 3 + c));
+    });
+
+    let nums = shuffle([1,2,3,4,5,6,7,8,9]);
+
+    return rows.map(r =>
+        cols.map(c => nums[pattern(r, c)])
+    );
 }
 
-function startGame() {
+function countSolutions(grid, limit = 2) {
+    let count = 0;
+
+    function solve() {
+        if (count >= limit) return;
+
+        let best = null;
+        let bestOptions = null;
+
+        for (let r = 0; r < 9; r++) {
+            for (let c = 0; c < 9; c++) {
+                if (grid[r][c] !== 0) continue;
+
+                let options = [];
+
+                for (let n = 1; n <= 9; n++) {
+                    if (validNumber(grid, r, c, n)) options.push(n);
+                }
+
+                if (options.length === 0) return;
+
+                if (!bestOptions || options.length < bestOptions.length) {
+                    best = [r, c];
+                    bestOptions = options;
+                }
+            }
+        }
+
+        if (!best) {
+            count++;
+            return;
+        }
+
+        let [r, c] = best;
+
+        for (let n of bestOptions) {
+            grid[r][c] = n;
+            solve();
+            grid[r][c] = 0;
+
+            if (count >= limit) return;
+        }
+    }
+
+    solve();
+    return count;
+}
+
+function validNumber(grid, row, col, number) {
+    for (let i = 0; i < 9; i++) {
+        if (grid[row][i] === number) return false;
+        if (grid[i][col] === number) return false;
+    }
+
+    let br = Math.floor(row / 3) * 3;
+    let bc = Math.floor(col / 3) * 3;
+
+    for (let r = br; r < br + 3; r++) {
+        for (let c = bc; c < bc + 3; c++) {
+            if (grid[r][c] === number) return false;
+        }
+    }
+
+    return true;
+}
+
+function makePuzzle() {
     solution = makeSolution();
+
     puzzle = solution.map(row => row.slice());
 
-    const blanks = Math.min(55, 32 + Math.floor((level - 1) / 20));
+    let blanks = Math.min(58, 35 + Math.floor((level - 1) / 15));
 
-    const positions = shuffle(
-        Array.from({ length: 81 }, (_, i) => i)
-    );
+    let positions = shuffle(Array.from({length:81}, (_,i) => i));
+    let removed = 0;
 
-    for (let i = 0; i < blanks; i++) {
-        const position = positions[i];
-        const r = Math.floor(position / 9);
-        const c = position % 9;
+    for (let pos of positions) {
+        if (removed >= blanks) break;
+
+        let r = Math.floor(pos / 9);
+        let c = pos % 9;
+        let old = puzzle[r][c];
+
         puzzle[r][c] = 0;
+
+        let test = puzzle.map(row => row.slice());
+
+        if (countSolutions(test) !== 1) {
+            puzzle[r][c] = old;
+        } else {
+            removed++;
+        }
     }
 
     originalPuzzle = puzzle.map(row => row.slice());
+    wrongCells = [];
+    selected = -1;
+}
 
-    selectedCell = null;
-    wrongCells.clear();
-    gameFinished = false;
+/* НАЧАЛО ИГРЫ */
 
-    document.getElementById('gameLevel').textContent = level;
-    document.getElementById('gameMessage').textContent = '';
-    document.getElementById('hintInstruction').textContent =
-        'Выбери клетку, затем нажми на нужную цифру.';
-
-    drawBoard();
+function startGame() {
+    makePuzzle();
+    document.getElementById("gameLevel").textContent = "LEVEL " + level;
+    document.getElementById("message").textContent = "";
+    renderBoard();
     updateHintDisplay();
-    showScreen('gameScreen');
+    showScreen("gameScreen");
 }
 
-function initialPuzzleValue(r, c) {
-    return originalPuzzle[r] && originalPuzzle[r][c] !== 0;
-}
+/* ОТРИСОВКА ПОЛЯ */
 
-function drawBoard() {
-    const board = document.getElementById('board');
-    board.innerHTML = '';
+function renderBoard() {
+    let board = document.getElementById("board");
+    board.innerHTML = "";
 
     for (let r = 0; r < 9; r++) {
         for (let c = 0; c < 9; c++) {
-            const cell = document.createElement('button');
-            const value = puzzle[r][c];
+            let index = r * 9 + c;
+            let cell = document.createElement("button");
 
-            cell.className = 'cell';
-            cell.dataset.row = r;
-            cell.dataset.col = c;
+            cell.className = "cell";
+            cell.textContent = puzzle[r][c] || "";
 
-            if (value !== 0) {
-                cell.textContent = value;
+            if (originalPuzzle[r][c] !== 0) {
+                cell.classList.add("fixed");
             }
 
-            if (initialPuzzleValue(r, c)) {
-                cell.classList.add('fixed');
-            } else if (value !== 0 && value === solution[r][c]) {
-                cell.classList.add('correct');
+            if (wrongCells.includes(index)) {
+                cell.classList.add("wrong");
             }
 
-            if (selectedCell && selectedCell.r === r && selectedCell.c === c) {
-                cell.classList.add('selected');
-            }
+            if (selected === index) {
+                cell.classList.add("selected");
+            } else if (selected >= 0) {
+                let sr = Math.floor(selected / 9);
+                let sc = selected % 9;
 
-            if (selectedCell) {
-                const sameRow = selectedCell.r === r;
-                const sameCol = selectedCell.c === c;
-                const sameBox =
-                    Math.floor(selectedCell.r / 3) === Math.floor(r / 3) &&
-                    Math.floor(selectedCell.c / 3) === Math.floor(c / 3);
-
-                if (sameRow || sameCol || sameBox) {
-                    cell.classList.add('related');
+                if (r === sr || c === sc ||
+                    (Math.floor(r/3) === Math.floor(sr/3) &&
+                     Math.floor(c/3) === Math.floor(sc/3))) {
+                    cell.classList.add("related");
                 }
 
-                if (value !== 0 &&
-                    value === puzzle[selectedCell.r][selectedCell.c]) {
-                    cell.classList.add('same');
+                if (puzzle[r][c] !== 0 &&
+                    puzzle[r][c] === puzzle[sr][sc]) {
+                    cell.classList.add("same");
                 }
             }
 
-            if (wrongCells.has(r + '-' + c)) {
-                cell.classList.add('wrong');
-            }
+            cell.onclick = () => {
+                if (originalPuzzle[r][c] !== 0) return;
+                selected = index;
+                renderBoard();
+            };
 
-            cell.addEventListener('click', () => selectCell(r, c));
             board.appendChild(cell);
         }
     }
 }
 
-function selectCell(r, c) {
-    if (gameFinished) return;
+/* ВВОД ЦИФР */
 
-    selectedCell = { r, c };
-    drawBoard();
-    document.getElementById('gameMessage').textContent = '';
-}
-
-function enterNumber(number) {
-    if (!selectedCell || gameFinished) {
-        document.getElementById('gameMessage').textContent =
-            'Сначала выбери клетку на поле.';
+function putNumber(number) {
+    if (selected < 0) {
+        document.getElementById("message").textContent =
+            "Сначала выбери клетку";
         return;
     }
 
-    const { r, c } = selectedCell;
+    let r = Math.floor(selected / 9);
+    let c = selected % 9;
 
-    if (initialPuzzleValue(r, c)) {
-        document.getElementById('gameMessage').textContent =
-            'Эту клетку нельзя изменить.';
-        return;
-    }
+    if (originalPuzzle[r][c] !== 0) return;
 
     puzzle[r][c] = number;
-    wrongCells.delete(r + '-' + c);
-    drawBoard();
+    wrongCells = wrongCells.filter(i => i !== selected);
+
+    document.getElementById("message").textContent = "";
+    renderBoard();
 }
 
 function eraseCell() {
-    if (!selectedCell || gameFinished) return;
+    if (selected < 0) return;
 
-    const { r, c } = selectedCell;
+    let r = Math.floor(selected / 9);
+    let c = selected % 9;
 
-    if (initialPuzzleValue(r, c)) return;
+    if (originalPuzzle[r][c] !== 0) return;
 
     puzzle[r][c] = 0;
-    wrongCells.delete(r + '-' + c);
-    drawBoard();
+    wrongCells = wrongCells.filter(i => i !== selected);
+    renderBoard();
 }
 
+/* ПРОВЕРКА */
+
 function checkBoard() {
-    if (gameFinished) return;
-
-    wrongCells.clear();
-
-    let emptyCount = 0;
-    let errorCount = 0;
+    wrongCells = [];
+    let empty = 0;
 
     for (let r = 0; r < 9; r++) {
         for (let c = 0; c < 9; c++) {
             if (puzzle[r][c] === 0) {
-                emptyCount++;
+                empty++;
                 continue;
             }
 
             if (puzzle[r][c] !== solution[r][c]) {
-                wrongCells.add(r + '-' + c);
-                errorCount++;
+                wrongCells.push(r * 9 + c);
             }
         }
     }
 
-    drawBoard();
+    renderBoard();
 
-    if (errorCount > 0) {
-        document.getElementById('gameMessage').textContent =
-            'Ошибок: ' + errorCount + '. Исправь красные цифры.';
+    if (wrongCells.length > 0) {
+        document.getElementById("message").textContent =
+            "Проверь красные клетки и попробуй ещё раз";
         return;
     }
 
-    if (emptyCount > 0) {
-        document.getElementById('gameMessage').textContent =
-            'Осталось заполнить клеток: ' + emptyCount + '.';
+    if (empty > 0) {
+        document.getElementById("message").textContent =
+            "Заполни оставшиеся клетки";
         return;
     }
 
-    gameFinished = true;
+    passed++;
+    level++;
 
-    document.getElementById('gameMessage').textContent =
-        '✨ Великолепно! Уровень пройден!';
+    localStorage.setItem("sudokuPassed", passed);
+    localStorage.setItem("sudokuLevel", level);
 
-    setTimeout(() => {
-        level++;
-        passed++;
+    document.getElementById("winText").textContent =
+        "Ты успешно прошла уровень " + (level - 1) + "!";
 
-        localStorage.setItem('logicLevel', String(level));
-        localStorage.setItem('logicPassed', String(passed));
+    document.getElementById("winModal").classList.add("active");
+}
 
-        updateMenu();
-        showScreen('menuScreen');
-    }, 1500);
+/* СЛЕДУЮЩИЙ УРОВЕНЬ */
+
+function nextLevel() {
+    document.getElementById("winModal").classList.remove("active");
+
+    updateMenu();
+
+    if (navigator.onLine) {
+        document.getElementById("levelAdModal").classList.add("active");
+    } else {
+        startGame();
+    }
+}
+
+function closeLevelAd() {
+    document.getElementById("levelAdModal").classList.remove("active");
+    startGame();
+}
+
+/* ПОДСКАЗКИ */
+
+function updateHintDisplay() {
+    document.getElementById("hintCount").textContent = hints + "/3";
+    document.getElementById("menuHints").textContent = hints;
+}
+
+function saveHints() {
+    localStorage.setItem("sudokuHints", hints);
+    localStorage.setItem("sudokuHintDate", today);
+    updateHintDisplay();
 }
 
 function useHint() {
-    if (gameFinished) return;
-
-    if (!selectedCell) {
-        document.getElementById('hintInstruction').textContent =
-            'Сначала выбери клетку на поле, затем нажми 💡.';
+    if (selected < 0) {
+        document.getElementById("message").textContent =
+            "Выбери пустую клетку для подсказки";
         return;
     }
 
-    const { r, c } = selectedCell;
+    let r = Math.floor(selected / 9);
+    let c = selected % 9;
 
-    if (initialPuzzleValue(r, c)) {
-        document.getElementById('hintInstruction').textContent =
-            'Выбери пустую клетку или клетку со своим ответом.';
+    if (originalPuzzle[r][c] !== 0) return;
+
+    if (hints <= 0) {
+        if (navigator.onLine) {
+            document.getElementById("hintModal").classList.add("active");
+        } else {
+            document.getElementById("message").textContent =
+                "Бесплатные подсказки на сегодня закончились";
+        }
         return;
     }
 
-    if (puzzle[r][c] === solution[r][c]) {
-        document.getElementById('hintInstruction').textContent =
-            'В этой клетке уже правильная цифра.';
-        return;
-    }
+    puzzle[r][c] = solution[r][c];
+    hints--;
 
-    const left = getHintsLeft();
+    wrongCells = wrongCells.filter(i => i !== selected);
 
-    if (left > 0) {
-        puzzle[r][c] = solution[r][c];
-        wrongCells.delete(r + '-' + c);
-        setHintsLeft(left - 1);
+    saveHints();
+    renderBoard();
 
-        document.getElementById('hintInstruction').textContent =
-            'Подсказка использована. Осталось: ' + (left - 1);
-
-        drawBoard();
-        return;
-    }
-
-    showHintAdOffer();
+    document.getElementById("message").textContent =
+        "Подсказка использована!";
 }
 
-function showHintAdOffer() {
-    const answer = confirm(
-        'Бесплатные подсказки на сегодня закончились.\\n\\n' +
-        'Дополнительные подсказки можно будет получить за просмотр рекламы. ' +
-        'Рекламный сервис пока не подключён.\\n\\nОткрыть Premium?'
-    );
+/* ADS */
 
-    if (answer) openPremium();
+function openAds() {
+    document.getElementById("adsModal").classList.add("active");
 }
 
-function openPremium() {
-    showScreen('premiumScreen');
-}
-
-function buyPremium() {
-    alert(
-        'Покупка Premium пока не подключена. ' +
-        'Для настоящей оплаты понадобится платёжная система.'
+function closeModal() {
+    document.querySelectorAll(".modal-bg").forEach(m =>
+        m.classList.remove("active")
     );
 }
 
-function goToMenu() {
-    updateMenu();
-    showScreen('menuScreen');
-}
-
-/* СПОКОЙНАЯ ИНСТРУМЕНТАЛЬНАЯ МЕЛОДИЯ */
-
-const melody = [
-    392, 440, 523, 440, 392, 349, 392, 440,
-    523, 587, 523, 440, 392, 349, 330, 349,
-    392, 440, 523, 587, 659, 587, 523, 440
-];
-
-function playNote(frequency, duration) {
-    if (!audioContext || !musicOn) return;
-
-    const oscillator = audioContext.createOscillator();
-    const gain = audioContext.createGain();
-
-    oscillator.type = 'sine';
-    oscillator.frequency.value = frequency;
-
-    gain.gain.setValueAtTime(0.0001, audioContext.currentTime);
-    gain.gain.exponentialRampToValueAtTime(
-        0.045, audioContext.currentTime + 0.04
-    );
-    gain.gain.exponentialRampToValueAtTime(
-        0.0001, audioContext.currentTime + duration
-    );
-
-    oscillator.connect(gain);
-    gain.connect(audioContext.destination);
-
-    oscillator.start();
-    oscillator.stop(audioContext.currentTime + duration + 0.03);
-}
-
-function playMelody() {
-    if (!musicOn) return;
-
-    const note = melody[melodyIndex % melody.length];
-
-    playNote(note, 0.65);
-
-    if (melodyIndex % 4 === 0) {
-        playNote(note / 2, 1.1);
-    }
-
-    melodyIndex++;
-    melodyTimer = setTimeout(playMelody, 650);
-}
+/* МУЗЫКА */
 
 function toggleMusic() {
-    if (!audioContext) {
-        const AudioContextClass =
-            window.AudioContext || window.webkitAudioContext;
+    if (musicOn) {
+        musicOn = false;
+        if (audioContext) audioContext.suspend();
+        document.getElementById("musicButton").textContent = "♫";
+        return;
+    }
+
+    try {
+        let AudioContextClass = window.AudioContext || window.webkitAudioContext;
 
         if (!AudioContextClass) {
-            alert('Музыка не поддерживается этим браузером.');
+            document.getElementById("message").textContent =
+                "Музыка недоступна на этом устройстве";
             return;
         }
 
-        audioContext = new AudioContextClass();
-    }
+        if (!audioContext) {
+            audioContext = new AudioContextClass();
+            playMelody();
+        } else {
+            audioContext.resume();
+        }
 
-    if (audioContext.state === 'suspended') {
-        audioContext.resume();
-    }
-
-    musicOn = !musicOn;
-
-    document.getElementById('musicButton').textContent =
-        musicOn ? '♫' : '♪';
-
-    if (musicOn) {
-        playMelody();
-    } else {
-        clearTimeout(melodyTimer);
+        musicOn = true;
+        document.getElementById("musicButton").textContent = "♫";
+    } catch (e) {
+        document.getElementById("message").textContent =
+            "Не удалось включить музыку";
     }
 }
 
-/* ВОССТАНОВЛЕНИЕ ИГРЫ */
+function playMelody() {
+    if (!audioContext) return;
 
-if (playerName && birthYear) {
-    updateMenu();
-    showScreen('menuScreen');
-} else {
-    showScreen('profileScreen');
+    let notes = [261.63, 329.63, 392, 329.63, 293.66, 349.23, 440, 349.23];
+    let index = 0;
+
+    function note() {
+        if (!musicOn || !audioContext) return;
+
+        let oscillator = audioContext.createOscillator();
+        let gain = audioContext.createGain();
+
+        oscillator.type = "sine";
+        oscillator.frequency.value = notes[index % notes.length];
+
+        gain.gain.setValueAtTime(0.0001, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.035, audioContext.currentTime + 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.65);
+
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.7);
+
+        index++;
+        setTimeout(note, 850);
+    }
+
+    note();
 }
 
-getHintsLeft();
+/* ОБНОВЛЕНИЕ МЕНЮ */
+
+updateMenu();
+updateHintDisplay();
 </script>
-
 </body>
 </html>
