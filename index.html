@@ -3,814 +3,1051 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#090909">
-
+<meta name="theme-color" content="#120d16">
 <link rel="icon" type="image/png" href="./sudoku-icon.png">
 <link rel="apple-touch-icon" href="./sudoku-icon.png">
-
 <title>Судоку на логику</title>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
 }
 
-html {
-    touch-action: manipulation;
-    -webkit-text-size-adjust: 100%;
+html, body {
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+    position: fixed;
+    inset: 0;
+    touch-action: pan-x pan-y;
 }
 
 body {
-    margin: 0;
-    min-height: 100vh;
-    padding: 15px;
-    background: radial-gradient(circle at top, #35240d, #090909 65%);
-    color: white;
-    font-family: Arial, sans-serif;
-    text-align: center;
+    background:
+        radial-gradient(ellipse at top, #382638 0%, transparent 55%),
+        linear-gradient(145deg, #120d16, #211421 55%, #100c13);
+    color: #ead9bd;
+    font-family: 'Montserrat', sans-serif;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    -webkit-appearance: none;
+}
+
+.app {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: 440px;
+    height: 100%;
+    height: 100dvh;
+    margin: auto;
+    padding:
+        max(env(safe-area-inset-top), 12px)
+        13px
+        max(env(safe-area-inset-bottom), 12px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .screen {
     display: none;
-    max-width: 440px;
-    margin: auto;
+    width: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    animation: appear .25s ease;
 }
 
 .screen.active {
     display: block;
 }
 
-.logo {
-    color: #ffd36a;
-    font-size: clamp(22px, 6vw, 32px);
-    font-weight: bold;
-    letter-spacing: 4px;
-    line-height: 1.5;
-    text-shadow: 0 0 20px #d69b30;
-    margin-top: 55px;
+#gameScreen.active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
 }
 
-.subtitle {
-    color: #b99758;
-    letter-spacing: 4px;
-    font-size: 10px;
-    margin: 10px 0 35px;
+@keyframes appear {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
-.card {
-    background: linear-gradient(145deg, #211a0e, #111);
-    border: 1px solid #98702c;
-    border-radius: 24px;
-    padding: 24px 20px;
-    box-shadow: 0 12px 35px #0008;
-    margin-bottom: 18px;
-}
-
-h2 {
-    color: #ffd36a;
-}
-
-.description {
-    color: #aaa;
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-.input-label {
-    display: block;
-    text-align: left;
-    color: #c6a66b;
-    font-size: 12px;
-    margin: 18px 0 7px 3px;
-}
-
-.input {
-    width: 100%;
-    padding: 15px;
-    border-radius: 12px;
-    border: 1px solid #a77d35;
-    background: #0b0b0b;
-    color: white;
-    font-size: 16px;
+.brand {
     text-align: center;
-    outline: none;
-}
-
-.btn {
-    width: 100%;
-    padding: 16px;
-    border-radius: 13px;
-    border: 1px solid #b88b39;
-    background: #211a0d;
-    color: #ffd36a;
-    font-weight: bold;
-    font-size: 15px;
-    margin-top: 12px;
-    cursor: pointer;
-    touch-action: manipulation;
-}
-
-.btn.gold {
-    background: linear-gradient(135deg, #ffe5a4, #c18a2c);
-    color: #17100a;
-    border: none;
-    box-shadow: 0 5px 18px #b77c1d44;
-}
-
-.btn:active,
-.icon-btn:active {
-    transform: scale(.96);
-}
-
-.level-title {
-    color: #c5a66b;
-    font-size: 12px;
-    letter-spacing: 4px;
-    margin-top: 20px;
-}
-
-.level-big {
-    color: #ffd36a;
-    font-size: 55px;
-    font-weight: bold;
-    margin: 15px 0;
-    text-shadow: 0 0 20px #b77c1d55;
-}
-
-.level-description {
-    color: #999;
-    font-size: 13px;
     margin-bottom: 20px;
 }
 
-.game-header {
+.brand h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    letter-spacing: 4px;
+    font-weight: 600;
+    color: #d8b987;
+    margin: 0;
+}
+
+.brand p {
+    color: #a88e78;
+    font-size: 10px;
+    letter-spacing: 5px;
+    margin: 6px 0 0;
+}
+
+.card {
+    width: 100%;
+    background: linear-gradient(145deg, rgba(59,39,57,.95), rgba(29,20,32,.98));
+    border: 1px solid rgba(207,171,119,.32);
+    border-radius: 23px;
+    padding: 22px 18px;
+    box-shadow: 0 12px 30px rgba(0,0,0,.22);
+}
+
+.subtitle {
+    text-align: center;
+    color: #bca68d;
+    font-size: 13px;
+    line-height: 1.7;
+    margin-bottom: 18px;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 13px;
+    border: 1px solid #765b65;
+    background: #211722;
+    color: #ead9bd;
+    font-size: 15px;
+    outline: none;
+    margin-bottom: 12px;
+}
+
+input::placeholder {
+    color: #947d83;
+}
+
+.main-btn {
+    width: 100%;
+    padding: 15px;
+    border-radius: 14px;
+    background: linear-gradient(110deg, #b38b58, #ddc49a);
+    color: #211622;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-top: 9px;
+}
+
+.main-btn:active,
+.small-btn:active,
+.number:active {
+    transform: scale(.97);
+}
+
+.player-name {
+    text-align: center;
+    color: #c7a879;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 25px;
+    margin-bottom: 5px;
+}
+
+.level-label {
+    text-align: center;
+    color: #a99082;
+    font-size: 11px;
+    letter-spacing: 3px;
+    margin: 8px 0 20px;
+}
+
+.level-number {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 65px;
+    color: #dfc397;
+    line-height: 1;
+    margin-bottom: 18px;
+}
+
+.menu-info {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid rgba(207,171,119,.2);
+    padding-top: 15px;
+    margin-top: 17px;
+    color: #aa9381;
+    font-size: 11px;
+}
+
+.premium-card {
+    text-align: center;
+    border: 1px solid rgba(218,181,119,.35);
+    background: linear-gradient(145deg, #453044, #211722);
+    border-radius: 17px;
+    padding: 15px 12px;
+    margin-top: 15px;
+}
+
+.crown {
+    font-size: 30px;
+}
+
+.premium-card h2 {
+    font-family: 'Cormorant Garamond', serif;
+    color: #e0c18f;
+    font-size: 27px;
+    margin: 3px 0;
+}
+
+.premium-card p {
+    color: #bca68d;
+    font-size: 11px;
+    line-height: 1.6;
+    margin: 7px 0;
+}
+
+/* ИГРОВОЙ ЭКРАН */
+
+.game-top {
+    width: 100%;
     display: grid;
-    grid-template-columns: 48px 1fr 48px;
+    grid-template-columns: 45px 1fr 45px;
     align-items: center;
-    gap: 8px;
-    margin: 8px auto 22px;
-    max-width: 440px;
+    flex-shrink: 0;
+    margin-bottom: 5px;
 }
 
 .icon-btn {
-    width: 44px;
-    height: 44px;
+    width: 41px;
+    height: 41px;
     border-radius: 50%;
-    border: 1px solid #a77d35;
-    background: linear-gradient(145deg, #282012, #100e0a);
-    color: #ffd36a;
-    font-size: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    touch-action: manipulation;
-}
-
-.game-level {
-    color: #ffd36a;
+    color: #d8bd91;
+    background: rgba(190,151,99,.12);
+    border: 1px solid rgba(207,171,119,.3);
     font-size: 20px;
-    font-weight: bold;
+}
+
+.game-title {
+    text-align: center;
+    color: #d8bd91;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 25px;
+}
+
+.game-subtitle {
+    text-align: center;
+    color: #a99082;
+    font-size: 10px;
     letter-spacing: 2px;
+    margin: 3px 0 11px;
+    flex-shrink: 0;
 }
 
-.game-card {
-    padding: 15px;
+.board-wrap {
+    width: min(100%, 410px, 47dvh);
+    flex-shrink: 1;
+    min-height: 0;
+    aspect-ratio: 1 / 1;
+    padding: 6px;
+    border-radius: 12px;
+    background: #b9966b;
+    box-shadow: 0 7px 20px rgba(0,0,0,.25);
 }
 
-#board {
+.board {
     display: grid;
     grid-template-columns: repeat(9, 1fr);
-    gap: 1px;
-    background: #bd913e;
-    border: 2px solid #d6a641;
+    grid-template-rows: repeat(9, 1fr);
     width: 100%;
-    aspect-ratio: 1;
-    touch-action: manipulation;
+    height: 100%;
+    background: #241b28;
+    border: 1px solid #b9966b;
 }
 
 .cell {
     min-width: 0;
-    border: 0;
-    border-radius: 0;
-    background: #171717;
-    color: white;
-    text-align: center;
+    min-height: 0;
+    border: 1px solid rgba(204,177,143,.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #d6bd97;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(16px, 5vw, 23px);
+    font-weight: 600;
+    background: #2a202d;
     padding: 0;
-    font-size: clamp(15px, 5vw, 23px);
-    font-weight: bold;
-    outline: none;
+    border-radius: 0;
     touch-action: manipulation;
 }
 
-.cell.fixed {
-    color: #e5bd68;
-    background: #252016;
-}
-
-.cell.selected {
-    background: #59431c;
-}
-
-.cell.wrong {
-    background: #a32626;
-    color: white;
-}
-
-.cell.correct {
-    color: #ffe5a4;
-}
-
 .cell:nth-child(3n) {
-    border-right: 2px solid #d6a641;
+    border-right: 2px solid #b9966b;
+}
+
+.cell:nth-child(9n) {
+    border-right: 1px solid #b9966b;
 }
 
 .cell:nth-child(n+19):nth-child(-n+27),
 .cell:nth-child(n+46):nth-child(-n+54) {
-    border-bottom: 2px solid #d6a641;
+    border-bottom: 2px solid #b9966b;
+}
+
+.cell.fixed {
+    color: #ead7b5;
+    background: #35283a;
+}
+
+.cell.selected {
+    background: #695044;
+    color: #fff0d1;
+}
+
+.cell.related {
+    background: #413044;
+}
+
+.cell.same {
+    background: #69513d;
+}
+
+.cell.wrong {
+    background: #8e343b !important;
+    color: #fff0e9 !important;
+    box-shadow: inset 0 0 0 2px #e76c70;
+}
+
+.cell.correct {
+    color: #e3c99c;
+}
+
+.hint-instruction {
+    width: 100%;
+    text-align: center;
+    color: #c2a989;
+    font-size: 12px;
+    line-height: 1.4;
+    margin: 10px 0 8px;
+    min-height: 17px;
+    flex-shrink: 0;
 }
 
 .numbers {
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(9, 1fr);
-    gap: 5px;
-    margin: 15px 0;
+    gap: 4px;
+    flex-shrink: 0;
 }
 
-.numbers button {
-    padding: 12px 0;
-    border: 1px solid #a77d29;
+.number {
+    height: clamp(34px, 5.2dvh, 43px);
     border-radius: 8px;
-    background: #251d10;
-    color: #ffd36a;
-    font-size: 17px;
-    touch-action: manipulation;
+    color: #d8bd91;
+    background: linear-gradient(145deg, #443346, #302332);
+    border: 1px solid rgba(207,171,119,.25);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 700;
+    padding: 0;
 }
 
 .actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    width: 100%;
+    display: flex;
+    gap: 9px;
+    margin-top: 9px;
+    flex-shrink: 0;
 }
 
-.actions .btn {
-    margin: 0;
-    padding: 13px 5px;
-    font-size: 13px;
+.small-btn {
+    flex: 1;
+    height: 39px;
+    border-radius: 11px;
+    color: #d7bd96;
+    background: rgba(190,151,99,.12);
+    border: 1px solid rgba(207,171,119,.28);
+    font-size: 20px;
+}
+
+.daily-count {
+    text-align: center;
+    color: #bca68d;
+    font-size: 10px;
+    margin-top: 8px;
+    flex-shrink: 0;
 }
 
 .message {
-    color: #ffd36a;
-    min-height: 35px;
-    margin-top: 15px;
-    line-height: 1.5;
-    font-size: 13px;
+    text-align: center;
+    min-height: 17px;
+    margin-top: 5px;
+    font-size: 11px;
+    color: #d4b98e;
+    line-height: 1.4;
+    flex-shrink: 0;
 }
 
-footer {
-    color: #665638;
-    font-size: 10px;
-    margin: 30px 0;
-    letter-spacing: 3px;
+.back-btn {
+    display: block;
+    margin: 15px auto 0;
+    color: #c6aa87;
+    background: transparent;
+    font-size: 12px;
+    padding: 10px;
+}
+
+@media (max-height: 700px) {
+    .board-wrap {
+        width: min(100%, 39dvh);
+    }
+
+    .game-subtitle {
+        margin-bottom: 6px;
+    }
+
+    .hint-instruction {
+        margin: 6px 0;
+    }
+
+    .brand {
+        margin-bottom: 12px;
+    }
+
+    .card {
+        padding: 17px 14px;
+    }
+
+    .premium-card {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 350px) {
+    .app {
+        padding-left: 9px;
+        padding-right: 9px;
+    }
+
+    .number {
+        font-size: 19px;
+    }
+
+    .cell {
+        font-size: 16px;
+    }
 }
 </style>
 </head>
 
 <body>
+<div class="app">
 
-<section id="welcome" class="screen active">
-
-    <div class="logo">СУДОКУ НА ЛОГИКУ</div>
-    <div class="subtitle">МИР ГОЛОВОЛОМОК</div>
+<section class="screen" id="profileScreen">
+    <div class="brand">
+        <h1>СУДОКУ</h1>
+        <p>НА ЛОГИКУ</p>
+    </div>
 
     <div class="card">
-        <h2>Добро пожаловать!</h2>
+        <div class="subtitle">
+            Добро пожаловать<br>
+            Создай свой игровой профиль
+        </div>
 
-        <p class="description">
-            Создай свой игровой профиль.
-        </p>
+        <input id="nameInput" type="text" maxlength="24" placeholder="Твоё имя">
+        <input id="yearInput" type="number" min="1900" max="2026" placeholder="Год рождения">
 
-        <label class="input-label">ТВОЁ ИМЯ</label>
-        <input id="playerName" class="input"
-               type="text" maxlength="20"
-               placeholder="Напиши имя" autocomplete="off">
+        <button class="main-btn" onclick="saveProfile()">ПРОДОЛЖИТЬ</button>
+    </div>
+</section>
 
-        <label class="input-label">ГОД РОЖДЕНИЯ</label>
-        <input id="birthYear" class="input"
-               type="number" inputmode="numeric"
-               placeholder="Например, 2012"
-               min="1900" max="2026">
+<section class="screen" id="menuScreen">
+    <div class="brand">
+        <h1>СУДОКУ</h1>
+        <p>НА ЛОГИКУ</p>
+    </div>
 
-        <button class="btn gold" onclick="saveProfile()">
-            ПРОДОЛЖИТЬ
+    <div class="card">
+        <div class="player-name" id="welcomeName"></div>
+        <div class="level-label">ТВОЙ ТЕКУЩИЙ УРОВЕНЬ</div>
+        <div class="level-number" id="menuLevel">1</div>
+
+        <button class="main-btn" onclick="startGame()">НАЧАТЬ ИГРУ</button>
+
+        <div class="menu-info">
+            <span>Пройдено: <b id="passedCount">0</b></span>
+            <span>Подсказки: <b id="menuHints">3</b>/3</span>
+        </div>
+
+        <div class="premium-card">
+            <div class="crown">👑</div>
+            <h2>PREMIUM</h2>
+            <p>Играй без рекламных объявлений.</p>
+            <button class="main-btn" onclick="openPremium()">УЗНАТЬ О PREMIUM</button>
+        </div>
+    </div>
+</section>
+
+<section class="screen" id="gameScreen">
+    <div class="game-top">
+        <button class="icon-btn" id="musicButton" onclick="toggleMusic()">♫</button>
+        <div class="game-title">Судоку</div>
+        <button class="icon-btn" onclick="useHint()">💡</button>
+    </div>
+
+    <div class="game-subtitle">
+        УРОВЕНЬ <span id="gameLevel">1</span>
+    </div>
+
+    <div class="board-wrap">
+        <div class="board" id="board"></div>
+    </div>
+
+    <div class="hint-instruction" id="hintInstruction">
+        Выбери клетку, затем нажми на нужную цифру.
+    </div>
+
+    <div class="numbers">
+        <button class="number" onclick="enterNumber(1)">1</button>
+        <button class="number" onclick="enterNumber(2)">2</button>
+        <button class="number" onclick="enterNumber(3)">3</button>
+        <button class="number" onclick="enterNumber(4)">4</button>
+        <button class="number" onclick="enterNumber(5)">5</button>
+        <button class="number" onclick="enterNumber(6)">6</button>
+        <button class="number" onclick="enterNumber(7)">7</button>
+        <button class="number" onclick="enterNumber(8)">8</button>
+        <button class="number" onclick="enterNumber(9)">9</button>
+    </div>
+
+    <div class="actions">
+        <button class="small-btn" onclick="eraseCell()">⌫</button>
+        <button class="small-btn" onclick="goToMenu()">⌂</button>
+        <button class="small-btn" onclick="checkBoard()">→</button>
+    </div>
+
+    <div class="daily-count" id="hintCount">
+        Бесплатные подсказки сегодня: 3 из 3
+    </div>
+
+    <div class="message" id="gameMessage"></div>
+</section>
+
+<section class="screen" id="premiumScreen">
+    <div class="brand">
+        <h1>СУДОКУ</h1>
+        <p>PREMIUM EDITION</p>
+    </div>
+
+    <div class="card">
+        <div class="premium-card">
+            <div class="crown">👑</div>
+            <h2>PREMIUM</h2>
+            <p>
+                Играй без рекламных объявлений.<br><br>
+                ✦ Без рекламы<br>
+                ✦ Комфортная игра<br>
+                ✦ Элегантный игровой стиль
+            </p>
+            <button class="main-btn" onclick="buyPremium()">ПЛАТНАЯ ВЕРСИЯ</button>
+        </div>
+
+        <button class="back-btn" onclick="showScreen('menuScreen')">
+            ← Вернуться в меню
         </button>
     </div>
 </section>
 
-<section id="startScreen" class="screen">
-
-    <div class="logo">СУДОКУ НА ЛОГИКУ</div>
-    <div class="subtitle">ТВОЁ ПУТЕШЕСТВИЕ НАЧИНАЕТСЯ</div>
-
-    <div class="card">
-
-        <p class="description" id="welcomeName"></p>
-
-        <div class="level-title">ТВОЙ УРОВЕНЬ</div>
-
-        <div class="level-big" id="startLevel">1</div>
-
-        <div class="level-description">Из 1000 уровней</div>
-
-        <button class="btn gold" onclick="openGame()">
-            НАЧАТЬ ИГРУ
-        </button>
-
-    </div>
-</section>
-
-<section id="game" class="screen">
-
-    <div class="game-header">
-
-        <button class="icon-btn" id="soundButton"
-                onclick="toggleMusic()">🔇</button>
-
-        <div class="game-level" id="gameLevel">1 УРОВЕНЬ</div>
-
-        <button class="icon-btn" onclick="hint()">💡</button>
-
-    </div>
-
-    <div class="card game-card">
-
-        <div id="board"></div>
-
-        <div class="numbers">
-            <button onclick="enterNumber(1)">1</button>
-            <button onclick="enterNumber(2)">2</button>
-            <button onclick="enterNumber(3)">3</button>
-            <button onclick="enterNumber(4)">4</button>
-            <button onclick="enterNumber(5)">5</button>
-            <button onclick="enterNumber(6)">6</button>
-            <button onclick="enterNumber(7)">7</button>
-            <button onclick="enterNumber(8)">8</button>
-            <button onclick="enterNumber(9)">9</button>
-        </div>
-
-        <div class="actions">
-            <button class="btn" onclick="eraseCell()">⌫ Стереть</button>
-            <button class="btn" onclick="goToMenu()">Меню</button>
-        </div>
-
-        <div class="message" id="message">
-            Выбери клетку и начинай!
-        </div>
-
-    </div>
-</section>
-
-<footer>СУДОКУ НА ЛОГИКУ</footer>
+</div>
 
 <script>
-
-/* ПРОФИЛЬ */
-
-let playerName = localStorage.getItem("logicName") || "";
-let birthYear = localStorage.getItem("logicBirthYear") || "";
-
-let level = Number(localStorage.getItem("logicLevel")) || 1;
-let passed = Number(localStorage.getItem("logicPassed")) || 0;
+let playerName = localStorage.getItem('logicName') || '';
+let birthYear = localStorage.getItem('logicBirthYear') || '';
+let level = Number(localStorage.getItem('logicLevel') || 1);
+let passed = Number(localStorage.getItem('logicPassed') || 0);
 
 let solution = [];
 let puzzle = [];
-let fixed = [];
-let selected = -1;
-let hints = 3;
-let completed = false;
-let advanceTimer = null;
-
-const board = document.getElementById("board");
+let originalPuzzle = [];
+let selectedCell = null;
+let wrongCells = new Set();
+let musicOn = false;
+let audioContext = null;
+let melodyTimer = null;
+let melodyIndex = 0;
+let gameFinished = false;
 
 function showScreen(id) {
-    document.querySelectorAll(".screen").forEach(screen => {
-        screen.classList.remove("active");
+    document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
     });
 
-    document.getElementById(id).classList.add("active");
+    document.getElementById(id).classList.add('active');
 }
 
-/* ПРОФИЛЬ */
-
 function saveProfile() {
-    const name = document.getElementById("playerName").value.trim();
-    const year = Number(document.getElementById("birthYear").value);
+    const name = document.getElementById('nameInput').value.trim();
+    const year = document.getElementById('yearInput').value.trim();
 
-    if (!name) {
-        alert("Напиши своё имя!");
-        return;
-    }
-
-    if (!year || year < 1900 || year > 2026) {
-        alert("Проверь год рождения!");
+    if (!name || !year || Number(year) < 1900 || Number(year) > 2026) {
+        alert('Введи имя и правильный год рождения.');
         return;
     }
 
     playerName = name;
-    birthYear = String(year);
+    birthYear = year;
 
-    localStorage.setItem("logicName", playerName);
-    localStorage.setItem("logicBirthYear", birthYear);
+    localStorage.setItem('logicName', playerName);
+    localStorage.setItem('logicBirthYear', birthYear);
 
-    document.getElementById("welcomeName").textContent =
-        "Добро пожаловать, " + playerName + "!";
-
-    document.getElementById("startLevel").textContent = level;
-
-    showScreen("startScreen");
+    updateMenu();
+    showScreen('menuScreen');
 }
 
-function openGame() {
-    newGame();
-    showScreen("game");
+function updateMenu() {
+    document.getElementById('welcomeName').textContent = playerName || 'Игрок';
+    document.getElementById('menuLevel').textContent = level;
+    document.getElementById('passedCount').textContent = passed;
+    document.getElementById('menuHints').textContent = getHintsLeft();
 }
 
-function goToMenu() {
-    if (advanceTimer) {
-        clearTimeout(advanceTimer);
-        advanceTimer = null;
+function todayKey() {
+    const date = new Date();
+    return date.getFullYear() + '-' +
+        (date.getMonth() + 1) + '-' +
+        date.getDate();
+}
+
+function getHintsLeft() {
+    const savedDate = localStorage.getItem('logicHintDate');
+    const savedHints = Number(localStorage.getItem('logicHintsLeft'));
+
+    if (savedDate !== todayKey()) {
+        localStorage.setItem('logicHintDate', todayKey());
+        localStorage.setItem('logicHintsLeft', '3');
+        return 3;
     }
 
-    document.getElementById("startLevel").textContent = level;
-    showScreen("startScreen");
+    return Number.isFinite(savedHints) ? savedHints : 3;
 }
 
-/* СОЗДАНИЕ СУДОКУ */
+function setHintsLeft(value) {
+    localStorage.setItem('logicHintDate', todayKey());
+    localStorage.setItem('logicHintsLeft', String(value));
+    updateHintDisplay();
+}
+
+function updateHintDisplay() {
+    const left = getHintsLeft();
+
+    document.getElementById('hintCount').textContent =
+        'Бесплатные подсказки сегодня: ' + left + ' из 3';
+
+    document.getElementById('menuHints').textContent = left;
+}
 
 function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
+    const result = array.slice();
+
+    for (let i = result.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+        [result[i], result[j]] = [result[j], result[i]];
     }
 
-    return array;
+    return result;
 }
 
-function generateSolution() {
-    const pattern = (r, c) =>
-        (r * 3 + Math.floor(r / 3) + c) % 9;
+function pattern(r, c) {
+    return (r * 3 + Math.floor(r / 3) + c) % 9;
+}
 
+function makeSolution() {
+    const bands = shuffle([0, 1, 2]);
     const rows = [];
+
+    bands.forEach(band => {
+        shuffle([0, 1, 2]).forEach(row => {
+            rows.push(band * 3 + row);
+        });
+    });
+
+    const stacks = shuffle([0, 1, 2]);
     const cols = [];
 
-    shuffle([0, 1, 2]).forEach(band => {
-        shuffle([0, 1, 2]).forEach(r => {
-            rows.push(band * 3 + r);
+    stacks.forEach(stack => {
+        shuffle([0, 1, 2]).forEach(col => {
+            cols.push(stack * 3 + col);
         });
     });
 
-    shuffle([0, 1, 2]).forEach(stack => {
-        shuffle([0, 1, 2]).forEach(c => {
-            cols.push(stack * 3 + c);
-        });
-    });
+    const digits = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    const grid = [];
 
-    const nums = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    for (let r = 0; r < 9; r++) {
+        const row = [];
 
-    return rows.map(r =>
-        cols.map(c => nums[pattern(r, c)])
-    );
-}
+        for (let c = 0; c < 9; c++) {
+            row.push(digits[pattern(rows[r], cols[c])]);
+        }
 
-function newGame() {
-    if (advanceTimer) {
-        clearTimeout(advanceTimer);
-        advanceTimer = null;
+        grid.push(row);
     }
 
-    solution = generateSolution();
-    puzzle = solution.map(row => [...row]);
+    return grid;
+}
 
-    let blanks = Math.min(
-        60,
-        30 + Math.floor((level - 1) / 25)
-    );
+function startGame() {
+    solution = makeSolution();
+    puzzle = solution.map(row => row.slice());
+
+    const blanks = Math.min(55, 32 + Math.floor((level - 1) / 20));
 
     const positions = shuffle(
-        Array.from({length: 81}, (_, i) => i)
+        Array.from({ length: 81 }, (_, i) => i)
     );
 
     for (let i = 0; i < blanks; i++) {
-        const pos = positions[i];
-        puzzle[Math.floor(pos / 9)][pos % 9] = 0;
+        const position = positions[i];
+        const r = Math.floor(position / 9);
+        const c = position % 9;
+        puzzle[r][c] = 0;
     }
 
-    fixed = puzzle.map(row => row.map(v => v !== 0));
+    originalPuzzle = puzzle.map(row => row.slice());
 
-    selected = -1;
-    hints = 3;
-    completed = false;
+    selectedCell = null;
+    wrongCells.clear();
+    gameFinished = false;
 
-    document.getElementById("gameLevel").textContent =
-        level + " УРОВЕНЬ";
+    document.getElementById('gameLevel').textContent = level;
+    document.getElementById('gameMessage').textContent = '';
+    document.getElementById('hintInstruction').textContent =
+        'Выбери клетку, затем нажми на нужную цифру.';
 
-    document.getElementById("message").textContent =
-        "Выбери клетку и начинай!";
-
-    renderBoard();
+    drawBoard();
+    updateHintDisplay();
+    showScreen('gameScreen');
 }
 
-/* ОТОБРАЖЕНИЕ */
+function initialPuzzleValue(r, c) {
+    return originalPuzzle[r] && originalPuzzle[r][c] !== 0;
+}
 
-function renderBoard() {
-    board.innerHTML = "";
+function drawBoard() {
+    const board = document.getElementById('board');
+    board.innerHTML = '';
 
     for (let r = 0; r < 9; r++) {
         for (let c = 0; c < 9; c++) {
+            const cell = document.createElement('button');
+            const value = puzzle[r][c];
 
-            const index = r * 9 + c;
-            const cell = document.createElement("button");
+            cell.className = 'cell';
+            cell.dataset.row = r;
+            cell.dataset.col = c;
 
-            cell.className = "cell";
-            cell.textContent = puzzle[r][c] || "";
+            if (value !== 0) {
+                cell.textContent = value;
+            }
 
-            if (fixed[r][c]) {
-                cell.classList.add("fixed");
-            } else if (puzzle[r][c] !== 0) {
+            if (initialPuzzleValue(r, c)) {
+                cell.classList.add('fixed');
+            } else if (value !== 0 && value === solution[r][c]) {
+                cell.classList.add('correct');
+            }
 
-                if (puzzle[r][c] !== solution[r][c]) {
-                    cell.classList.add("wrong");
-                } else {
-                    cell.classList.add("correct");
+            if (selectedCell && selectedCell.r === r && selectedCell.c === c) {
+                cell.classList.add('selected');
+            }
+
+            if (selectedCell) {
+                const sameRow = selectedCell.r === r;
+                const sameCol = selectedCell.c === c;
+                const sameBox =
+                    Math.floor(selectedCell.r / 3) === Math.floor(r / 3) &&
+                    Math.floor(selectedCell.c / 3) === Math.floor(c / 3);
+
+                if (sameRow || sameCol || sameBox) {
+                    cell.classList.add('related');
+                }
+
+                if (value !== 0 &&
+                    value === puzzle[selectedCell.r][selectedCell.c]) {
+                    cell.classList.add('same');
                 }
             }
 
-            if (selected === index) {
-                cell.classList.add("selected");
+            if (wrongCells.has(r + '-' + c)) {
+                cell.classList.add('wrong');
             }
 
-            cell.onclick = () => {
-                selected = index;
-                renderBoard();
-            };
-
+            cell.addEventListener('click', () => selectCell(r, c));
             board.appendChild(cell);
         }
     }
 }
 
-/* АВТОМАТИЧЕСКАЯ ПРОВЕРКА */
+function selectCell(r, c) {
+    if (gameFinished) return;
 
-function checkAutomatically() {
+    selectedCell = { r, c };
+    drawBoard();
+    document.getElementById('gameMessage').textContent = '';
+}
 
-    let allFilled = true;
-    let allCorrect = true;
+function enterNumber(number) {
+    if (!selectedCell || gameFinished) {
+        document.getElementById('gameMessage').textContent =
+            'Сначала выбери клетку на поле.';
+        return;
+    }
+
+    const { r, c } = selectedCell;
+
+    if (initialPuzzleValue(r, c)) {
+        document.getElementById('gameMessage').textContent =
+            'Эту клетку нельзя изменить.';
+        return;
+    }
+
+    puzzle[r][c] = number;
+    wrongCells.delete(r + '-' + c);
+    drawBoard();
+}
+
+function eraseCell() {
+    if (!selectedCell || gameFinished) return;
+
+    const { r, c } = selectedCell;
+
+    if (initialPuzzleValue(r, c)) return;
+
+    puzzle[r][c] = 0;
+    wrongCells.delete(r + '-' + c);
+    drawBoard();
+}
+
+function checkBoard() {
+    if (gameFinished) return;
+
+    wrongCells.clear();
+
+    let emptyCount = 0;
+    let errorCount = 0;
 
     for (let r = 0; r < 9; r++) {
         for (let c = 0; c < 9; c++) {
-
             if (puzzle[r][c] === 0) {
-                allFilled = false;
+                emptyCount++;
+                continue;
             }
 
             if (puzzle[r][c] !== solution[r][c]) {
-                allCorrect = false;
+                wrongCells.add(r + '-' + c);
+                errorCount++;
             }
         }
     }
 
-    if (allFilled && allCorrect) {
-        completeLevel();
-    }
-}
+    drawBoard();
 
-function completeLevel() {
-    if (completed) return;
-
-    completed = true;
-    passed++;
-
-    localStorage.setItem("logicPassed", passed);
-
-    document.getElementById("message").textContent =
-        "🎉 Великолепно! Уровень пройден!";
-
-    if (level >= 1000) {
-        document.getElementById("message").textContent =
-            "🏆 Поздравляем! Ты прошла все 1000 уровней!";
+    if (errorCount > 0) {
+        document.getElementById('gameMessage').textContent =
+            'Ошибок: ' + errorCount + '. Исправь красные цифры.';
         return;
     }
 
-    advanceTimer = setTimeout(() => {
+    if (emptyCount > 0) {
+        document.getElementById('gameMessage').textContent =
+            'Осталось заполнить клеток: ' + emptyCount + '.';
+        return;
+    }
+
+    gameFinished = true;
+
+    document.getElementById('gameMessage').textContent =
+        '✨ Великолепно! Уровень пройден!';
+
+    setTimeout(() => {
         level++;
+        passed++;
 
-        localStorage.setItem("logicLevel", level);
+        localStorage.setItem('logicLevel', String(level));
+        localStorage.setItem('logicPassed', String(passed));
 
-        newGame();
-    }, 1600);
+        updateMenu();
+        showScreen('menuScreen');
+    }, 1500);
 }
 
-/* ВВОД ЦИФР */
+function useHint() {
+    if (gameFinished) return;
 
-function enterNumber(num) {
-
-    if (selected < 0 || completed) {
-        document.getElementById("message").textContent =
-            "Сначала выбери пустую клетку!";
+    if (!selectedCell) {
+        document.getElementById('hintInstruction').textContent =
+            'Сначала выбери клетку на поле, затем нажми 💡.';
         return;
     }
 
-    const r = Math.floor(selected / 9);
-    const c = selected % 9;
+    const { r, c } = selectedCell;
 
-    if (fixed[r][c]) return;
-
-    puzzle[r][c] = num;
-
-    renderBoard();
-
-    const message = document.getElementById("message");
-
-    if (num !== solution[r][c]) {
-        message.textContent = "Неправильная цифра. Попробуй другую!";
-    } else {
-        message.textContent = "Правильно!";
-    }
-
-    checkAutomatically();
-}
-
-/* СТИРАНИЕ */
-
-function eraseCell() {
-    if (selected < 0 || completed) return;
-
-    const r = Math.floor(selected / 9);
-    const c = selected % 9;
-
-    if (!fixed[r][c]) {
-        puzzle[r][c] = 0;
-
-        document.getElementById("message").textContent =
-            "Клетка очищена.";
-
-        renderBoard();
-    }
-}
-
-/* ПОДСКАЗКА */
-
-function hint() {
-    if (completed) return;
-
-    if (selected < 0) {
-        document.getElementById("message").textContent =
-            "Сначала выбери клетку!";
+    if (initialPuzzleValue(r, c)) {
+        document.getElementById('hintInstruction').textContent =
+            'Выбери пустую клетку или клетку со своим ответом.';
         return;
     }
 
-    if (hints <= 0) {
-        document.getElementById("message").textContent =
-            "Подсказки закончились!";
+    if (puzzle[r][c] === solution[r][c]) {
+        document.getElementById('hintInstruction').textContent =
+            'В этой клетке уже правильная цифра.';
         return;
     }
 
-    const r = Math.floor(selected / 9);
-    const c = selected % 9;
+    const left = getHintsLeft();
 
-    if (fixed[r][c]) {
-        document.getElementById("message").textContent =
-            "Выбери пустую клетку!";
+    if (left > 0) {
+        puzzle[r][c] = solution[r][c];
+        wrongCells.delete(r + '-' + c);
+        setHintsLeft(left - 1);
+
+        document.getElementById('hintInstruction').textContent =
+            'Подсказка использована. Осталось: ' + (left - 1);
+
+        drawBoard();
         return;
     }
 
-    puzzle[r][c] = solution[r][c];
-    hints--;
-
-    document.getElementById("message").textContent =
-        "Подсказка использована!";
-
-    renderBoard();
-    checkAutomatically();
+    showHintAdOffer();
 }
 
-/* ПЛАВНАЯ МУЗЫКА */
+function showHintAdOffer() {
+    const answer = confirm(
+        'Бесплатные подсказки на сегодня закончились.\\n\\n' +
+        'Дополнительные подсказки можно будет получить за просмотр рекламы. ' +
+        'Рекламный сервис пока не подключён.\\n\\nОткрыть Premium?'
+    );
 
-let audioContext = null;
-let masterGain = null;
-let musicOn = false;
-let musicTimer = null;
-let musicStep = 0;
+    if (answer) openPremium();
+}
+
+function openPremium() {
+    showScreen('premiumScreen');
+}
+
+function buyPremium() {
+    alert(
+        'Покупка Premium пока не подключена. ' +
+        'Для настоящей оплаты понадобится платёжная система.'
+    );
+}
+
+function goToMenu() {
+    updateMenu();
+    showScreen('menuScreen');
+}
+
+/* СПОКОЙНАЯ ИНСТРУМЕНТАЛЬНАЯ МЕЛОДИЯ */
 
 const melody = [
-    261.63, 329.63, 392.00, 329.63,
-    293.66, 349.23, 440.00, 392.00,
-    329.63, 392.00, 493.88, 440.00,
-    349.23, 440.00, 523.25, 440.00
+    392, 440, 523, 440, 392, 349, 392, 440,
+    523, 587, 523, 440, 392, 349, 330, 349,
+    392, 440, 523, 587, 659, 587, 523, 440
 ];
 
-const chords = [
-    [130.81, 164.81, 196.00],
-    [146.83, 174.61, 220.00],
-    [164.81, 196.00, 246.94],
-    [146.83, 174.61, 220.00]
-];
+function playNote(frequency, duration) {
+    if (!audioContext || !musicOn) return;
 
-function playTone(frequency, startTime, duration, volume) {
-    const osc = audioContext.createOscillator();
+    const oscillator = audioContext.createOscillator();
     const gain = audioContext.createGain();
 
-    osc.type = "sine";
-    osc.frequency.value = frequency;
+    oscillator.type = 'sine';
+    oscillator.frequency.value = frequency;
 
-    gain.gain.setValueAtTime(0.0001, startTime);
-    gain.gain.linearRampToValueAtTime(
-        volume, startTime + 0.18
-    );
-    gain.gain.setValueAtTime(
-        volume, startTime + duration - 0.2
+    gain.gain.setValueAtTime(0.0001, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(
+        0.045, audioContext.currentTime + 0.04
     );
     gain.gain.exponentialRampToValueAtTime(
-        0.0001, startTime + duration
+        0.0001, audioContext.currentTime + duration
     );
 
-    osc.connect(gain);
-    gain.connect(masterGain);
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
 
-    osc.start(startTime);
-    osc.stop(startTime + duration + 0.05);
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + duration + 0.03);
 }
 
-function playMusicStep() {
-    if (!musicOn || !audioContext) return;
+function playMelody() {
+    if (!musicOn) return;
 
-    const now = audioContext.currentTime;
-    const note = melody[musicStep % melody.length];
+    const note = melody[melodyIndex % melody.length];
 
-    playTone(note, now, 0.85, 0.09);
+    playNote(note, 0.65);
 
-    if (musicStep % 4 === 0) {
-        const chord = chords[
-            Math.floor(musicStep / 4) % chords.length
-        ];
-
-        chord.forEach((frequency, index) => {
-            playTone(
-                frequency,
-                now,
-                1.8,
-                0.025 - index * 0.004
-            );
-        });
+    if (melodyIndex % 4 === 0) {
+        playNote(note / 2, 1.1);
     }
 
-    musicStep++;
+    melodyIndex++;
+    melodyTimer = setTimeout(playMelody, 650);
 }
 
-async function toggleMusic() {
-    const AudioContextClass =
-        window.AudioContext || window.webkitAudioContext;
-
-    if (!AudioContextClass) return;
-
+function toggleMusic() {
     if (!audioContext) {
-        audioContext = new AudioContextClass();
+        const AudioContextClass =
+            window.AudioContext || window.webkitAudioContext;
 
-        masterGain = audioContext.createGain();
-        masterGain.gain.value = 0.65;
-        masterGain.connect(audioContext.destination);
+        if (!AudioContextClass) {
+            alert('Музыка не поддерживается этим браузером.');
+            return;
+        }
+
+        audioContext = new AudioContextClass();
     }
 
-    await audioContext.resume();
+    if (audioContext.state === 'suspended') {
+        audioContext.resume();
+    }
 
     musicOn = !musicOn;
 
-    document.getElementById("soundButton").textContent =
-        musicOn ? "🔉" : "🔇";
+    document.getElementById('musicButton').textContent =
+        musicOn ? '♫' : '♪';
 
     if (musicOn) {
-        musicStep = 0;
-        playMusicStep();
-
-        musicTimer = setInterval(playMusicStep, 700);
+        playMelody();
     } else {
-        clearInterval(musicTimer);
-        musicTimer = null;
+        clearTimeout(melodyTimer);
     }
 }
 
-/* ВОССТАНОВЛЕНИЕ ПРОФИЛЯ */
+/* ВОССТАНОВЛЕНИЕ ИГРЫ */
 
 if (playerName && birthYear) {
-    document.getElementById("welcomeName").textContent =
-        "Добро пожаловать, " + playerName + "!";
-
-    document.getElementById("startLevel").textContent = level;
-
-    showScreen("startScreen");
+    updateMenu();
+    showScreen('menuScreen');
+} else {
+    showScreen('profileScreen');
 }
 
+getHintsLeft();
 </script>
 
 </body>
