@@ -144,8 +144,6 @@ h2 {
     margin-bottom: 20px;
 }
 
-/* ИГРОВОЙ ЭКРАН */
-
 .game-header {
     display: grid;
     grid-template-columns: 48px 1fr 48px;
@@ -216,7 +214,12 @@ h2 {
 }
 
 .cell.wrong {
-    background: #762b2b;
+    background: #a32626;
+    color: white;
+}
+
+.cell.correct {
+    color: #ffe5a4;
 }
 
 .cell:nth-child(3n) {
@@ -276,15 +279,12 @@ footer {
 
 <body>
 
-<!-- ПЕРВЫЙ ЭКРАН -->
-
 <section id="welcome" class="screen active">
 
     <div class="logo">СУДОКУ НА ЛОГИКУ</div>
     <div class="subtitle">МИР ГОЛОВОЛОМОК</div>
 
     <div class="card">
-
         <h2>Добро пожаловать!</h2>
 
         <p class="description">
@@ -292,35 +292,21 @@ footer {
         </p>
 
         <label class="input-label">ТВОЁ ИМЯ</label>
-        <input
-            id="playerName"
-            class="input"
-            type="text"
-            maxlength="20"
-            placeholder="Напиши имя"
-            autocomplete="off"
-        >
+        <input id="playerName" class="input"
+               type="text" maxlength="20"
+               placeholder="Напиши имя" autocomplete="off">
 
         <label class="input-label">ГОД РОЖДЕНИЯ</label>
-        <input
-            id="birthYear"
-            class="input"
-            type="number"
-            inputmode="numeric"
-            placeholder="Например, 2012"
-            min="1900"
-            max="2026"
-        >
+        <input id="birthYear" class="input"
+               type="number" inputmode="numeric"
+               placeholder="Например, 2012"
+               min="1900" max="2026">
 
         <button class="btn gold" onclick="saveProfile()">
             ПРОДОЛЖИТЬ
         </button>
-
     </div>
-
 </section>
-
-<!-- ЭКРАН ПЕРВОГО УРОВНЯ -->
 
 <section id="startScreen" class="screen">
 
@@ -329,48 +315,31 @@ footer {
 
     <div class="card">
 
-        <p class="description" id="welcomeName">
-            Добро пожаловать!
-        </p>
+        <p class="description" id="welcomeName"></p>
 
         <div class="level-title">ТВОЙ УРОВЕНЬ</div>
 
         <div class="level-big" id="startLevel">1</div>
 
-        <div class="level-description">
-            Из 1000 уровней
-        </div>
+        <div class="level-description">Из 1000 уровней</div>
 
         <button class="btn gold" onclick="openGame()">
             НАЧАТЬ ИГРУ
         </button>
 
     </div>
-
 </section>
-
-<!-- ИГРА -->
 
 <section id="game" class="screen">
 
     <div class="game-header">
 
-        <button
-            class="icon-btn"
-            id="soundButton"
-            onclick="toggleMusic()"
-            aria-label="Звук"
-        >🔇</button>
+        <button class="icon-btn" id="soundButton"
+                onclick="toggleMusic()">🔇</button>
 
-        <div class="game-level" id="gameLevel">
-            1 УРОВЕНЬ
-        </div>
+        <div class="game-level" id="gameLevel">1 УРОВЕНЬ</div>
 
-        <button
-            class="icon-btn"
-            onclick="hint()"
-            aria-label="Подсказка"
-        >💡</button>
+        <button class="icon-btn" onclick="hint()">💡</button>
 
     </div>
 
@@ -391,23 +360,8 @@ footer {
         </div>
 
         <div class="actions">
-
-            <button class="btn" onclick="eraseCell()">
-                ⌫ Стереть
-            </button>
-
-            <button class="btn" onclick="checkBoard()">
-                ✓ Проверить
-            </button>
-
-            <button class="btn" onclick="goToMenu()">
-                Меню
-            </button>
-
-            <button class="btn gold" onclick="nextLevel()">
-                Далее →
-            </button>
-
+            <button class="btn" onclick="eraseCell()">⌫ Стереть</button>
+            <button class="btn" onclick="goToMenu()">Меню</button>
         </div>
 
         <div class="message" id="message">
@@ -415,14 +369,13 @@ footer {
         </div>
 
     </div>
-
 </section>
 
 <footer>СУДОКУ НА ЛОГИКУ</footer>
 
 <script>
 
-/* ПРОФИЛЬ И ПРОГРЕСС */
+/* ПРОФИЛЬ */
 
 let playerName = localStorage.getItem("logicName") || "";
 let birthYear = localStorage.getItem("logicBirthYear") || "";
@@ -436,10 +389,9 @@ let fixed = [];
 let selected = -1;
 let hints = 3;
 let completed = false;
+let advanceTimer = null;
 
 const board = document.getElementById("board");
-
-/* ПЕРЕКЛЮЧЕНИЕ ЭКРАНОВ */
 
 function showScreen(id) {
     document.querySelectorAll(".screen").forEach(screen => {
@@ -449,7 +401,7 @@ function showScreen(id) {
     document.getElementById(id).classList.add("active");
 }
 
-/* СОХРАНЕНИЕ ИМЕНИ И ГОДА */
+/* ПРОФИЛЬ */
 
 function saveProfile() {
     const name = document.getElementById("playerName").value.trim();
@@ -479,16 +431,17 @@ function saveProfile() {
     showScreen("startScreen");
 }
 
-/* НАЧАЛО ИГРЫ */
-
 function openGame() {
     newGame();
     showScreen("game");
-    document.getElementById("gameLevel").textContent =
-        level + " УРОВЕНЬ";
 }
 
 function goToMenu() {
+    if (advanceTimer) {
+        clearTimeout(advanceTimer);
+        advanceTimer = null;
+    }
+
     document.getElementById("startLevel").textContent = level;
     showScreen("startScreen");
 }
@@ -505,7 +458,6 @@ function shuffle(array) {
 }
 
 function generateSolution() {
-
     const pattern = (r, c) =>
         (r * 3 + Math.floor(r / 3) + c) % 9;
 
@@ -532,9 +484,12 @@ function generateSolution() {
 }
 
 function newGame() {
+    if (advanceTimer) {
+        clearTimeout(advanceTimer);
+        advanceTimer = null;
+    }
 
     solution = generateSolution();
-
     puzzle = solution.map(row => [...row]);
 
     let blanks = Math.min(
@@ -566,14 +521,12 @@ function newGame() {
     renderBoard();
 }
 
-/* ОТОБРАЖЕНИЕ ПОЛЯ */
+/* ОТОБРАЖЕНИЕ */
 
 function renderBoard() {
-
     board.innerHTML = "";
 
     for (let r = 0; r < 9; r++) {
-
         for (let c = 0; c < 9; c++) {
 
             const index = r * 9 + c;
@@ -584,6 +537,13 @@ function renderBoard() {
 
             if (fixed[r][c]) {
                 cell.classList.add("fixed");
+            } else if (puzzle[r][c] !== 0) {
+
+                if (puzzle[r][c] !== solution[r][c]) {
+                    cell.classList.add("wrong");
+                } else {
+                    cell.classList.add("correct");
+                }
             }
 
             if (selected === index) {
@@ -591,10 +551,8 @@ function renderBoard() {
             }
 
             cell.onclick = () => {
-
                 selected = index;
                 renderBoard();
-
             };
 
             board.appendChild(cell);
@@ -602,7 +560,58 @@ function renderBoard() {
     }
 }
 
-/* ВВОД ЧИСЕЛ */
+/* АВТОМАТИЧЕСКАЯ ПРОВЕРКА */
+
+function checkAutomatically() {
+
+    let allFilled = true;
+    let allCorrect = true;
+
+    for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+
+            if (puzzle[r][c] === 0) {
+                allFilled = false;
+            }
+
+            if (puzzle[r][c] !== solution[r][c]) {
+                allCorrect = false;
+            }
+        }
+    }
+
+    if (allFilled && allCorrect) {
+        completeLevel();
+    }
+}
+
+function completeLevel() {
+    if (completed) return;
+
+    completed = true;
+    passed++;
+
+    localStorage.setItem("logicPassed", passed);
+
+    document.getElementById("message").textContent =
+        "🎉 Великолепно! Уровень пройден!";
+
+    if (level >= 1000) {
+        document.getElementById("message").textContent =
+            "🏆 Поздравляем! Ты прошла все 1000 уровней!";
+        return;
+    }
+
+    advanceTimer = setTimeout(() => {
+        level++;
+
+        localStorage.setItem("logicLevel", level);
+
+        newGame();
+    }, 1600);
+}
+
+/* ВВОД ЦИФР */
 
 function enterNumber(num) {
 
@@ -620,10 +629,21 @@ function enterNumber(num) {
     puzzle[r][c] = num;
 
     renderBoard();
+
+    const message = document.getElementById("message");
+
+    if (num !== solution[r][c]) {
+        message.textContent = "Неправильная цифра. Попробуй другую!";
+    } else {
+        message.textContent = "Правильно!";
+    }
+
+    checkAutomatically();
 }
 
-function eraseCell() {
+/* СТИРАНИЕ */
 
+function eraseCell() {
     if (selected < 0 || completed) return;
 
     const r = Math.floor(selected / 9);
@@ -631,6 +651,10 @@ function eraseCell() {
 
     if (!fixed[r][c]) {
         puzzle[r][c] = 0;
+
+        document.getElementById("message").textContent =
+            "Клетка очищена.";
+
         renderBoard();
     }
 }
@@ -638,7 +662,6 @@ function eraseCell() {
 /* ПОДСКАЗКА */
 
 function hint() {
-
     if (completed) return;
 
     if (selected < 0) {
@@ -663,80 +686,13 @@ function hint() {
     }
 
     puzzle[r][c] = solution[r][c];
-
     hints--;
 
     document.getElementById("message").textContent =
         "Подсказка использована!";
 
     renderBoard();
-}
-
-/* ПРОВЕРКА */
-
-function checkBoard() {
-
-    if (completed) return;
-
-    let empty = false;
-    let correct = true;
-
-    for (let r = 0; r < 9; r++) {
-
-        for (let c = 0; c < 9; c++) {
-
-            if (puzzle[r][c] === 0) {
-                empty = true;
-            }
-
-            if (puzzle[r][c] !== solution[r][c]) {
-                correct = false;
-            }
-        }
-    }
-
-    if (empty) {
-        document.getElementById("message").textContent =
-            "Заполни все клетки!";
-        return;
-    }
-
-    if (!correct) {
-        document.getElementById("message").textContent =
-            "Есть ошибки. Попробуй ещё раз!";
-        return;
-    }
-
-    completed = true;
-    passed++;
-
-    localStorage.setItem("logicPassed", passed);
-
-    document.getElementById("message").textContent =
-        "🎉 Поздравляем! Уровень пройден!";
-}
-
-/* СЛЕДУЮЩИЙ УРОВЕНЬ */
-
-function nextLevel() {
-
-    if (!completed) {
-        document.getElementById("message").textContent =
-            "Сначала реши судоку!";
-        return;
-    }
-
-    if (level >= 1000) {
-        document.getElementById("message").textContent =
-            "Ты прошла все 1000 уровней!";
-        return;
-    }
-
-    level++;
-
-    localStorage.setItem("logicLevel", level);
-
-    newGame();
+    checkAutomatically();
 }
 
 /* ПЛАВНАЯ МУЗЫКА */
@@ -762,7 +718,6 @@ const chords = [
 ];
 
 function playTone(frequency, startTime, duration, volume) {
-
     const osc = audioContext.createOscillator();
     const gain = audioContext.createGain();
 
@@ -770,20 +725,14 @@ function playTone(frequency, startTime, duration, volume) {
     osc.frequency.value = frequency;
 
     gain.gain.setValueAtTime(0.0001, startTime);
-
     gain.gain.linearRampToValueAtTime(
-        volume,
-        startTime + 0.18
+        volume, startTime + 0.18
     );
-
     gain.gain.setValueAtTime(
-        volume,
-        startTime + duration - 0.2
+        volume, startTime + duration - 0.2
     );
-
     gain.gain.exponentialRampToValueAtTime(
-        0.0001,
-        startTime + duration
+        0.0001, startTime + duration
     );
 
     osc.connect(gain);
@@ -794,30 +743,25 @@ function playTone(frequency, startTime, duration, volume) {
 }
 
 function playMusicStep() {
-
     if (!musicOn || !audioContext) return;
 
     const now = audioContext.currentTime;
-
     const note = melody[musicStep % melody.length];
 
     playTone(note, now, 0.85, 0.09);
 
     if (musicStep % 4 === 0) {
-
         const chord = chords[
             Math.floor(musicStep / 4) % chords.length
         ];
 
         chord.forEach((frequency, index) => {
-
             playTone(
                 frequency,
                 now,
                 1.8,
                 0.025 - index * 0.004
             );
-
         });
     }
 
@@ -825,20 +769,16 @@ function playMusicStep() {
 }
 
 async function toggleMusic() {
-
     const AudioContextClass =
         window.AudioContext || window.webkitAudioContext;
 
     if (!AudioContextClass) return;
 
     if (!audioContext) {
-
         audioContext = new AudioContextClass();
 
         masterGain = audioContext.createGain();
-
         masterGain.gain.value = 0.65;
-
         masterGain.connect(audioContext.destination);
     }
 
@@ -850,18 +790,11 @@ async function toggleMusic() {
         musicOn ? "🔉" : "🔇";
 
     if (musicOn) {
-
         musicStep = 0;
-
         playMusicStep();
 
-        musicTimer = setInterval(
-            playMusicStep,
-            700
-        );
-
+        musicTimer = setInterval(playMusicStep, 700);
     } else {
-
         clearInterval(musicTimer);
         musicTimer = null;
     }
@@ -870,7 +803,6 @@ async function toggleMusic() {
 /* ВОССТАНОВЛЕНИЕ ПРОФИЛЯ */
 
 if (playerName && birthYear) {
-
     document.getElementById("welcomeName").textContent =
         "Добро пожаловать, " + playerName + "!";
 
