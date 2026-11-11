@@ -8,7 +8,7 @@
 <link rel="icon" type="image/png" href="./sudoku-icon.png">
 <link rel="apple-touch-icon" href="./sudoku-icon.png">
 
-<title>SUDOKU PREMIUM</title>
+<title>SUDOKU GOLDEN EDITION</title>
 
 <style>
 * {
@@ -17,53 +17,127 @@
 
 body {
     margin: 0;
-    padding: 15px;
-    background: #090909;
-    color: #fff;
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #30200b, #090909 55%);
+    color: white;
     font-family: Arial, sans-serif;
     text-align: center;
+    padding: 15px;
 }
 
-header {
-    margin: 15px 0 25px;
+.screen {
+    display: none;
+    max-width: 440px;
+    margin: auto;
 }
 
-h1 {
+.screen.active {
+    display: block;
+}
+
+.logo {
     color: #ffd36a;
-    font-size: 34px;
+    font-size: 36px;
+    font-weight: bold;
     letter-spacing: 5px;
-    margin-bottom: 5px;
-    text-shadow: 0 0 15px #c58b20;
+    text-shadow: 0 0 20px #d69b30;
+    margin-top: 35px;
 }
 
 .subtitle {
-    color: #a88a52;
-    letter-spacing: 3px;
+    color: #c39a4e;
+    letter-spacing: 4px;
     font-size: 11px;
+    margin-bottom: 35px;
 }
 
-.panel {
-    max-width: 430px;
-    margin: auto;
-    padding: 18px;
-    background: #141414;
-    border: 1px solid #8d681f;
-    border-radius: 20px;
+.card {
+    background: linear-gradient(145deg, #1d180f, #101010);
+    border: 1px solid #9c742c;
+    border-radius: 22px;
+    padding: 22px;
     box-shadow: 0 0 25px #000;
+    margin-bottom: 18px;
+}
+
+h2 {
+    color: #ffd36a;
+}
+
+input, button {
+    font-family: inherit;
+}
+
+.nameInput {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #c39742;
+    background: #090909;
+    color: white;
+    font-size: 16px;
+    outline: none;
+    margin: 15px 0;
+    text-align: center;
+}
+
+.btn {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #c39742;
+    background: #211a0d;
+    color: #ffd36a;
+    font-weight: bold;
+    font-size: 15px;
+    margin-top: 10px;
+}
+
+.btn.gold {
+    background: linear-gradient(135deg, #ffe4a0, #b77c1d);
+    color: #17100a;
+    border: none;
+}
+
+.btn:active {
+    transform: scale(.97);
+}
+
+.welcomeText {
+    color: #ddd;
+    line-height: 1.6;
+}
+
+.levelNumber {
+    color: #ffd36a;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.progress {
+    width: 100%;
+    height: 8px;
+    background: #292015;
+    border-radius: 20px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+
+.progressBar {
+    height: 100%;
+    background: linear-gradient(90deg, #9b6715, #ffe39b);
+    width: 0%;
 }
 
 .stats {
     display: flex;
     justify-content: space-around;
+    color: #aaa;
+    font-size: 12px;
     margin-bottom: 18px;
 }
 
-.stat {
-    color: #aaa;
-    font-size: 12px;
-}
-
-.stat strong {
+.stats strong {
     display: block;
     color: #ffd36a;
     font-size: 20px;
@@ -73,46 +147,47 @@ h1 {
 #board {
     display: grid;
     grid-template-columns: repeat(9, 1fr);
+    gap: 1px;
+    background: #bd913e;
+    border: 2px solid #d6a641;
     width: 100%;
     aspect-ratio: 1;
-    border: 2px solid #d7a83e;
-    background: #d7a83e;
-    gap: 1px;
 }
 
 .cell {
+    width: 100%;
     min-width: 0;
+    border: 0;
+    border-radius: 0;
     background: #171717;
-    color: #fff;
-    border: none;
+    color: white;
     text-align: center;
+    padding: 0;
     font-size: clamp(15px, 5vw, 23px);
     font-weight: bold;
     outline: none;
-    padding: 0;
-    border-radius: 0;
-}
-
-.cell:focus {
-    background: #44351c;
 }
 
 .cell.fixed {
     color: #e5bd68;
-    background: #222;
+    background: #252016;
+}
+
+.cell.selected {
+    background: #59431c;
 }
 
 .cell.wrong {
-    background: #602323;
+    background: #762b2b;
 }
 
 .cell:nth-child(3n) {
-    border-right: 2px solid #d7a83e;
+    border-right: 2px solid #d6a641;
 }
 
 .cell:nth-child(n+19):nth-child(-n+27),
 .cell:nth-child(n+46):nth-child(-n+54) {
-    border-bottom: 2px solid #d7a83e;
+    border-bottom: 2px solid #d6a641;
 }
 
 .numbers {
@@ -124,79 +199,40 @@ h1 {
 
 .numbers button {
     padding: 12px 0;
-    background: #282015;
-    color: #ffd36a;
-    border: 1px solid #9d762a;
+    border: 1px solid #a77d29;
     border-radius: 8px;
+    background: #251d10;
+    color: #ffd36a;
     font-size: 17px;
-}
-
-button {
-    cursor: pointer;
 }
 
 .actions {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 9px;
-    margin-top: 12px;
+    gap: 8px;
 }
 
-.action {
+.actions .btn {
+    margin: 0;
     padding: 13px 5px;
-    border-radius: 10px;
-    border: 1px solid #a77d29;
-    background: #211b10;
-    color: #ffd36a;
     font-size: 13px;
-    font-weight: bold;
-}
-
-.action:active,
-.numbers button:active {
-    background: #654819;
-}
-
-.gold {
-    background: linear-gradient(135deg, #ffe19a, #b47b19);
-    color: #17100a;
-    border: none;
-}
-
-select {
-    width: 100%;
-    padding: 12px;
-    background: #211b10;
-    color: #ffd36a;
-    border: 1px solid #a77d29;
-    border-radius: 10px;
-    margin-bottom: 12px;
-    font-size: 14px;
 }
 
 #message {
-    min-height: 25px;
-    margin-top: 12px;
     color: #ffd36a;
-    font-size: 14px;
-}
-
-.premium {
+    min-height: 35px;
     margin-top: 15px;
-    padding: 16px;
-    border: 1px solid #d6a33d;
-    border-radius: 15px;
-    background: linear-gradient(135deg, #241b0b, #111);
+    line-height: 1.5;
 }
 
-.premium h3 {
-    color: #ffd36a;
-    margin: 0 0 7px;
-}
-
-.premium p {
-    color: #aaa;
+.small {
+    color: #888;
     font-size: 12px;
+    line-height: 1.5;
+}
+
+#musicButton {
+    margin-bottom: 15px;
 }
 
 footer {
@@ -209,156 +245,325 @@ footer {
 
 <body>
 
-<header>
-    <h1>SUDOKU</h1>
+<!-- ПРИВЕТСТВИЕ -->
+
+<section id="welcome" class="screen active">
+
+    <div class="logo">SUDOKU</div>
     <div class="subtitle">GOLDEN EDITION</div>
-</header>
 
-<div class="panel">
+    <div class="card">
 
-    <div class="stats">
-        <div class="stat">
-            УРОВЕНЬ
-            <strong id="level">1</strong>
-        </div>
+        <h2>Добро пожаловать!</h2>
 
-        <div class="stat">
-            ПРОЙДЕНО
-            <strong id="passed">0</strong>
-        </div>
+        <p class="welcomeText">
+            Добро пожаловать в мир SUDOKU!
+            <br>
+            Готов проверить свою логику?
+        </p>
 
-        <div class="stat">
-            ПОДСКАЗКИ
-            <strong id="hints">3</strong>
-        </div>
-    </div>
+        <input
+            id="playerName"
+            class="nameInput"
+            type="text"
+            maxlength="20"
+            placeholder="Напишите имя или ник"
+            autocomplete="off"
+        >
 
-    <select id="difficulty">
-        <option value="easy">Лёгкий</option>
-        <option value="medium">Средний</option>
-        <option value="hard">Сложный</option>
-    </select>
-
-    <div id="board"></div>
-
-    <div class="numbers">
-        <button onclick="enterNumber(1)">1</button>
-        <button onclick="enterNumber(2)">2</button>
-        <button onclick="enterNumber(3)">3</button>
-        <button onclick="enterNumber(4)">4</button>
-        <button onclick="enterNumber(5)">5</button>
-        <button onclick="enterNumber(6)">6</button>
-        <button onclick="enterNumber(7)">7</button>
-        <button onclick="enterNumber(8)">8</button>
-        <button onclick="enterNumber(9)">9</button>
-    </div>
-
-    <div class="actions">
-        <button class="action" onclick="eraseCell()">⌫ Стереть</button>
-        <button class="action" onclick="hint()">✦ Подсказка</button>
-        <button class="action" onclick="checkBoard()">✓ Проверить</button>
-        <button class="action" onclick="newGame()">↻ Новая игра</button>
-        <button class="action" onclick="toggleMusic()">♫ Музыка</button>
-        <button class="action gold" onclick="nextLevel()">Следующий уровень</button>
-    </div>
-
-    <div id="message">Выбери клетку и начинай играть!</div>
-
-    <div class="premium">
-        <h3>👑 PREMIUM</h3>
-        <p>Особый игровой режим</p>
-        <button class="action gold" onclick="premiumDemo()">
-            Попробовать Premium
+        <button class="btn gold" onclick="startGame()">
+            НАЧАТЬ ИГРУ
         </button>
+
+        <p class="small">
+            1000 уровней • Логика • Мастерство
+        </p>
+
     </div>
 
-</div>
+</section>
 
-<footer>
-    SUDOKU GOLDEN EDITION
-</footer>
+<!-- ГЛАВНОЕ МЕНЮ -->
+
+<section id="menu" class="screen">
+
+    <div class="logo">SUDOKU</div>
+    <div class="subtitle">GOLDEN EDITION</div>
+
+    <div class="card">
+
+        <h2 id="helloName">Привет!</h2>
+
+        <p class="small">Твой текущий уровень</p>
+
+        <div class="levelNumber" id="menuLevel">1 / 1000</div>
+
+        <div class="progress">
+            <div class="progressBar" id="progressBar"></div>
+        </div>
+
+        <button class="btn gold" onclick="openGame()">
+            ПРОДОЛЖИТЬ
+        </button>
+
+        <button class="btn" onclick="toggleMusic()" id="menuMusic">
+            ♫ Включить музыку
+        </button>
+
+        <button class="btn" onclick="changePlayer()">
+            Изменить имя
+        </button>
+
+    </div>
+
+</section>
+
+<!-- ИГРА -->
+
+<section id="game" class="screen">
+
+    <div class="logo" style="font-size:28px">SUDOKU</div>
+
+    <div class="subtitle">GOLDEN EDITION</div>
+
+    <div class="card">
+
+        <div class="stats">
+
+            <div>
+                УРОВЕНЬ
+                <strong id="level">1</strong>
+            </div>
+
+            <div>
+                ПРОЙДЕНО
+                <strong id="passed">0</strong>
+            </div>
+
+            <div>
+                ПОДСКАЗКИ
+                <strong id="hints">3</strong>
+            </div>
+
+        </div>
+
+        <div id="board"></div>
+
+        <div class="numbers">
+            <button onclick="enterNumber(1)">1</button>
+            <button onclick="enterNumber(2)">2</button>
+            <button onclick="enterNumber(3)">3</button>
+            <button onclick="enterNumber(4)">4</button>
+            <button onclick="enterNumber(5)">5</button>
+            <button onclick="enterNumber(6)">6</button>
+            <button onclick="enterNumber(7)">7</button>
+            <button onclick="enterNumber(8)">8</button>
+            <button onclick="enterNumber(9)">9</button>
+        </div>
+
+        <div class="actions">
+
+            <button class="btn" onclick="eraseCell()">
+                ⌫ Стереть
+            </button>
+
+            <button class="btn" onclick="hint()">
+                ✦ Подсказка
+            </button>
+
+            <button class="btn" onclick="checkBoard()">
+                ✓ Проверить
+            </button>
+
+            <button class="btn" onclick="toggleMusic()">
+                ♫ Музыка
+            </button>
+
+            <button class="btn" onclick="goMenu()">
+                Меню
+            </button>
+
+            <button class="btn gold" onclick="nextLevel()">
+                Следующий уровень
+            </button>
+
+        </div>
+
+        <div id="message">
+            Выбери клетку и начинай играть!
+        </div>
+
+    </div>
+
+</section>
+
+<footer>SUDOKU GOLDEN EDITION</footer>
 
 <script>
+
+let playerName = localStorage.getItem("sudokuName") || "";
+
 let level = Number(localStorage.getItem("sudokuLevel")) || 1;
 let passed = Number(localStorage.getItem("sudokuPassed")) || 0;
 
 let solution = [];
 let puzzle = [];
+let fixed = [];
 let selected = -1;
 let hints = 3;
+let completed = false;
 
-let musicOn = false;
 let audioContext = null;
 let musicTimer = null;
-let musicNote = 0;
+let musicOn = false;
+let musicStep = 0;
 
 const board = document.getElementById("board");
 
+function showScreen(id) {
+
+    document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.remove("active");
+    });
+
+    document.getElementById(id).classList.add("active");
+}
+
+function startGame() {
+
+    let input = document.getElementById("playerName").value.trim();
+
+    if (!input) {
+        alert("Напиши своё имя или игровой ник!");
+        return;
+    }
+
+    playerName = input;
+
+    localStorage.setItem("sudokuName", playerName);
+
+    updateMenu();
+    showScreen("menu");
+}
+
+function changePlayer() {
+
+    let newName = prompt("Напиши новое имя или ник:", playerName);
+
+    if (newName && newName.trim()) {
+
+        playerName = newName.trim().slice(0, 20);
+
+        localStorage.setItem("sudokuName", playerName);
+
+        updateMenu();
+    }
+}
+
+function updateMenu() {
+
+    document.getElementById("helloName").textContent =
+        "Привет, " + playerName + "!";
+
+    document.getElementById("menuLevel").textContent =
+        level + " / 1000";
+
+    document.getElementById("progressBar").style.width =
+        (level / 1000 * 100) + "%";
+
+    document.getElementById("menuMusic").textContent =
+        musicOn ? "♫ Выключить музыку" : "♫ Включить музыку";
+}
+
+function openGame() {
+
+    if (level > 1000) level = 1000;
+
+    newGame();
+    showScreen("game");
+}
+
+function goMenu() {
+
+    updateMenu();
+    showScreen("menu");
+}
+
 function shuffle(array) {
+
     for (let i = array.length - 1; i > 0; i--) {
+
         let j = Math.floor(Math.random() * (i + 1));
+
         [array[i], array[j]] = [array[j], array[i]];
     }
+
     return array;
 }
 
 function generateSolution() {
-    let base = [0,1,2,3,4,5,6,7,8];
 
-    let bands = shuffle([0,1,2]);
+    let bands = shuffle([0, 1, 2]);
+    let stacks = shuffle([0, 1, 2]);
+
     let rows = [];
-
-    bands.forEach(b => {
-        shuffle([0,1,2]).forEach(r => {
-            rows.push(b * 3 + r);
-        });
-    });
-
-    let stacks = shuffle([0,1,2]);
     let cols = [];
 
+    bands.forEach(b => {
+
+        shuffle([0, 1, 2]).forEach(r => {
+            rows.push(b * 3 + r);
+        });
+
+    });
+
     stacks.forEach(s => {
-        shuffle([0,1,2]).forEach(c => {
+
+        shuffle([0, 1, 2]).forEach(c => {
             cols.push(s * 3 + c);
         });
+
     });
 
     let nums = shuffle([1,2,3,4,5,6,7,8,9]);
 
-    return rows.map(r =>
-        cols.map(c =>
-            nums[(r * 3 + Math.floor(r / 3) + c) % 9]
-        )
-    );
+    return rows.map(r => {
+
+        return cols.map(c => {
+
+            return nums[(r * 3 + Math.floor(r / 3) + c) % 9];
+
+        });
+
+    });
+
 }
 
 function newGame() {
+
     solution = generateSolution();
 
     puzzle = solution.map(row => [...row]);
 
-    let difficulty = document.getElementById("difficulty").value;
-
-    let blanks;
-
-    if (difficulty === "easy") {
-        blanks = 30 + Math.min(8, Math.floor(level / 100));
-    } else if (difficulty === "medium") {
-        blanks = 40 + Math.min(8, Math.floor(level / 100));
-    } else {
-        blanks = 48 + Math.min(8, Math.floor(level / 100));
-    }
+    let blanks = Math.min(60, 30 + Math.floor((level - 1) / 25));
 
     let positions = shuffle(
         Array.from({length: 81}, (_, i) => i)
     );
 
     positions.slice(0, blanks).forEach(i => {
+
         puzzle[Math.floor(i / 9)][i % 9] = 0;
+
     });
+
+    fixed = puzzle.map(row =>
+        row.map(value => value !== 0)
+    );
 
     hints = 3;
     selected = -1;
+    completed = false;
 
     render();
     updateStats();
@@ -368,116 +573,121 @@ function newGame() {
 }
 
 function render() {
+
     board.innerHTML = "";
 
     for (let r = 0; r < 9; r++) {
+
         for (let c = 0; c < 9; c++) {
+
             let i = r * 9 + c;
 
-            let input = document.createElement("input");
+            let cell = document.createElement("input");
 
-            input.className = "cell";
-            input.type = "text";
-            input.inputMode = "none";
-            input.maxLength = 1;
+            cell.className = "cell";
+            cell.type = "text";
+            cell.inputMode = "none";
+            cell.maxLength = 1;
 
-            input.value = puzzle[r][c] || "";
+            cell.value = puzzle[r][c] || "";
 
-            if (puzzle[r][c] !== 0) {
-                input.classList.add("fixed");
-                input.readOnly = true;
+            if (fixed[r][c]) {
+                cell.classList.add("fixed");
+                cell.readOnly = true;
             }
 
-            input.addEventListener("click", () => {
+            cell.addEventListener("click", () => {
+
                 selected = i;
                 highlight();
+
             });
 
-            input.addEventListener("input", () => {
-                let value = input.value.replace(/[^1-9]/g, "");
+            board.appendChild(cell);
 
-                input.value = value.slice(-1);
-
-                if (input.value) {
-                    puzzle[r][c] = Number(input.value);
-                } else {
-                    puzzle[r][c] = 0;
-                }
-
-                highlight();
-            });
-
-            board.appendChild(input);
         }
+
     }
 
     highlight();
 }
 
 function highlight() {
+
     document.querySelectorAll(".cell").forEach((cell, i) => {
-        cell.style.outline = i === selected ?
-            "2px solid #ffd36a" : "none";
+
+        cell.classList.toggle("selected", i === selected);
+
     });
+
 }
 
 function enterNumber(number) {
-    if (selected < 0) return;
+
+    if (selected < 0 || completed) return;
 
     let r = Math.floor(selected / 9);
     let c = selected % 9;
 
-    if (solution[r][c] === puzzle[r][c] &&
-        puzzle[r][c] !== 0) return;
-
-    if (document.querySelectorAll(".cell")[selected].readOnly) {
-        return;
-    }
+    if (fixed[r][c]) return;
 
     puzzle[r][c] = number;
 
     render();
 
-    document.querySelectorAll(".cell")[selected].focus();
 }
 
 function eraseCell() {
-    if (selected < 0) return;
+
+    if (selected < 0 || completed) return;
 
     let r = Math.floor(selected / 9);
     let c = selected % 9;
 
-    if (document.querySelectorAll(".cell")[selected].readOnly) {
-        return;
-    }
+    if (fixed[r][c]) return;
 
     puzzle[r][c] = 0;
+
     render();
+
 }
 
 function hint() {
+
+    if (completed) return;
+
     if (hints <= 0) {
+
         document.getElementById("message").textContent =
             "Подсказки закончились!";
+
         return;
+
     }
 
     if (selected < 0) {
+
         document.getElementById("message").textContent =
-            "Сначала выбери пустую клетку.";
+            "Сначала выбери клетку.";
+
         return;
+
     }
 
     let r = Math.floor(selected / 9);
     let c = selected % 9;
 
-    if (puzzle[r][c] !== 0) {
+    if (fixed[r][c] || puzzle[r][c] !== 0) {
+
         document.getElementById("message").textContent =
             "Выбери пустую клетку.";
+
         return;
+
     }
 
     puzzle[r][c] = solution[r][c];
+
     hints--;
 
     render();
@@ -485,9 +695,13 @@ function hint() {
 
     document.getElementById("message").textContent =
         "Подсказка использована!";
+
 }
 
 function checkBoard() {
+
+    if (completed) return;
+
     let empty = 0;
     let wrong = 0;
 
@@ -496,107 +710,244 @@ function checkBoard() {
     });
 
     for (let r = 0; r < 9; r++) {
+
         for (let c = 0; c < 9; c++) {
+
             if (puzzle[r][c] === 0) {
+
                 empty++;
+
             } else if (puzzle[r][c] !== solution[r][c]) {
+
                 wrong++;
+
                 board.children[r * 9 + c].classList.add("wrong");
+
             }
+
         }
+
     }
 
     if (wrong > 0) {
-        document.getElementById("message").textContent =
-            "Есть ошибки. Проверь красные клетки!";
-    } else if (empty > 0) {
-        document.getElementById("message").textContent =
-            "Пока всё правильно! Продолжай.";
-    } else {
-        passed++;
-        level++;
-
-        localStorage.setItem("sudokuLevel", level);
-        localStorage.setItem("sudokuPassed", passed);
-
-        updateStats();
 
         document.getElementById("message").textContent =
-            "🏆 Отлично! Уровень пройден!";
+            "Есть ошибки! Проверь красные клетки.";
+
+        return;
+
     }
+
+    if (empty > 0) {
+
+        document.getElementById("message").textContent =
+            "Всё правильно! Продолжай.";
+
+        return;
+
+    }
+
+    completed = true;
+
+    passed++;
+
+    localStorage.setItem("sudokuPassed", passed);
+
+    document.getElementById("message").textContent =
+        "🏆 ПОЗДРАВЛЯЮ! УРОВЕНЬ ПРОЙДЕН!";
+
+    updateStats();
+
 }
 
 function nextLevel() {
-    if (level === Number(localStorage.getItem("sudokuLevel"))) {
-        newGame();
+
+    if (!completed) {
+
+        document.getElementById("message").textContent =
+            "Сначала правильно заверши этот уровень!";
+
+        return;
+
     }
+
+    if (level >= 1000) {
+
+        document.getElementById("message").textContent =
+            "👑 Поздравляем! Ты прошла все 1000 уровней!";
+
+        return;
+
+    }
+
+    level++;
+
+    localStorage.setItem("sudokuLevel", level);
+
+    newGame();
+
 }
 
 function updateStats() {
+
     document.getElementById("level").textContent = level;
+
     document.getElementById("passed").textContent = passed;
+
     document.getElementById("hints").textContent = hints;
+
 }
 
-function premiumDemo() {
-    document.getElementById("message").textContent =
-        "👑 Premium — демонстрационный режим. Реальная оплата пока не подключена.";
+// ЭНЕРГИЧНАЯ МУЗЫКА
+
+function playNote(frequency, duration, volume, type, delay = 0) {
+
+    let start = audioContext.currentTime + delay;
+
+    let oscillator = audioContext.createOscillator();
+
+    let gain = audioContext.createGain();
+
+    oscillator.type = type;
+
+    oscillator.frequency.setValueAtTime(frequency, start);
+
+    gain.gain.setValueAtTime(0.001, start);
+
+    gain.gain.exponentialRampToValueAtTime(
+        volume, start + 0.02
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.001, start + duration
+    );
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    oscillator.start(start);
+    oscillator.stop(start + duration + 0.02);
+
 }
 
-function toggleMusic() {
+function musicBeat() {
+
+    const melody = [
+        523.25, 659.25, 783.99, 659.25,
+        587.33, 698.46, 880, 698.46,
+        659.25, 783.99, 987.77, 783.99,
+        587.33, 698.46, 880, 1046.5
+    ];
+
+    const bass = [
+        130.81, 130.81, 164.81, 164.81,
+        146.83, 146.83, 174.61, 174.61
+    ];
+
+    let step = musicStep % 16;
+
+    playNote(
+        melody[step],
+        0.22,
+        0.055,
+        "triangle"
+    );
+
+    playNote(
+        melody[(step + 4) % 16] * 2,
+        0.12,
+        0.018,
+        "sine",
+        0.12
+    );
+
+    if (step % 2 === 0) {
+
+        playNote(
+            bass[(step / 2) % 8],
+            0.32,
+            0.075,
+            "sawtooth"
+        );
+
+    }
+
+    if (step % 4 === 0) {
+
+        playNote(
+            90,
+            0.13,
+            0.035,
+            "sine"
+        );
+
+    }
+
+    if (step % 4 === 2) {
+
+        playNote(
+            220,
+            0.09,
+            0.018,
+            "triangle"
+        );
+
+    }
+
+    musicStep++;
+}
+
+async function toggleMusic() {
+
     if (!audioContext) {
-        audioContext = new (window.AudioContext ||
-            window.webkitAudioContext)();
+
+        audioContext = new (
+            window.AudioContext ||
+            window.webkitAudioContext
+        )();
+
     }
 
     if (musicOn) {
+
         clearInterval(musicTimer);
+
         musicOn = false;
 
         document.getElementById("message").textContent =
             "Музыка выключена.";
-        return;
+
+    } else {
+
+        await audioContext.resume();
+
+        musicOn = true;
+
+        musicBeat();
+
+        musicTimer = setInterval(musicBeat, 160);
+
+        document.getElementById("message").textContent =
+            "♫ Музыка включена!";
+
     }
 
-    musicOn = true;
-    audioContext.resume();
+    updateMenu();
 
-    const notes = [261.63, 329.63, 392, 329.63, 440, 392, 329.63];
-
-    musicTimer = setInterval(() => {
-        let oscillator = audioContext.createOscillator();
-        let gain = audioContext.createGain();
-
-        oscillator.type = "sine";
-        oscillator.frequency.value = notes[musicNote % notes.length];
-
-        gain.gain.setValueAtTime(0.0001, audioContext.currentTime);
-        gain.gain.exponentialRampToValueAtTime(
-            0.06, audioContext.currentTime + 0.05
-        );
-        gain.gain.exponentialRampToValueAtTime(
-            0.0001, audioContext.currentTime + 0.45
-        );
-
-        oscillator.connect(gain);
-        gain.connect(audioContext.destination);
-
-        oscillator.start();
-        oscillator.stop(audioContext.currentTime + 0.5);
-
-        musicNote++;
-    }, 500);
-
-    document.getElementById("message").textContent =
-        "♫ Музыка включена!";
 }
 
-document.getElementById("difficulty").addEventListener(
-    "change", newGame
-);
+// ВОССТАНОВЛЕНИЕ ИГРЫ
 
-newGame();
-updateStats();
+if (playerName) {
+
+    document.getElementById("playerName").value = playerName;
+
+    updateMenu();
+
+    showScreen("menu");
+
+}
+
 </script>
 
 </body>
