@@ -7,9 +7,10 @@
 
 <title>Cloud Sudoku</title>
 
-<link rel="icon" type="image/png" href="icon.png">
-<link rel="apple-touch-icon" href="icon.png">
-<link rel="shortcut icon" href="icon.png">
+<!-- ИКОНКА ПРИЛОЖЕНИЯ -->
+<link rel="icon" type="image/png" sizes="512x512" href="./icon.png?v=4">
+<link rel="shortcut icon" href="./icon.png?v=4">
+<link rel="apple-touch-icon" sizes="180x180" href="./icon.png?v=4">
 
 <style>
 * {
@@ -629,9 +630,7 @@ function renderBoard() {
             const value = puzzle[r][c];
             button.textContent = value || "";
 
-            if (fixed[r][c]) {
-                button.classList.add("fixed");
-            }
+            if (fixed[r][c]) button.classList.add("fixed");
 
             if (selectedCell &&
                 selectedCell.r === r &&
@@ -645,7 +644,6 @@ function renderBoard() {
 
             button.onclick = () => {
                 if (fixed[r][c] || completed) return;
-
                 selectedCell = {r, c};
                 renderBoard();
             };
@@ -675,19 +673,16 @@ function enterNumber(n) {
     if (fixed[r][c]) return;
 
     puzzle[r][c] = n;
+
     wrongCells = wrongCells.filter(
         x => !(x.r === r && x.c === c)
     );
 
     $("message").textContent = "";
-
     renderBoard();
 
-    if (isFull()) {
-        $("nextButton").style.display = "block";
-    } else {
-        $("nextButton").style.display = "none";
-    }
+    $("nextButton").style.display =
+        isFull() ? "block" : "none";
 }
 
 function eraseCell() {
@@ -832,10 +827,7 @@ function backFromSettings() {
 function updateMusicButtons() {
     ["mapMusic", "gameMusic", "settingsMusic"].forEach(id => {
         const button = $(id);
-
-        if (!button) return;
-
-        button.classList.toggle("music-off", !musicOn);
+        if (button) button.classList.toggle("music-off", !musicOn);
     });
 }
 
@@ -856,9 +848,7 @@ function startMusic() {
 
     if (!Audio) return;
 
-    if (!audioContext) {
-        audioContext = new Audio();
-    }
+    if (!audioContext) audioContext = new Audio();
 
     audioContext.resume();
 
