@@ -2,9 +2,8 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#9bdcff">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#91c9f5">
 <title>Cloud Sudoku</title>
 
 <style>
@@ -19,1305 +18,899 @@ html, body {
     height: 100%;
     overflow: hidden;
     font-family: Arial, sans-serif;
-    color: #23496b;
-    background: linear-gradient(#74c9fa,#c9edff,#f1faff);
 }
 
-button {
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    font-family: inherit;
+body {
+    background: linear-gradient(160deg, #c9edff, #91c9f5, #e8f7ff);
+    color: #24496d;
 }
 
 .screen {
     display: none;
-    height: 100dvh;
     width: 100%;
-    padding: 12px 14px;
+    height: 100dvh;
     overflow: hidden;
+    flex-direction: column;
 }
 
 .screen.active {
     display: flex;
-    flex-direction: column;
 }
 
-/* ВЕРХНЯЯ ПАНЕЛЬ */
+/* ЗАКРЕПЛЁННАЯ ВЕРХНЯЯ ПАНЕЛЬ */
 
 .topbar {
-    width: 100%;
-    max-width: 430px;
-    min-height: 52px;
-    margin: 0 auto;
+    position: relative;
+    z-index: 100;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: 7px;
+    min-height: 58px;
+    padding: 7px 12px;
     flex-shrink: 0;
+    background: #c9edff;
+    box-shadow: 0 4px 12px #477da622;
 }
 
-.top-button {
+.topbar button {
+    border: 0;
+    border-radius: 14px;
+    background: white;
+    color: #35658e;
+    font-size: 20px;
     width: 43px;
-    height: 43px;
-    min-width: 43px;
-    border-radius: 50%;
-    background: linear-gradient(145deg,#ffffff,#b9e6ff);
-    color: #3187bd;
-    font-size: 21px;
-    box-shadow: 0 4px 12px #398bc233;
-    position: relative;
-}
-
-.top-button.music-off::after {
-    content: "";
-    position: absolute;
-    width: 28px;
-    height: 3px;
-    background: #ff5252;
-    border-radius: 5px;
-    transform: rotate(-45deg);
-    top: 20px;
-    left: 7px;
-}
-
-.brand {
-    flex: 1;
-    text-align: center;
-    font-weight: 900;
-    color: white;
-    font-size: 15px;
-    text-shadow: 0 3px 8px #398bc2;
-    white-space: nowrap;
-}
-
-/* ПРИВЕТСТВИЕ */
-
-.center {
-    width: 100%;
-    max-width: 430px;
-    margin: auto;
-    text-align: center;
+    height: 42px;
+    flex-shrink: 0;
+    box-shadow: 0 3px 10px #5a9ac433;
 }
 
 .logo {
-    font-size: 32px;
+    font-size: 16px;
     font-weight: 900;
-    color: white;
-    text-shadow: 0 4px 12px #398bc2;
-    margin-top: 20px;
+    color: #3975a7;
+    white-space: nowrap;
+    text-align: center;
 }
 
-.subtitle {
-    color: #397eaa;
-    letter-spacing: 4px;
-    font-size: 12px;
-    margin: 10px;
+.music-off {
+    position: relative;
+}
+
+.music-off::after {
+    content: "";
+    position: absolute;
+    width: 29px;
+    height: 3px;
+    background: red;
+    transform: rotate(-45deg);
+    left: 7px;
+    top: 19px;
+    border-radius: 5px;
+}
+
+/* ОБЩИЕ ЭЛЕМЕНТЫ */
+
+h1, h2, p {
+    text-align: center;
+}
+
+.center {
+    margin: auto;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    padding: 15px;
 }
 
 .card {
-    background: #ffffffdf;
-    border-radius: 28px;
-    padding: 23px;
-    box-shadow: 0 10px 35px #398bc233;
-    margin-top: 25px;
+    background: #ffffffd9;
+    border-radius: 25px;
+    padding: 20px;
+    box-shadow: 0 8px 25px #4d91bd30;
 }
 
 input {
     width: 100%;
-    padding: 16px;
-    margin: 9px 0;
-    border-radius: 15px;
-    border: 2px solid #c3e8fa;
-    background: white;
+    padding: 14px;
+    border: 2px solid #b9ddf5;
+    border-radius: 14px;
     font-size: 16px;
-    text-align: center;
+    margin: 8px 0;
     outline: none;
 }
 
 .main-btn {
-    width: 100%;
-    padding: 16px;
-    margin-top: 15px;
+    border: none;
     border-radius: 17px;
-    background: linear-gradient(120deg,#65c8ff,#398ee5);
+    padding: 14px 22px;
+    width: 100%;
+    background: linear-gradient(120deg, #58a9e7, #79c5f5);
     color: white;
     font-size: 17px;
-    box-shadow: 0 6px 15px #398ee555;
+    font-weight: bold;
+    margin-top: 12px;
+    box-shadow: 0 5px 12px #4d91bd40;
 }
 
 .secondary-btn {
-    width: 100%;
-    padding: 13px;
-    border-radius: 14px;
-    margin-top: 10px;
+    border: none;
+    border-radius: 15px;
+    padding: 12px;
     background: white;
-    color: #438dbb;
-    border: 1px solid #b9e2f8;
+    color: #3975a7;
+    font-size: 15px;
+    font-weight: bold;
 }
 
-/* КАРТА ОБЛАКОВ */
+/* КАРТА УРОВНЕЙ */
 
-.map-title {
-    text-align: center;
-    color: white;
-    font-size: 25px;
-    text-shadow: 0 3px 10px #398bc2;
-    margin: 15px 0;
+.map-heading {
     flex-shrink: 0;
+    padding: 5px 12px;
 }
 
 .cloud-map {
-    width: 100%;
-    max-width: 430px;
-    margin: 0 auto;
     flex: 1;
     min-height: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
-    border-radius: 25px;
-    padding: 15px;
-    background: linear-gradient(#a5e1ff99,#e5f7ff99);
-    scroll-behavior: smooth;
+    padding: 15px 12px 30px;
 }
 
-.level-item {
-    height: 112px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
+.cloud-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
 }
 
-.level-item:nth-child(odd) {
-    transform: translateX(-45px);
-}
-
-.level-item:nth-child(even) {
-    transform: translateX(45px);
-}
-
-.level-cloud {
-    width: 77px;
-    height: 77px;
+.cloud {
+    border: none;
     border-radius: 50%;
-    background: linear-gradient(145deg,#ffffff,#bde8ff);
-    border: 4px solid white;
-    box-shadow: 0 7px 15px #3e9bd755;
-    color: #318bc5;
+    height: 90px;
+    background: white;
+    color: #3984bb;
     font-size: 23px;
-    position: relative;
-    z-index: 2;
+    font-weight: bold;
+    box-shadow: 0 6px 15px #4d91bd35;
 }
 
-.level-cloud.open {
-    background: linear-gradient(145deg,#fff,#70c9ff);
+.cloud.locked {
+    opacity: .45;
+    filter: grayscale(.5);
 }
 
-.level-cloud.done {
-    background: linear-gradient(145deg,#fff3ad,#ffc85d);
-    color: #98621c;
+.cloud small {
+    display: block;
+    font-size: 10px;
+    margin-top: 5px;
 }
 
-.level-cloud.locked {
-    background: #d8eaf5;
-    color: #91aabd;
+/* ИГРОВАЯ ОБЛАСТЬ */
+
+.game-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 8px 12px 25px;
 }
 
-.level-time {
-    position: absolute;
-    top: 87px;
-    font-size: 11px;
-    color: #286c9c;
+#gameInfo {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 4px;
     font-weight: bold;
 }
 
-/* ИГРОВОЙ ЭКРАН */
-
-#gameScreen {
-    overflow: hidden;
-}
-
-.game-title {
-    text-align: center;
-    color: white;
-    font-size: 21px;
-    margin: 14px 0 8px;
-    text-shadow: 0 3px 10px #398bc2;
-    flex-shrink: 0;
-}
-
-.game-card {
-    width: 100%;
-    max-width: 430px;
+.board-card {
     margin: 12px auto 0;
-    padding: 14px;
-    background: #ffffffdc;
-    border-radius: 25px;
-    box-shadow: 0 10px 30px #438fc233;
-    text-align: center;
-    flex-shrink: 0;
-}
-
-.game-stats {
-    display: flex;
-    justify-content: space-around;
-    gap: 8px;
-    margin: 5px 0 12px;
-}
-
-.stat {
-    background: #e7f6ff;
-    border-radius: 14px;
-    padding: 10px 5px;
-    flex: 1;
-    font-size: 12px;
-}
-
-.stat b {
-    display: block;
-    font-size: 19px;
-    margin-top: 5px;
-    color: #328bc4;
+    width: min(100%, 370px);
+    background: white;
+    padding: 7px;
+    border-radius: 17px;
+    box-shadow: 0 6px 20px #477da633;
 }
 
 #board {
     display: grid;
-    grid-template-columns: repeat(9,1fr);
-    gap: 1px;
-    background: #559acb;
-    border: 3px solid #559acb;
-    border-radius: 8px;
-    overflow: hidden;
+    grid-template-columns: repeat(9, 1fr);
     width: 100%;
     aspect-ratio: 1;
-    margin: 12px auto;
+    border: 2px solid #4b85b1;
 }
 
 .cell {
-    background: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: clamp(14px,4.8vw,22px);
-    color: #318bc5;
     min-width: 0;
-    cursor: pointer;
-}
-
-.cell.fixed {
-    background: #e4f4ff;
+    border: 0;
+    border-right: 1px solid #c5d9e9;
+    border-bottom: 1px solid #c5d9e9;
+    background: white;
+    color: #286b9e;
+    font-size: clamp(15px, 4.8vw, 21px);
     font-weight: bold;
-    color: #245a82;
-}
-
-.cell.selected {
-    background: #a4ddff;
+    padding: 0;
+    text-align: center;
+    outline: none;
+    border-radius: 0;
 }
 
 .cell:nth-child(3n) {
-    border-right: 2px solid #559acb;
+    border-right: 2px solid #4b85b1;
 }
 
 .cell:nth-child(9n) {
-    border-right: none;
+    border-right: 0;
 }
 
 .cell:nth-child(n+19):nth-child(-n+27),
 .cell:nth-child(n+46):nth-child(-n+54) {
-    border-bottom: 2px solid #559acb;
+    border-bottom: 2px solid #4b85b1;
 }
 
-.numbers {
+.cell.fixed {
+    background: #eaf6ff;
+    color: #24496d;
+}
+
+.cell.selected {
+    background: #cceaff;
+}
+
+.cell.wrong {
+    background: #ffd6d6;
+    color: #e32323;
+}
+
+.number-pad {
     display: grid;
-    grid-template-columns: repeat(9,1fr);
-    gap: 4px;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 5px;
+    width: min(100%, 370px);
+    margin: 12px auto;
 }
 
-.number {
-    padding: 12px 0;
-    background: #d9f0ff;
-    color: #347eae;
-    border-radius: 9px;
-    font-size: 17px;
+.number-pad button {
+    border: none;
+    border-radius: 10px;
+    background: white;
+    color: #3478a9;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 11px 0;
 }
 
-.hint-area {
+.actions {
     display: flex;
-    gap: 8px;
-    margin-top: 12px;
+    justify-content: center;
+    gap: 9px;
+    flex-wrap: wrap;
+    margin: 8px auto;
 }
 
-.hint-area button {
-    flex: 1;
-    padding: 13px 5px;
+.actions button {
+    border: none;
     border-radius: 13px;
-    background: #4da9e8;
-    color: white;
+    padding: 11px 15px;
+    background: white;
+    color: #3478a9;
+    font-weight: bold;
 }
 
-.hint-area .ad-btn {
-    background: #ffb94f;
-    color: #604015;
-}
-
-.hidden {
-    display: none !important;
-}
-
-.message {
+#message {
+    text-align: center;
+    font-size: 14px;
     min-height: 22px;
-    margin-top: 8px;
-    color: #388ac1;
-    font-size: 13px;
+    margin: 5px;
+    color: #d34b4b;
 }
 
-/* РЕЗУЛЬТАТ И НАСТРОЙКИ */
+#nextButton {
+    display: none;
+    max-width: 370px;
+    margin: 10px auto 15px;
+}
 
-.result-card {
-    width: 100%;
-    max-width: 430px;
-    margin: auto;
+/* ПОЗДРАВЛЕНИЕ */
+
+#successScreen {
+    background: linear-gradient(160deg, #d7f2ff, #a9d9ff, #f3fbff);
+    justify-content: center;
+    align-items: center;
     text-align: center;
+    padding: 15px;
 }
 
-.settings-card {
-    width: 100%;
-    max-width: 430px;
-    margin: 30px auto;
-    background: #ffffffdf;
+.success-card {
+    background: white;
+    padding: 30px 20px;
     border-radius: 28px;
-    padding: 23px;
-    text-align: center;
+    width: 100%;
+    max-width: 370px;
+    box-shadow: 0 10px 30px #4d91bd35;
+    animation: pop .5s ease;
 }
 
+@keyframes pop {
+    0% { transform: scale(.7); opacity: 0; }
+    70% { transform: scale(1.06); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.cloud-emoji {
+    font-size: 60px;
+}
+
+/* НАСТРОЙКИ */
+
+.settings-content {
+    margin: auto;
+    width: 100%;
+    max-width: 400px;
+    padding: 12px;
+}
+
+.setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    padding: 16px;
+    border-radius: 15px;
+    margin: 10px 0;
+}
 </style>
 </head>
 
 <body>
 
-<!-- ПРИВЕТСТВИЕ -->
-
 <section id="welcome" class="screen active">
-
-<div class="center">
-
-<div class="logo">☁ CLOUD SUDOKU</div>
-
-<div class="subtitle">YOUR SKY ADVENTURE</div>
-
-<div class="card">
-
-<h2>Добро пожаловать!</h2>
-
-<p>Начни своё путешествие среди облаков</p>
-
-<input id="name" placeholder="Твоё имя" maxlength="20">
-
-<input id="birth" type="number"
-placeholder="Год рождения"
-min="1900" max="2026">
-
-<button class="main-btn" onclick="enterGame()">
-Начать путешествие ☁
-</button>
-
-</div>
-</div>
+    <div class="center card">
+        <div class="cloud-emoji">☁️</div>
+        <h1>Cloud Sudoku</h1>
+        <p>Добро пожаловать в мир облаков!</p>
+        <input id="playerName" placeholder="Твоё имя">
+        <button class="main-btn" onclick="startApp()">Начать игру</button>
+    </div>
 </section>
 
-<!-- КАРТА -->
+<section id="map" class="screen">
+    <header class="topbar">
+        <button onclick="showScreen('welcome')">←</button>
+        <button id="mapMusic" onclick="toggleMusic()">♫</button>
+        <div class="logo">☁ CLOUD SUDOKU</div>
+        <button onclick="openSettings()">⚙</button>
+    </header>
 
-<section id="mapScreen" class="screen">
+    <div class="map-heading">
+        <h2 id="hello">Карта уровней</h2>
+        <p>Проходи уровни и открывай новые облака ☁️</p>
+    </div>
 
-<div class="topbar">
-
-<button class="top-button" onclick="showWelcome()">←</button>
-
-<button class="top-button" id="mapMusic"
-onclick="toggleMusic()">♫</button>
-
-<div class="brand">☁ CLOUD SUDOKU</div>
-
-<button class="top-button" onclick="openSettings()">⚙</button>
-
-</div>
-
-<h2 class="map-title">Твоё путешествие ☁</h2>
-
-<div class="cloud-map" id="levelMap"></div>
-
+    <div class="cloud-map">
+        <div id="cloudList" class="cloud-list"></div>
+    </div>
 </section>
 
-<!-- ИГРА -->
+<section id="game" class="screen">
+    <header class="topbar">
+        <button onclick="showScreen('map')">←</button>
+        <button id="gameMusic" onclick="toggleMusic()">♫</button>
+        <div class="logo">☁ CLOUD SUDOKU</div>
+        <button onclick="openSettings()">⚙</button>
+    </header>
 
-<section id="gameScreen" class="screen">
+    <div class="game-scroll">
+        <div id="gameInfo">
+            <span id="levelText">Уровень 1</span>
+            <span id="timer">00:00</span>
+        </div>
 
-<div class="topbar">
+        <div class="board-card">
+            <div id="board"></div>
+        </div>
 
-<button class="top-button" onclick="showMap()">←</button>
+        <div class="number-pad" id="numberPad"></div>
 
-<button class="top-button" id="gameMusic"
-onclick="toggleMusic()">♫</button>
+        <div class="actions">
+            <button onclick="eraseCell()">⌫ Стереть</button>
+            <button onclick="giveHint()">💡 Подсказка</button>
+        </div>
 
-<div class="brand">☁ CLOUD SUDOKU</div>
+        <div id="message"></div>
 
-<button class="top-button" onclick="openSettings()">⚙</button>
-
-</div>
-
-<h2 class="game-title">
-УРОВЕНЬ <span id="levelNumber">1</span>
-</h2>
-
-<div class="game-card">
-
-<div class="game-stats">
-
-<div class="stat">
-Время
-<b id="timer">00:00</b>
-</div>
-
-<div class="stat">
-Подсказки
-<b id="hintCount">3</b>
-</div>
-
-</div>
-
-<div id="board"></div>
-
-<div class="numbers" id="numbers"></div>
-
-<div class="hint-area">
-
-<button onclick="useHint()">💡 Подсказка</button>
-
-<button class="ad-btn hidden"
-id="adButton" onclick="watchAd()">🔴 ADS</button>
-
-</div>
-
-<div class="message" id="message"></div>
-
-</div>
+        <button id="nextButton" class="main-btn" onclick="checkBoard()">
+            Следующее →
+        </button>
+    </div>
 </section>
 
-<!-- РЕЗУЛЬТАТ -->
-
-<section id="resultScreen" class="screen">
-
-<div class="topbar">
-
-<button class="top-button" onclick="showMap()">←</button>
-
-<button class="top-button" id="resultMusic"
-onclick="toggleMusic()">♫</button>
-
-<div class="brand">☁ CLOUD SUDOKU</div>
-
-<button class="top-button" onclick="openSettings()">⚙</button>
-
-</div>
-
-<div class="result-card">
-
-<div class="logo">☁ УРА!</div>
-
-<div class="card">
-
-<h2>Уровень пройден!</h2>
-
-<p>Твоё время:</p>
-
-<h1 id="resultTime" style="color:#398fd0">
-00:00
-</h1>
-
-<p>Следующий уровень открыт!</p>
-
-<button class="main-btn" onclick="nextLevel()">
-Следующий уровень →
-</button>
-
-<button class="secondary-btn" onclick="showMap()">
-Вернуться к облакам
-</button>
-
-</div>
-</div>
+<section id="successScreen" class="screen">
+    <div class="success-card">
+        <div class="cloud-emoji">🎉☁️</div>
+        <h1>Поздравляем!</h1>
+        <p id="successText">Ты прошла уровень!</p>
+        <h2 id="successTime">00:00</h2>
+        <p>Твоё время прохождения ❤️</p>
+        <p>Сейчас откроется следующий уровень...</p>
+    </div>
 </section>
 
-<!-- НАСТРОЙКИ -->
+<section id="settings" class="screen">
+    <header class="topbar">
+        <button onclick="backFromSettings()">←</button>
+        <button id="settingsMusic" onclick="toggleMusic()">♫</button>
+        <div class="logo">☁ CLOUD SUDOKU</div>
+        <div style="width:43px"></div>
+    </header>
 
-<section id="settingsScreen" class="screen">
+    <div class="settings-content">
+        <div class="card">
+            <h2>Настройки ⚙</h2>
 
-<div class="topbar">
+            <div class="setting-row">
+                <span>Музыка</span>
+                <button class="secondary-btn" onclick="toggleMusic()">
+                    Включить / Выключить
+                </button>
+            </div>
 
-<button class="top-button" onclick="backFromSettings()">←</button>
+            <div class="setting-row">
+                <span>Игрок</span>
+                <strong id="settingsName"></strong>
+            </div>
 
-<button class="top-button" id="settingsMusic"
-onclick="toggleMusic()">♫</button>
-
-<div class="brand">☁ CLOUD SUDOKU</div>
-
-<button class="top-button">⚙</button>
-
-</div>
-
-<div class="settings-card">
-
-<h2>⚙ Настройки</h2>
-
-<button class="secondary-btn" onclick="toggleMusic()">
-♫ Включить / выключить музыку
-</button>
-
-<button class="secondary-btn" onclick="resetProgress()">
-Сбросить прогресс
-</button>
-
-<button class="main-btn" onclick="backFromSettings()">
-Вернуться
-</button>
-
-</div>
-
+            <button class="main-btn" onclick="backFromSettings()">
+                Вернуться в игру
+            </button>
+        </div>
+    </div>
 </section>
 
 <script>
+const $ = id => document.getElementById(id);
 
-// СОХРАНЕНИЕ
-
-let user = JSON.parse(
-localStorage.getItem("cloudUser") || "null"
-);
-
-let unlocked = Number(
-localStorage.getItem("cloudUnlocked")
-) || 1;
-
-let records = JSON.parse(
-localStorage.getItem("cloudRecords") || "{}"
-);
-
-let currentLevel = 1;
-let board = [];
+let player = localStorage.getItem("cloudPlayer") || "";
+let currentLevel = Number(localStorage.getItem("cloudLevel")) || 1;
+let selectedCell = null;
+let puzzle = [];
 let solution = [];
 let fixed = [];
-let selected = null;
-let hints = 3;
-let seconds = 0;
+let wrongCells = [];
+let startTime = 0;
 let timerInterval = null;
-let previousScreen = "mapScreen";
-
-// МУЗЫКА
-
+let hints = 3;
+let musicOn = false;
 let audioContext = null;
-let masterGain = null;
-let musicEnabled = false;
-let musicLoop = null;
-let musicStep = 0;
-
-function toggleMusic() {
-
-    if (musicEnabled) {
-        stopMusic();
-    } else {
-        startMusic();
-    }
-
-}
-
-async function startMusic() {
-
-    const Audio = window.AudioContext ||
-                  window.webkitAudioContext;
-
-    if (!Audio) return;
-
-    try {
-
-        if (!audioContext) {
-
-            audioContext = new Audio();
-
-            masterGain = audioContext.createGain();
-
-            masterGain.gain.value = 0.22;
-
-            masterGain.connect(audioContext.destination);
-
-        }
-
-        await audioContext.resume();
-
-        musicEnabled = true;
-
-        updateMusicButtons();
-
-        musicStep = 0;
-
-        playPhonk();
-
-        clearInterval(musicLoop);
-
-        musicLoop = setInterval(playPhonk,125);
-
-    } catch(error) {
-
-        stopMusic();
-
-    }
-
-}
-
-function stopMusic() {
-
-    musicEnabled = false;
-
-    clearInterval(musicLoop);
-
-    musicLoop = null;
-
-    updateMusicButtons();
-
-}
-
-function updateMusicButtons() {
-
-    ["mapMusic","gameMusic","resultMusic","settingsMusic"]
-    .forEach(id=>{
-
-        let btn=document.getElementById(id);
-
-        if(!btn) return;
-
-        btn.classList.toggle("music-off",!musicEnabled);
-
-    });
-
-}
-
-function sound(freq,duration,type,volume) {
-
-    if (!musicEnabled) return;
-
-    let osc = audioContext.createOscillator();
-
-    let gain = audioContext.createGain();
-
-    osc.type = type;
-
-    osc.frequency.setValueAtTime(
-        freq,audioContext.currentTime
-    );
-
-    gain.gain.setValueAtTime(
-        volume,audioContext.currentTime
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-        0.001,
-        audioContext.currentTime+duration
-    );
-
-    osc.connect(gain);
-
-    gain.connect(masterGain);
-
-    osc.start();
-
-    osc.stop(audioContext.currentTime+duration);
-
-}
-
-function playPhonk() {
-
-    if (!musicEnabled) return;
-
-    let step = musicStep % 16;
-
-    let bass = [
-        55,55,82,55,
-        73,55,98,55,
-        55,55,82,55,
-        73,55,110,55
-    ];
-
-    sound(bass[step],0.22,"sawtooth",0.09);
-
-    if(step===0 || step===8) {
-        sound(55,0.18,"sine",0.7);
-    }
-
-    if(step===4 || step===12) {
-        sound(180,0.12,"triangle",0.25);
-    }
-
-    let melody = [
-        220,0,261,0,
-        329,0,293,0,
-        220,0,196,0,
-        261,0,329,0
-    ];
-
-    if(melody[step]) {
-        sound(melody[step],0.16,"square",0.035);
-    }
-
-    musicStep++;
-
-}
-
-// ЭКРАНЫ
+let musicTimer = null;
+let settingsReturn = "map";
+let completed = false;
 
 function showScreen(id) {
-
-    document.querySelectorAll(".screen")
-    .forEach(s => s.classList.remove("active"));
-
-    document.getElementById(id)
-    .classList.add("active");
-
+    document.querySelectorAll(".screen").forEach(s => {
+        s.classList.remove("active");
+    });
+    $(id).classList.add("active");
 }
 
-function enterGame() {
+function startApp() {
+    const name = $("playerName").value.trim();
 
-    let name = document.getElementById("name").value.trim();
+    if (name) {
+        player = name;
+        localStorage.setItem("cloudPlayer", player);
+    }
 
-    let birth = Number(document.getElementById("birth").value);
-
-    if(!name || !birth ||
-       birth < 1900 || birth > 2026) {
-
-        alert("Заполни имя и год рождения");
-
+    if (!player) {
+        alert("Напиши своё имя!");
         return;
-
     }
 
-    user = {name,birth};
+    $("hello").textContent = "Привет, " + player + "!";
+    $("settingsName").textContent = player;
 
-    localStorage.setItem("cloudUser",
-    JSON.stringify(user));
-
-    showMap();
-
+    renderMap();
+    showScreen("map");
 }
 
-function showWelcome() {
-
-    showScreen("welcome");
-
-    if(user) {
-
-        document.getElementById("name").value=user.name;
-
-        document.getElementById("birth").value=user.birth;
-
-    }
-
+if (player) {
+    $("playerName").value = player;
 }
 
-function showMap() {
+function renderMap() {
+    const list = $("cloudList");
+    list.innerHTML = "";
 
-    clearInterval(timerInterval);
+    for (let i = 1; i <= 1000; i++) {
+        const button = document.createElement("button");
+        button.className = "cloud";
+        button.innerHTML = "☁️<small>" + i + "</small>";
 
-    showScreen("mapScreen");
-
-    drawMap();
-
-}
-
-function openSettings() {
-
-    previousScreen =
-    document.querySelector(".screen.active").id;
-
-    showScreen("settingsScreen");
-
-}
-
-function backFromSettings() {
-
-    showScreen(previousScreen);
-
-    if(previousScreen==="mapScreen") {
-        drawMap();
-    }
-
-}
-
-// СБРОС
-
-function resetProgress() {
-
-    if(confirm("Ты действительно хочешь сбросить весь прогресс?")) {
-
-        localStorage.removeItem("cloudUnlocked");
-
-        localStorage.removeItem("cloudRecords");
-
-        unlocked=1;
-
-        records={};
-
-        showMap();
-
-    }
-
-}
-
-// КАРТА
-
-function drawMap() {
-
-    let map = document.getElementById("levelMap");
-
-    map.innerHTML = "";
-
-    for(let i=1;i<=1000;i++) {
-
-        let item = document.createElement("div");
-
-        item.className="level-item";
-
-        let button = document.createElement("button");
-
-        button.className="level-cloud";
-
-        if(i<unlocked) {
-
-            button.classList.add("done");
-
-            button.textContent=i;
-
-        } else if(i===unlocked) {
-
-            button.classList.add("open");
-
-            button.textContent=i;
-
-        } else {
-
+        if (i > currentLevel) {
             button.classList.add("locked");
-
-            button.textContent="🔒";
-
+            button.disabled = true;
+        } else {
+            button.onclick = () => newGame(i);
         }
 
-        button.onclick=()=>{
+        const record = localStorage.getItem("cloudTime" + i);
 
-            if(i>unlocked) return;
-
-            startLevel(i);
-
-        };
-
-        item.appendChild(button);
-
-        if(records[i]) {
-
-            let time=document.createElement("div");
-
-            time.className="level-time";
-
-            time.textContent=records[i];
-
-            item.appendChild(time);
-
+        if (record) {
+            const small = document.createElement("small");
+            small.textContent = "⏱ " + record;
+            button.appendChild(small);
         }
 
-        map.appendChild(item);
+        list.appendChild(button);
+    }
+}
 
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+function generateSudoku() {
+    const base = 3;
+    const side = 9;
+
+    const pattern = (r, c) =>
+        (base * (r % base) + Math.floor(r / base) + c) % side;
+
+    const groups = [0, 1, 2];
+
+    const rows = shuffle([...groups]).flatMap(g =>
+        shuffle([...groups]).map(r => g * 3 + r)
+    );
+
+    const cols = shuffle([...groups]).flatMap(g =>
+        shuffle([...groups]).map(c => g * 3 + c)
+    );
+
+    const nums = shuffle([1,2,3,4,5,6,7,8,9]);
+
+    solution = rows.map(r =>
+        cols.map(c => nums[pattern(r, c)])
+    );
+
+    puzzle = solution.map(row => [...row]);
+
+    const removeCount = Math.min(
+        65,
+        38 + Math.floor((currentLevel - 1) / 20)
+    );
+
+    let positions = shuffle(
+        Array.from({length:81}, (_, i) => i)
+    );
+
+    for (let i = 0; i < removeCount; i++) {
+        const pos = positions[i];
+        puzzle[Math.floor(pos / 9)][pos % 9] = 0;
     }
 
-    setTimeout(()=>{
-
-        let current=map.children[unlocked-1];
-
-        if(current) {
-
-            map.scrollTop =
-            current.offsetTop-map.offsetTop-150;
-
-        }
-
-    },100);
-
+    fixed = puzzle.map(row => row.map(n => n !== 0));
 }
 
-// SUDOKU
-
-function shuffle(arr) {
-
-    for(let i=arr.length-1;i>0;i--) {
-
-        let j=Math.floor(Math.random()*(i+1));
-
-        [arr[i],arr[j]]=[arr[j],arr[i]];
-
-    }
-
-    return arr;
-
-}
-
-function makeSolution() {
-
-    let pattern=(r,c)=>
-    (r*3+Math.floor(r/3)+c)%9;
-
-    let digits=shuffle([1,2,3,4,5,6,7,8,9]);
-
-    let rows=shuffle([0,1,2]).flatMap(g=>
-        shuffle([0,1,2]).map(x=>g*3+x)
-    );
-
-    let cols=shuffle([0,1,2]).flatMap(g=>
-        shuffle([0,1,2]).map(x=>g*3+x)
-    );
-
-    return rows.map(r=>
-        cols.map(c=>digits[pattern(r,c)])
-    );
-
-}
-
-function startLevel(level) {
-
-    currentLevel=level;
-
-    hints=3;
-
-    seconds=0;
-
+function newGame(level) {
     clearInterval(timerInterval);
 
-    solution=makeSolution();
+    currentLevel = level;
+    completed = false;
+    selectedCell = null;
+    wrongCells = [];
+    hints = 3;
 
-    board=solution.map(row=>[...row]);
+    localStorage.setItem("cloudLevel", currentLevel);
 
-    let blanks=Math.min(58,35+Math.floor(level/20));
+    generateSudoku();
 
-    let positions=shuffle(
-        Array.from({length:81},(_,i)=>i)
-    );
-
-    for(let i=0;i<blanks;i++) {
-
-        let p=positions[i];
-
-        board[Math.floor(p/9)][p%9]=0;
-
-    }
-
-    fixed=board.map(row=>row.map(v=>v!==0));
-
-    selected=null;
-
-    showScreen("gameScreen");
-
-    document.getElementById("levelNumber")
-    .textContent=level;
+    $("levelText").textContent = "Уровень " + currentLevel;
+    $("message").textContent = "";
+    $("nextButton").style.display = "none";
 
     renderBoard();
-
-    updateHints();
-
-    document.getElementById("timer").textContent="00:00";
-
-    timerInterval=setInterval(()=>{
-
-        seconds++;
-
-        document.getElementById("timer")
-        .textContent=formatTime(seconds);
-
-    },1000);
-
-}
-
-function formatTime(sec) {
-
-    let min=Math.floor(sec/60);
-
-    let s=sec%60;
-
-    return String(min).padStart(2,"0")+
-    ":"+String(s).padStart(2,"0");
-
-}
-
-// ДОСКА
-
-function renderBoard() {
-
-    let element=document.getElementById("board");
-
-    element.innerHTML="";
-
-    for(let r=0;r<9;r++) {
-
-        for(let c=0;c<9;c++) {
-
-            let cell=document.createElement("div");
-
-            cell.className="cell";
-
-            if(fixed[r][c]) {
-
-                cell.classList.add("fixed");
-
-            }
-
-            if(selected && selected.r===r &&
-               selected.c===c) {
-
-                cell.classList.add("selected");
-
-            }
-
-            cell.textContent=board[r][c]||"";
-
-            cell.onclick=()=>{
-
-                selected={r,c};
-
-                renderBoard();
-
-            };
-
-            element.appendChild(cell);
-
-        }
-
-    }
-
     renderNumbers();
 
+    startTime = Date.now();
+    updateTimer();
+
+    timerInterval = setInterval(updateTimer, 1000);
+
+    showScreen("game");
+}
+
+function renderBoard() {
+    const board = $("board");
+    board.innerHTML = "";
+
+    for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+            const button = document.createElement("button");
+            button.className = "cell";
+
+            const value = puzzle[r][c];
+            button.textContent = value || "";
+
+            if (fixed[r][c]) {
+                button.classList.add("fixed");
+            }
+
+            if (selectedCell &&
+                selectedCell.r === r &&
+                selectedCell.c === c) {
+                button.classList.add("selected");
+            }
+
+            if (wrongCells.some(x => x.r === r && x.c === c)) {
+                button.classList.add("wrong");
+            }
+
+            button.onclick = () => {
+                if (fixed[r][c] || completed) return;
+
+                selectedCell = {r, c};
+                renderBoard();
+            };
+
+            board.appendChild(button);
+        }
+    }
 }
 
 function renderNumbers() {
+    const pad = $("numberPad");
+    pad.innerHTML = "";
 
-    let element=document.getElementById("numbers");
-
-    element.innerHTML="";
-
-    for(let n=1;n<=9;n++) {
-
-        let btn=document.createElement("button");
-
-        btn.className="number";
-
-        btn.textContent=n;
-
-        btn.onclick=()=>enterNumber(n);
-
-        element.appendChild(btn);
-
+    for (let n = 1; n <= 9; n++) {
+        const button = document.createElement("button");
+        button.textContent = n;
+        button.onclick = () => enterNumber(n);
+        pad.appendChild(button);
     }
-
 }
 
-// ВВОД
-
 function enterNumber(n) {
+    if (!selectedCell || completed) return;
 
-    if(!selected) {
+    const {r, c} = selectedCell;
 
-        showMessage("Сначала выбери клетку");
+    if (fixed[r][c]) return;
 
-        return;
+    puzzle[r][c] = n;
+    wrongCells = wrongCells.filter(
+        x => !(x.r === r && x.c === c)
+    );
 
-    }
-
-    let {r,c}=selected;
-
-    if(fixed[r][c]) return;
-
-    board[r][c]=n;
+    $("message").textContent = "";
 
     renderBoard();
 
-    checkCompletion();
-
+    if (isFull()) {
+        $("nextButton").style.display = "block";
+    } else {
+        $("nextButton").style.display = "none";
+    }
 }
 
-// ПОДСКАЗКИ
+function eraseCell() {
+    if (!selectedCell || completed) return;
 
-function updateHints() {
+    const {r, c} = selectedCell;
 
-    document.getElementById("hintCount")
-    .textContent=hints;
+    if (fixed[r][c]) return;
 
-    document.getElementById("adButton")
-    .classList.toggle("hidden",hints>0);
+    puzzle[r][c] = 0;
 
+    wrongCells = wrongCells.filter(
+        x => !(x.r === r && x.c === c)
+    );
+
+    $("nextButton").style.display = "none";
+    $("message").textContent = "";
+
+    renderBoard();
 }
 
-function useHint() {
+function isFull() {
+    return puzzle.every(row => row.every(n => n !== 0));
+}
 
-    if(hints<=0) {
-
-        showMessage("Подсказки закончились!");
-
+function checkBoard() {
+    if (!isFull()) {
+        $("message").textContent = "Сначала заполни все клетки!";
         return;
-
     }
 
-    if(giveOneHint()) {
+    wrongCells = [];
 
-        hints--;
-
-        updateHints();
-
+    for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+            if (puzzle[r][c] !== solution[r][c]) {
+                wrongCells.push({r, c});
+            }
+        }
     }
 
-}
-
-function giveOneHint() {
-
-    if(selected &&
-       !fixed[selected.r][selected.c] &&
-       board[selected.r][selected.c]===0) {
-
-        let {r,c}=selected;
-
-        board[r][c]=solution[r][c];
+    if (wrongCells.length > 0) {
+        $("message").textContent =
+            "Есть ошибки! Исправь красные цифры ❤️";
 
         renderBoard();
-
-        checkCompletion();
-
-        return true;
-
-    }
-
-    selected=null;
-
-    for(let r=0;r<9;r++) {
-
-        for(let c=0;c<9;c++) {
-
-            if(!fixed[r][c] && board[r][c]===0) {
-
-                board[r][c]=solution[r][c];
-
-                selected={r,c};
-
-                renderBoard();
-
-                checkCompletion();
-
-                return true;
-
-            }
-
-        }
-
-    }
-
-    showMessage("Все клетки заполнены!");
-
-    return false;
-
-}
-
-// РЕКЛАМА
-
-function watchAd() {
-
-    showMessage("Рекламная система пока не подключена.");
-
-}
-
-function grantRewardedHint() {
-
-    if(giveOneHint()) {
-
-        showMessage("Получена одна подсказка!");
-
-    }
-
-}
-
-// ЗАВЕРШЕНИЕ
-
-function checkCompletion() {
-
-    for(let r=0;r<9;r++) {
-
-        for(let c=0;c<9;c++) {
-
-            if(board[r][c]!==solution[r][c]) {
-
-                return;
-
-            }
-
-        }
-
+        return;
     }
 
     finishLevel();
+}
 
+function giveHint() {
+    if (completed) return;
+
+    if (hints <= 0) {
+        alert("Бесплатные подсказки закончились!");
+        return;
+    }
+
+    let cell = selectedCell;
+
+    if (!cell || puzzle[cell.r][cell.c] !== 0 ||
+        fixed[cell.r][cell.c]) {
+        cell = null;
+
+        for (let r = 0; r < 9 && !cell; r++) {
+            for (let c = 0; c < 9; c++) {
+                if (puzzle[r][c] === 0) {
+                    cell = {r, c};
+                    break;
+                }
+            }
+        }
+    }
+
+    if (!cell) return;
+
+    puzzle[cell.r][cell.c] = solution[cell.r][cell.c];
+    hints--;
+
+    selectedCell = cell;
+    renderBoard();
+
+    if (isFull()) {
+        $("nextButton").style.display = "block";
+    }
+}
+
+function updateTimer() {
+    const seconds = Math.floor((Date.now() - startTime) / 1000);
+    $("timer").textContent = formatTime(seconds);
+}
+
+function formatTime(seconds) {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+
+    return String(m).padStart(2, "0") + ":" +
+           String(s).padStart(2, "0");
 }
 
 function finishLevel() {
+    if (completed) return;
 
+    completed = true;
     clearInterval(timerInterval);
 
-    let time=formatTime(seconds);
+    const seconds = Math.floor((Date.now() - startTime) / 1000);
+    const result = formatTime(seconds);
 
-    records[currentLevel]=time;
+    localStorage.setItem("cloudTime" + currentLevel, result);
 
-    if(currentLevel>=unlocked) {
-
-        unlocked=currentLevel+1;
-
+    if (currentLevel >= Number(localStorage.getItem("cloudLevel") || 1)) {
+        currentLevel++;
+        localStorage.setItem("cloudLevel", currentLevel);
     }
 
-    localStorage.setItem("cloudRecords",
-    JSON.stringify(records));
+    $("successText").textContent =
+        "Уровень " + (currentLevel - 1) + " пройден!";
 
-    localStorage.setItem("cloudUnlocked",
-    unlocked);
+    $("successTime").textContent = result;
 
-    document.getElementById("resultTime")
-    .textContent=time;
+    showScreen("successScreen");
 
-    showScreen("resultScreen");
-
+    setTimeout(() => {
+        renderMap();
+        newGame(currentLevel);
+    }, 2500);
 }
 
-function nextLevel() {
-
-    startLevel(unlocked);
-
+function openSettings() {
+    settingsReturn = document.querySelector(".screen.active").id;
+    $("settingsName").textContent = player;
+    showScreen("settings");
 }
 
-function showMessage(text) {
-
-    document.getElementById("message")
-    .textContent=text;
-
+function backFromSettings() {
+    showScreen(settingsReturn);
 }
 
-// ВОССТАНОВЛЕНИЕ ИМЕНИ
+/* МУЗЫКА */
 
-if(user) {
+function updateMusicButtons() {
+    ["mapMusic", "gameMusic", "settingsMusic"].forEach(id => {
+        const button = $(id);
 
-    document.getElementById("name").value=user.name;
+        if (!button) return;
 
-    document.getElementById("birth").value=user.birth;
+        button.classList.toggle("music-off", !musicOn);
+    });
+}
 
+function toggleMusic() {
+    musicOn = !musicOn;
+
+    if (musicOn) {
+        startMusic();
+    } else {
+        stopMusic();
+    }
+
+    updateMusicButtons();
+}
+
+function startMusic() {
+    const Audio = window.AudioContext || window.webkitAudioContext;
+
+    if (!Audio) return;
+
+    if (!audioContext) {
+        audioContext = new Audio();
+    }
+
+    audioContext.resume();
+
+    if (musicTimer) return;
+
+    let step = 0;
+
+    musicTimer = setInterval(() => {
+        if (!musicOn || !audioContext) return;
+
+        const notes = [220, 261, 329, 392, 329, 261];
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+
+        oscillator.type = "triangle";
+        oscillator.frequency.value = notes[step % notes.length];
+
+        gain.gain.setValueAtTime(0.0001, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(
+            0.035, audioContext.currentTime + 0.04
+        );
+        gain.gain.exponentialRampToValueAtTime(
+            0.0001, audioContext.currentTime + 0.3
+        );
+
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.32);
+
+        step++;
+    }, 350);
+}
+
+function stopMusic() {
+    if (musicTimer) {
+        clearInterval(musicTimer);
+        musicTimer = null;
+    }
 }
 
 updateMusicButtons();
-
 </script>
 
 </body>
